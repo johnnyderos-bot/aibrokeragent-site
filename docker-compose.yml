@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  brokeragent:
+    build: .
+    container_name: brokeragent
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - brokeragent_data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  brokeragent_data:

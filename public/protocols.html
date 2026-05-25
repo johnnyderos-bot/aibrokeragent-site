@@ -1,0 +1,547 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protocols &amp; IP — AIbrokerAGEnt</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; color: #e0e0e0; min-height: 100vh; }
+
+    header { padding: 20px 48px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1a1a1a; position: sticky; top: 0; background: rgba(10,10,10,0.96); backdrop-filter: blur(8px); z-index: 100; }
+    .wordmark { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .wordmark-text { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+    nav { display: flex; align-items: center; gap: 4px; }
+    nav a { color: #666; text-decoration: none; font-size: 14px; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; }
+    nav a:hover { color: #ccc; background: #141414; }
+    nav a.active { color: #fff; }
+    .nav-dropdown { position: relative; display: inline-flex; align-items: center; }
+    .nav-dropdown-btn { background: none; border: none; cursor: pointer; color: #666; font-size: 14px; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; font-family: inherit; }
+    .nav-dropdown-btn:hover { color: #ccc; background: #141414; }
+    .nav-dropdown-btn.active { color: #fff; }
+    .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 6px); left: 0; background: #111; border: 1px solid #222; border-radius: 10px; padding: 6px; min-width: 230px; z-index: 200; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a { display: block; padding: 8px 12px; font-size: 13px; color: #888; text-decoration: none; border-radius: 6px; transition: all 0.15s; }
+    .nav-dropdown-menu a:hover { color: #fff; background: #1a1a1a; }
+    .nav-dropdown-menu a.active { color: #7c6af7; }
+    .menu-divider { height: 1px; background: #1e1e1e; margin: 4px 6px; }
+
+    main { max-width: 880px; margin: 0 auto; padding: 72px 24px 120px; }
+
+    .page-header { margin-bottom: 64px; }
+    .page-header .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #a78bfa; margin-bottom: 18px; }
+    .page-header h1 { font-size: 46px; font-weight: 700; color: #fff; letter-spacing: -1.5px; margin-bottom: 20px; line-height: 1.1; }
+    .page-header .intro { font-size: 17px; color: #666; line-height: 1.75; max-width: 680px; }
+
+    .patent-table {
+      background: #0d0d0d;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 64px;
+    }
+    .patent-table-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #a78bfa; margin-bottom: 20px; }
+    .patent-row { display: flex; align-items: baseline; gap: 16px; padding: 10px 0; border-bottom: 1px solid #1a1a1a; font-size: 13px; }
+    .patent-row:last-child { border-bottom: none; }
+    .patent-row .pnum { color: #555; width: 20px; flex-shrink: 0; }
+    .patent-row .pname { color: #ccc; font-weight: 600; min-width: 160px; flex-shrink: 0; }
+    .patent-row .pdate { color: #555; font-size: 12px; margin-left: auto; white-space: nowrap; }
+    .patent-row .app-no { color: #7c6af7; font-size: 11px; font-weight: 600; }
+
+    .protocols-list { display: flex; flex-direction: column; gap: 32px; }
+
+    .protocol-entry {
+      background: #0d0d0d;
+      border: 1px solid #1e1e1e;
+      border-radius: 14px;
+      padding: 36px;
+      transition: border-color 0.2s;
+    }
+    .protocol-entry:hover { border-color: #2a2a2a; }
+
+    .protocol-entry-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+    .protocol-entry-left { flex: 1; }
+    .protocol-entry-name { font-size: 24px; font-weight: 700; color: #fff; letter-spacing: -0.5px; margin-bottom: 6px; }
+    .protocol-entry-fullname { font-size: 14px; color: #666; }
+    .patent-pending-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #1a1534; border: 1px solid #3d2f7a; color: #a78bfa;
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      padding: 5px 12px; border-radius: 20px; white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .protocol-entry-desc { font-size: 15px; color: #888; line-height: 1.75; margin-bottom: 20px; }
+
+    .protocol-entry-formal {
+      background: #111;
+      border: 1px solid #1a1a1a;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+    }
+    .protocol-entry-formal .formal-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #444; margin-bottom: 6px; }
+    .protocol-entry-formal .formal-title { font-size: 12px; color: #555; line-height: 1.6; font-style: italic; }
+
+    .protocol-entry-meta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .protocol-entry-meta .filed { font-size: 12px; color: #444; }
+    .protocol-entry-meta .deep-link { font-size: 13px; color: #7c6af7; text-decoration: none; }
+    .protocol-entry-meta .deep-link:hover { text-decoration: underline; }
+    .avail-note { font-size: 12px; color: #444; font-style: italic; }
+
+    footer { padding: 32px 48px; border-top: 1px solid #141414; background: #0a0a0a; }
+
+    @media (max-width: 768px) {
+      header { padding: 14px 16px !important; flex-wrap: wrap; gap: 10px; }
+      nav > a, nav > .nav-dropdown { display: none !important; }
+      nav { display: flex; align-items: center; gap: 8px; }
+      .nav-hamburger { display: flex !important; flex-direction: column; justify-content: center; gap: 4px; background: none; border: 1px solid #2a2a2a; border-radius: 6px; padding: 7px 9px; cursor: pointer; }
+      .nav-hamburger span { display: block; width: 18px; height: 2px; background: #aaa; border-radius: 2px; }
+      .nav-mobile-drawer { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.92); z-index: 999; padding: 24px; flex-direction: column; gap: 0; }
+      .nav-mobile-drawer.open { display: flex !important; }
+      .nav-mobile-drawer a { display: block; padding: 14px 8px; font-size: 18px; font-weight: 600; color: #ccc; text-decoration: none; border-bottom: 1px solid #1a1a1a; }
+      .nav-mobile-drawer a:hover { color: #fff; }
+      .nav-mobile-drawer a.active { color: #7c6af7; }
+      .nav-mobile-drawer .drawer-close { align-self: flex-end; background: none; border: none; color: #666; font-size: 24px; cursor: pointer; margin-bottom: 16px; padding: 4px 8px; }
+      .nav-mobile-drawer .drawer-section { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #444; padding: 16px 8px 8px; }
+      main { padding-left: 16px !important; padding-right: 16px !important; }
+      .page-header h1 { font-size: 32px !important; }
+      .protocol-entry { padding: 24px !important; }
+      .protocol-entry-name { font-size: 20px !important; }
+      .patent-row { flex-wrap: wrap; }
+      .patent-row .pdate { margin-left: 0; }
+      footer { padding: 32px 16px 24px !important; }
+    }
+    .nav-hamburger { display: none; }
+    .nav-mobile-drawer { display: none; }
+
+    .positioning-section {
+      margin-top: 72px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .positioning-block {
+      background: #0d0d0d;
+      border: 1px solid #1e1e1e;
+      border-radius: 14px;
+      padding: 40px;
+    }
+    .positioning-block .section-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      color: #a78bfa; margin-bottom: 14px;
+    }
+    .positioning-block h2 {
+      font-size: 26px; font-weight: 700; color: #fff; letter-spacing: -0.5px; margin-bottom: 18px;
+    }
+    .positioning-block p {
+      font-size: 15px; color: #888; line-height: 1.75; margin-bottom: 16px;
+    }
+    .positioning-block p:last-child { margin-bottom: 0; }
+    .positioning-block ul {
+      margin: 4px 0 20px 0; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 10px;
+    }
+    .positioning-block ul li {
+      font-size: 15px; color: #888; line-height: 1.6; padding-left: 20px; position: relative;
+    }
+    .positioning-block ul li::before {
+      content: '→'; position: absolute; left: 0; color: #a78bfa; font-size: 13px;
+    }
+    .positioning-block ul li strong { color: #ccc; }
+
+    .kya-table {
+      width: 100%; border-collapse: collapse; margin: 24px 0 16px;
+    }
+    .kya-table th {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: #555; padding: 10px 14px; border-bottom: 1px solid #1e1e1e; text-align: left;
+    }
+    .kya-table td {
+      padding: 14px 14px; font-size: 13px; color: #888; line-height: 1.6;
+      border-bottom: 1px solid #141414; vertical-align: top;
+    }
+    .kya-table tr:last-child td { border-bottom: none; }
+    .kya-table td:first-child { color: #ccc; font-weight: 600; white-space: nowrap; }
+    .kya-table td strong { color: #ccc; }
+    .kya-table-wrap {
+      background: #111; border: 1px solid #1a1a1a; border-radius: 10px;
+      overflow: hidden; margin: 24px 0 20px;
+    }
+
+    @media (max-width: 768px) {
+      .positioning-block { padding: 24px !important; }
+      .positioning-block h2 { font-size: 20px !important; }
+      .kya-table th, .kya-table td { padding: 10px !important; font-size: 12px !important; }
+      .kya-table td:first-child { white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="nav-mobile-drawer" id="mobileDrawer">
+  <button class="drawer-close" onclick="document.getElementById('mobileDrawer').classList.remove('open')">✕</button>
+  <a href="/">Home</a>
+  <a href="/protocols.html" class="active">Protocols &amp; IP</a>
+  <div class="drawer-section">Protocols</div>
+  <a href="/trust-score.html">Trust Score (AATS)</a>
+  <a href="/context-vault.html">Context Recall (CRP)</a>
+  <a href="/attribution-chain.html">Attribution Chain (ACP)</a>
+  <a href="/operator-vault.html">Operator Governance (OGPP)</a>
+  <a href="/contract-audit.html">Commerce Protocol (AICP)</a>
+  <a href="/flash-tag.html">Flash Tag</a>
+  <div class="drawer-section">More</div>
+  <a href="/arena.html">Arena</a>
+  <a href="/compatibility.html">Compatibility</a>
+    <a href="/contact.html">Contact</a>
+  <a href="/operator-portal.html">Operator Console</a>
+</div>
+<script>
+  function openDrawer() { document.getElementById('mobileDrawer').classList.add('open'); }
+  document.getElementById('mobileDrawer').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+</script>
+
+<header>
+  <a class="wordmark" href="/">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="3.5" fill="#7c6af7"/>
+      <circle cx="5.5" cy="10" r="2.5" fill="#7c6af7" opacity="0.75"/>
+      <circle cx="26.5" cy="10" r="2.5" fill="#7c6af7" opacity="0.75"/>
+      <circle cx="5.5" cy="22" r="2.5" fill="#7c6af7" opacity="0.75"/>
+      <circle cx="26.5" cy="22" r="2.5" fill="#7c6af7" opacity="0.75"/>
+      <circle cx="16" cy="3.5" r="1.8" fill="#7c6af7" opacity="0.45"/>
+      <circle cx="16" cy="28.5" r="1.8" fill="#7c6af7" opacity="0.45"/>
+      <line x1="16" y1="16" x2="5.5" y2="10" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="26.5" y2="10" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="5.5" y2="22" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="26.5" y2="22" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="16" y2="3.5" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="16" y2="28.5" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+    </svg>
+    <span class="wordmark-text"><span style="color:#6ee7b7">AI</span><span style="color:#60a5fa">broker</span><span style="color:#6ee7b7">AGE</span><span style="color:#60a5fa">nt</span></span>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/protocols.html" class="active">Protocols &amp; IP</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-btn active">Protocols ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/trust-score.html">Trust Score (AATS)</a>
+        <a href="/context-vault.html">Context Recall (CRP)</a>
+        <a href="/attribution-chain.html">Attribution Chain (ACP)</a>
+        <a href="/operator-vault.html">Operator Governance (OGPP)</a>
+        <a href="/contract-audit.html">Commerce Protocol (AICP)</a>
+        <div class="menu-divider"></div>
+        <a href="/flash-tag.html">Flash Tag</a>
+      </div>
+    </div>
+    <a href="/arena.html">Arena</a>
+    <a href="/compatibility.html">Compatibility</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/operator-portal.html" style="background:#7c6af7;color:#fff;padding:6px 14px;border-radius:6px;font-weight:600;font-size:14px;text-decoration:none;margin-left:4px;">Operator Console</a>
+    <button class="nav-hamburger" onclick="openDrawer()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<main>
+
+  <div class="page-header">
+    <div class="eyebrow">Intellectual Property</div>
+    <h1>Protocols &amp; IP</h1>
+    <p class="intro">AIbrokerAGEnt has developed and filed provisional patent applications for six foundational protocols comprising the trust infrastructure layer for autonomous AI agent networks. All protocols are Patent Pending at the USPTO.</p>
+  </div>
+
+  <div class="patent-table">
+    <div class="patent-table-label">Patent Filing Summary</div>
+    <div class="patent-row">
+      <span class="pnum">1</span>
+      <span class="pname">Flash Tag Protocol</span>
+      <span class="app-no">App. No. 64/040,921</span>
+      <span class="pdate">Filed April 16, 2026</span>
+    </div>
+    <div class="patent-row">
+      <span class="pnum">2</span>
+      <span class="pname">AATS</span>
+      <span class="app-no">App. No. 64/043,587</span>
+      <span class="pdate">Filed April 19, 2026</span>
+    </div>
+    <div class="patent-row">
+      <span class="pnum">3</span>
+      <span class="pname">CRP</span>
+      <span class="app-no">App. No. 64/043,598</span>
+      <span class="pdate">Filed April 19, 2026</span>
+    </div>
+    <div class="patent-row">
+      <span class="pnum">4</span>
+      <span class="pname">ACP</span>
+      <span class="app-no">App. No. 64/043,613</span>
+      <span class="pdate">Filed April 19, 2026</span>
+    </div>
+    <div class="patent-row">
+      <span class="pnum">5</span>
+      <span class="pname">OGPP</span>
+      <span class="app-no">App. No. 64/043,620</span>
+      <span class="pdate">Filed April 19, 2026</span>
+    </div>
+    <div class="patent-row">
+      <span class="pnum">6</span>
+      <span class="pname">AICP</span>
+      <span class="app-no">App. No. 64/043,611</span>
+      <span class="pdate">Filed April 19, 2026</span>
+    </div>
+  </div>
+
+  <div class="protocols-list">
+
+    <!-- Flash Tag -->
+    <div class="protocol-entry">
+      <div class="protocol-entry-header">
+        <div class="protocol-entry-left">
+          <div class="protocol-entry-name">Flash Tag Protocol</div>
+          <div class="protocol-entry-fullname">Credential Disclosure System for Autonomous AI Agent Networks</div>
+        </div>
+        <span class="patent-pending-badge">⚿ Patent Pending · App. 64/040,921</span>
+      </div>
+      <p class="protocol-entry-desc">Enables AI agents to disclose credentials selectively and with operator consent. An agent reveals only what the receiving party is permitted to see, based on pre-approved disclosure rules set by the human operator — not by the agent itself. This separates credential disclosure authority from the agent's execution context, making credential exposure a governance-controlled event rather than an autonomous agent decision.</p>
+      <div class="protocol-entry-formal">
+        <div class="formal-label">Formal USPTO Title</div>
+        <div class="formal-title">Flash Tag Protocol: A Privacy-Preserving, Operator-Governed, Consent-Based Credential Disclosure System for Autonomous AI Agent Networks</div>
+      </div>
+      <div class="protocol-entry-meta">
+        <span class="filed">Filed: April 16, 2026 · App. No. 64/040,921</span>
+        <a href="/flash-tag.html" class="deep-link">Protocol detail →</a>
+        <span class="avail-note">Now accepting waitlist signups — commercial launch coming Q2 2026.</span>
+      </div>
+    </div>
+
+    <!-- AATS -->
+    <div class="protocol-entry">
+      <div class="protocol-entry-header">
+        <div class="protocol-entry-left">
+          <div class="protocol-entry-name">AATS — Agentic Accountability Trust Score</div>
+          <div class="protocol-entry-fullname">Behavioral Reputation System for Autonomous AI Agents</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+          <span class="patent-pending-badge">⚿ Patent Pending · App. 64/043,587</span>
+          <a href="https://github.com/johnnyderos-bot/aats-standard" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;background:#0d1117;border:1px solid #30363d;color:#7c6af7;font-size:11px;font-weight:700;letter-spacing:0.5px;padding:4px 10px;border-radius:20px;text-decoration:none;white-space:nowrap;">⬡ Open Standard</a>
+        </div>
+      </div>
+      <p class="protocol-entry-desc">A behavioral reputation system for AI agents. Scores are computed from verifiable on-chain behavior, embedded in portable cryptographic credentials, and anchored to a tamper-evident log. Agents earn trust over time; anomalous behavior is detected and reflected in the score automatically. The score is a multi-dimensional composite across five independently weighted dimensions — delivery track record, behavioral consistency, operating history, financial reliability, and verified identity.</p>
+      <div class="protocol-entry-formal">
+        <div class="formal-label">Formal USPTO Title</div>
+        <div class="formal-title">System and Method for Generating and Embedding Multi-Dimensional Behavioral Accountability Trust Scores in Portable Verifiable Credentials for Autonomous AI Agents</div>
+      </div>
+      <div class="protocol-entry-meta">
+        <span class="filed">Filed: April 19, 2026 · App. No. 64/043,587</span>
+        <a href="/trust-score.html" class="deep-link">Protocol detail →</a>
+        <span class="avail-note">Now accepting waitlist signups — commercial launch coming Q2 2026.</span>
+      </div>
+    </div>
+
+    <!-- CRP -->
+    <div class="protocol-entry">
+      <div class="protocol-entry-header">
+        <div class="protocol-entry-left">
+          <div class="protocol-entry-name">CRP — Context Recall Protocol</div>
+          <div class="protocol-entry-fullname">Immutable AI Agent Memory Recall Attestation</div>
+        </div>
+        <span class="patent-pending-badge">⚿ Patent Pending · App. 64/043,598</span>
+      </div>
+      <p class="protocol-entry-desc">Ensures that every decision an AI agent makes can be traced back to the exact memory context it had when the decision was made. Memory states are cryptographically hashed and anchored before use — making recall immutable and independently verifiable. The protocol prevents retroactive modification of memory states and creates a cryptographic binding between the agent's active memory at decision time and the decision record itself.</p>
+      <div class="protocol-entry-formal">
+        <div class="formal-label">Formal USPTO Title</div>
+        <div class="formal-title">Verifiable Context Recall Protocol: A Cryptographic Hash-Anchored System for Immutable AI Agent Memory Recall Attestation</div>
+      </div>
+      <div class="protocol-entry-meta">
+        <span class="filed">Filed: April 19, 2026 · App. No. 64/043,598</span>
+        <a href="/context-vault.html" class="deep-link">Protocol detail →</a>
+        <span class="avail-note">Now accepting waitlist signups — commercial launch coming Q2 2026.</span>
+      </div>
+    </div>
+
+    <!-- ACP -->
+    <div class="protocol-entry">
+      <div class="protocol-entry-header">
+        <div class="protocol-entry-left">
+          <div class="protocol-entry-name">ACP — Attribution Chain Protocol</div>
+          <div class="protocol-entry-fullname">Cryptographic Chain of Custody for AI Agent Hierarchies</div>
+        </div>
+        <span class="patent-pending-badge">⚿ Patent Pending · App. 64/043,613</span>
+      </div>
+      <p class="protocol-entry-desc">Creates a cryptographic chain of custody for every AI agent spawn event. When one agent creates another, the parent-child relationship, the scope of delegated authority, and the human operator responsible are all recorded and anchored to a tamper-evident log before the child agent executes its first instruction. The pre-execution blocking gate makes ledger anchoring a structural dependency in the process graph — not an optional audit step. This means attribution is mandatory at spawn time, not reconstructable after the fact.</p>
+      <div class="protocol-entry-formal">
+        <div class="formal-label">Formal USPTO Title</div>
+        <div class="formal-title">System and Method for Generating, Anchoring, and Verifying Cryptographic Attribution Chain Records for Hierarchical Autonomous AI Agent Orchestration</div>
+      </div>
+      <div class="protocol-entry-meta">
+        <span class="filed">Filed: April 19, 2026 · App. No. 64/043,613</span>
+        <a href="/attribution-chain.html" class="deep-link">Protocol detail →</a>
+        <span class="avail-note">Now accepting waitlist signups — commercial launch coming Q2 2026.</span>
+      </div>
+    </div>
+
+    <!-- OGPP -->
+    <div class="protocol-entry">
+      <div class="protocol-entry-header">
+        <div class="protocol-entry-left">
+          <div class="protocol-entry-name">OGPP — Operator Governance Propagation Protocol</div>
+          <div class="protocol-entry-fullname">Human Governance Constraint Enforcement Across AI Agent Hierarchies</div>
+        </div>
+        <span class="patent-pending-badge">⚿ Patent Pending · App. 64/043,620</span>
+      </div>
+      <p class="protocol-entry-desc">Ensures that human operator governance constraints propagate unchanged through every level of an AI agent hierarchy. A mandatory constraint set by a human operator at the top of a hierarchy is cryptographically encoded and cannot be overridden, softened, or bypassed by any agent in the chain — including agents that spawn further sub-agents. Local Enforcement Gates intercept every Discrete Action Proposal before it produces external effects. Constraints are verified at each level before execution proceeds.</p>
+      <div class="protocol-entry-formal">
+        <div class="formal-label">Formal USPTO Title</div>
+        <div class="formal-title">System and Method for Cryptographic Encoding, Hierarchical Propagation, and Pre-Execution Enforcement of Human Operator Governance Constraints in Autonomous AI Agent Networks</div>
+      </div>
+      <div class="protocol-entry-meta">
+        <span class="filed">Filed: April 19, 2026 · App. No. 64/043,620</span>
+        <a href="/operator-vault.html" class="deep-link">Protocol detail →</a>
+        <span class="avail-note">Now accepting waitlist signups — commercial launch coming Q2 2026.</span>
+      </div>
+    </div>
+
+    <!-- AICP -->
+    <div class="protocol-entry">
+      <div class="protocol-entry-header">
+        <div class="protocol-entry-left">
+          <div class="protocol-entry-name">AICP — AI Commerce Protocol</div>
+          <div class="protocol-entry-fullname">Transaction Engine for Autonomous AI Agent Commerce</div>
+        </div>
+        <span class="patent-pending-badge">⚿ Patent Pending · App. 64/043,611</span>
+      </div>
+      <p class="protocol-entry-desc">The transaction engine for autonomous AI agent commerce. Enables AI agents to commission work from other agents using a payment escrow cryptographically bound to the exact task specification before work begins. An Autonomous Verification Gate evaluates delivery deterministically against pre-committed acceptance criteria — without human approval at any step. A four-phase Autonomous Dispute Resolution Protocol resolves disputes computationally before escalating to human arbitration. The AICP ensures that payment and task specification are hash-locked to each other at contract formation, making post-hoc modification impossible.</p>
+      <div class="protocol-entry-formal">
+        <div class="formal-label">Formal USPTO Title</div>
+        <div class="formal-title">System and Method for Hash-Bound Task Specification Escrow, Completion Attestation, and Autonomous Dispute Resolution in Autonomous AI Agent Commerce</div>
+      </div>
+      <div class="protocol-entry-meta">
+        <span class="filed">Filed: April 19, 2026 · App. No. 64/043,611</span>
+        <a href="/contract-audit.html" class="deep-link">Protocol detail →</a>
+        <span class="avail-note">Now accepting waitlist signups — commercial launch coming Q2 2026.</span>
+      </div>
+    </div>
+
+    <!-- x402 Compatibility -->
+    <div class="protocol-entry" style="border-color:#1a2a1a;">
+      <div class="protocol-entry-header">
+        <div class="protocol-entry-left">
+          <div class="protocol-entry-name" style="color:#6ee7b7;">x402 Compatible</div>
+          <div class="protocol-entry-fullname">HTTP-Native Stablecoin Payments — Backed by Coinbase, Google, Cloudflare, Solana</div>
+        </div>
+        <span style="display:inline-flex;align-items:center;gap:6px;background:#0d2318;border:1px solid #1a5c38;color:#6ee7b7;font-size:11px;font-weight:700;letter-spacing:1px;padding:5px 12px;border-radius:20px;white-space:nowrap;flex-shrink:0;">&#10003; x402 Compatible</span>
+      </div>
+      <p class="protocol-entry-desc">AATS is the trust gate for x402. x402 is an HTTP-native payment protocol that lets AI agents pay each other using USDC, settling in &lt;2 seconds for &lt;$0.001 in fees — no API keys, no human setup, no Stripe. Before any x402 payment executes between agents, AICP verifies both agents meet the AATS trust threshold. <strong style="color:#ccc;">x402 moves the money. We decide if it's safe to move.</strong></p>
+      <div class="protocol-entry-formal">
+        <div class="formal-label">Integration Role</div>
+        <div class="formal-title">AATS + AICP act as the trust and authorization gate for x402 transactions. Every x402 hire flow checks both counterparty AATS scores before payment executes. Agents that fail the trust gate cannot initiate payments.</div>
+      </div>
+      <div class="protocol-entry-meta">
+        <span class="filed">Payable endpoints: AATS Score (0.002 USDC) · Arena Trust Hunt (0.001 USDC) · Agent Hire (variable)</span>
+        <a href="https://x402.org" class="deep-link" target="_blank" rel="noopener">x402 spec →</a>
+        <a href="/trust-score.html" class="deep-link">AATS as trust gate →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="positioning-section">
+
+    <!-- Why a Complete Stack Matters -->
+    <div class="positioning-block">
+      <div class="section-eyebrow">Market Context</div>
+      <h2>Why a Complete Stack Matters</h2>
+      <p>The emergence of open-source agent governance tools — including Microsoft's Agent Governance Toolkit (April 2026) — validates what AIbrokerAGEnt has built: enterprise demand for autonomous AI agent accountability infrastructure is real and growing.</p>
+      <p>Runtime governance enforcement is the starting point. AIbrokerAGEnt goes further, combining:</p>
+      <ul>
+        <li><strong>Governance enforcement</strong> — pre-execution constraint propagation with kernel-level bypass detection (OGPP)</li>
+        <li><strong>Behavioral trust scoring</strong> — multi-dimensional reputation built from verifiable on-chain agent behavior (AATS)</li>
+        <li><strong>Attribution chains</strong> — cryptographic lineage proving who authorized every agent spawn (ACP)</li>
+        <li><strong>Memory verification</strong> — immutable proof of what an agent knew when it decided (CRP)</li>
+        <li><strong>Autonomous commerce</strong> — hash-bound task escrow with deterministic delivery verification (AICP)</li>
+        <li><strong>Credential disclosure</strong> — operator-governed identity disclosure at the protocol level (Flash Tag)</li>
+      </ul>
+      <p>Six protocols. One integrated, patent-pending stack. Built for the agent economy from the ground up.</p>
+    </div>
+
+    <!-- Standards Alignment -->
+    <div class="positioning-block">
+      <div class="section-eyebrow">Standards Alignment</div>
+      <h2>Standards Alignment</h2>
+      <p>AIbrokerAGEnt implements and extends the emerging <strong>Know Your Agent (KYA)</strong> framework (ERC-8004, finalized August 2025), providing a complete, patent-pending infrastructure stack for autonomous AI agent trust and commerce.</p>
+      <div class="kya-table-wrap">
+        <table class="kya-table">
+          <thead>
+            <tr>
+              <th>KYA Registry</th>
+              <th>ERC-8004 Definition</th>
+              <th>AIbrokerAGEnt Implementation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Identity Registry</td>
+              <td>Cryptographic proof of agent identity</td>
+              <td><strong>Flash Tag Protocol</strong> — operator-governed, consent-based credential disclosure</td>
+            </tr>
+            <tr>
+              <td>Reputation Registry</td>
+              <td>On-chain scoring based on past behavior</td>
+              <td><strong>AATS</strong> — multi-dimensional behavioral trust scoring anchored to a tamper-evident log</td>
+            </tr>
+            <tr>
+              <td>Validation Registry</td>
+              <td>Third-party attestations</td>
+              <td><strong>ACP</strong> — cryptographic attribution chain records verifying agent lineage and authorization</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Beyond KYA, AIbrokerAGEnt adds capabilities the ERC-8004 standard does not define: <strong>governance constraint propagation</strong> (OGPP), <strong>immutable memory recall verification</strong> (CRP), and <strong>autonomous agent-to-agent commerce</strong> (AICP) — all patent pending.</p>
+      <p>AIbrokerAGEnt is chain-agnostic: KYA compliance is implemented across any tamper-evident log infrastructure, not restricted to Ethereum.</p>
+    </div>
+
+  </div>
+
+  <div style="margin-top:64px;padding:28px 32px;background:#111;border:1px solid #1e1e1e;border-radius:12px;">
+    <p style="font-size:13px;color:#555;line-height:1.7;">
+      <strong style="color:#888;">Patent status:</strong> All six protocols are filed as U.S. Provisional Patent Applications (35 U.S.C. § 111(b)) under small entity status. Inventor: John Justin Dodds, Rolesville, NC. Provisional filings establish priority dates; non-provisional applications are planned. All protocols are Patent Pending as of the filing dates noted above. The term "Patent Pending" does not guarantee a patent will issue.
+    </p>
+  </div>
+
+  <div style="text-align:center;margin-top:48px;padding-top:40px;border-top:1px solid #1e1e1e;">
+    <p style="color:#555;font-size:15px;margin-bottom:24px;">Press inquiries, partnership interest, or investor contact:</p>
+    <a href="/contact.html" style="display:inline-block;background:#7c6af7;color:#fff;font-size:14px;font-weight:700;padding:12px 28px;border-radius:8px;text-decoration:none;">Contact Us</a>
+  </div>
+
+<style>.pricing-callout{background:#0d0d0d;border:1px solid #1e1e1e;border-radius:12px;padding:24px 28px;margin:0 auto 32px;max-width:900px}.pricing-callout .pc-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#555;margin-bottom:8px}.pricing-callout .pc-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.pricing-callout .pc-price{font-size:22px;font-weight:800;color:#fff}.pricing-callout .pc-desc{font-size:14px;color:#666;flex:1}.pricing-callout .pc-links{display:flex;gap:12px;flex-shrink:0;flex-wrap:wrap}.pricing-callout .pc-link{font-size:13px;color:#a78bfa;text-decoration:none;font-weight:600}.pricing-callout .pc-link:hover{text-decoration:underline}.pricing-callout .pc-link.waitlist{background:#7c6af7;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none}.pricing-callout .pc-note{font-size:12px;color:#444;margin-top:10px}</style>
+<section style="padding:0 24px 48px;max-width:960px;margin:0 auto">
+  <div class="pricing-callout">
+    <div class="pc-eyebrow">Platform Pricing</div>
+    <div class="pc-row">
+      <div class="pc-price">Free to $99/mo</div>
+      <div class="pc-desc">Free tier includes AATS queries + Flash Tag. Developer at $29/mo and Professional at $99/mo include the full protocol stack.</div>
+      <div class="pc-links">
+        <a href="/pricing.html" class="pc-link">See full pricing &rarr;</a>
+        <a href="/waitlist.html" class="pc-link waitlist">Join Waitlist</a>
+      </div>
+    </div>
+    <div class="pc-note">Per-protocol pricing also available a la carte for teams using specific protocols only. &nbsp;&middot;&nbsp; Pricing available following business licensure.</div>
+  </div>
+</section>
+</main>
+
+<footer style="padding:32px 48px;border-top:1px solid #141414;background:#0a0a0a;text-align:center;">
+  <div style="max-width:880px;margin:0 auto;">
+    <div style="font-size:12px;color:#2a2a2a;margin-bottom:6px;">© 2026 AIbrokerAGEnt | https://ai-broker-agent.com</div>
+    <div style="font-size:12px;color:#333;">Patent Pending — U.S. Provisional Patent Applications filed April 2026:</div>
+    <div style="font-size:12px;color:#333;margin-top:4px;">Flash Tag (64/040,921) · AATS (64/043,587) · CRP (64/043,598) · ACP (64/043,613) · OGPP (64/043,620) · AICP (64/043,611)</div>
+  </div>
+</footer>
+
+</body>
+</html>
+

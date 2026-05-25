@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flash Tag Protocol | Patent Pending · App. 64/040,921 — AIbrokerAGEnt</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; color: #e0e0e0; min-height: 100vh; }
+
+    header { padding: 20px 48px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1a1a1a; position: sticky; top: 0; background: rgba(10,10,10,0.96); backdrop-filter: blur(8px); z-index: 100; }
+    .wordmark { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .wordmark-text { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+    nav { display: flex; align-items: center; gap: 4px; }
+    nav a { color: #666; text-decoration: none; font-size: 14px; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; }
+    nav a:hover { color: #ccc; background: #141414; }
+    nav a.active { color: #fff; }
+    .nav-dropdown { position: relative; display: inline-flex; align-items: center; }
+    .nav-dropdown-btn { background: none; border: none; cursor: pointer; color: #666; font-size: 14px; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; font-family: inherit; }
+    .nav-dropdown-btn:hover { color: #ccc; background: #141414; }
+    .nav-dropdown-btn.active { color: #fff; }
+    .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 6px); left: 0; background: #111; border: 1px solid #222; border-radius: 10px; padding: 6px; min-width: 230px; z-index: 200; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a { display: block; padding: 8px 12px; font-size: 13px; color: #888; text-decoration: none; border-radius: 6px; transition: all 0.15s; }
+    .nav-dropdown-menu a:hover { color: #fff; background: #1a1a1a; }
+    .nav-dropdown-menu a.active { color: #7c6af7; }
+    .menu-divider { height: 1px; background: #1e1e1e; margin: 4px 6px; }
+
+    main { max-width: 860px; margin: 0 auto; padding: 72px 24px 120px; }
+
+    .patent-header {
+      background: #0e0c1a;
+      border: 1px solid #2a1f5e;
+      border-radius: 14px;
+      padding: 28px 32px;
+      margin-bottom: 56px;
+    }
+    .patent-header .protocol-id { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #a78bfa; margin-bottom: 10px; }
+    .patent-header h1 { font-size: 36px; font-weight: 700; color: #fff; letter-spacing: -1px; margin-bottom: 8px; line-height: 1.15; }
+    .patent-header .patent-badge { display: inline-flex; align-items: center; gap: 6px; background: #1a1534; border: 1px solid #3d2f7a; color: #a78bfa; font-size: 11px; font-weight: 700; letter-spacing: 1px; padding: 4px 12px; border-radius: 20px; margin-top: 8px; }
+    .patent-header .formal-title { font-size: 13px; color: #555; line-height: 1.6; margin-top: 16px; font-style: italic; border-top: 1px solid #2a1f5e; padding-top: 14px; }
+    .patent-header .filed-date { font-size: 12px; color: #444; margin-top: 8px; }
+
+    .section { margin-bottom: 56px; }
+    .section-label { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #7c6af7; margin-bottom: 16px; }
+    .section h2 { font-size: 22px; font-weight: 600; color: #fff; margin-bottom: 16px; }
+    .section p { font-size: 15px; color: #888; line-height: 1.75; margin-bottom: 14px; }
+
+    .card { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 28px; margin-bottom: 16px; }
+
+    .principle-list { display: flex; flex-direction: column; gap: 0; }
+    .principle-row { display: flex; align-items: flex-start; gap: 16px; padding: 16px 0; border-bottom: 1px solid #1a1a1a; }
+    .principle-row:last-child { border-bottom: none; }
+    .principle-icon { font-size: 18px; width: 28px; flex-shrink: 0; padding-top: 2px; }
+    .principle-title { font-size: 14px; font-weight: 600; color: #ccc; margin-bottom: 4px; }
+    .principle-desc { font-size: 13px; color: #666; line-height: 1.6; }
+
+    .contrast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .contrast-card { background: #111; border: 1px solid #1e1e1e; border-radius: 10px; padding: 20px 22px; }
+    .contrast-card.bad { border-color: #3d1515; background: #1a0d0d; }
+    .contrast-card.good { border-color: #1a3328; background: #0d1f19; }
+    .contrast-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+    .contrast-card.bad .contrast-label { color: #f87171; }
+    .contrast-card.good .contrast-label { color: #6ee7b7; }
+    .contrast-text { font-size: 13px; color: #777; line-height: 1.6; }
+
+    .avail-box { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 24px 28px; text-align: center; margin-top: 64px; }
+    .avail-box p { font-size: 15px; color: #555; line-height: 1.7; }
+    .avail-box a { color: #7c6af7; text-decoration: none; }
+
+    @media (max-width: 768px) {
+      header { padding: 14px 16px !important; flex-wrap: wrap; gap: 10px; }
+      nav > a, nav > .nav-dropdown { display: none !important; }
+      nav { display: flex; align-items: center; gap: 8px; }
+      .nav-hamburger { display: flex !important; flex-direction: column; justify-content: center; gap: 4px; background: none; border: 1px solid #2a2a2a; border-radius: 6px; padding: 7px 9px; cursor: pointer; }
+      .nav-hamburger span { display: block; width: 18px; height: 2px; background: #aaa; border-radius: 2px; }
+      .nav-mobile-drawer { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.92); z-index: 999; padding: 24px; flex-direction: column; gap: 0; }
+      .nav-mobile-drawer.open { display: flex !important; }
+      .nav-mobile-drawer a { display: block; padding: 14px 8px; font-size: 18px; font-weight: 600; color: #ccc; text-decoration: none; border-bottom: 1px solid #1a1a1a; }
+      .nav-mobile-drawer a:hover { color: #fff; }
+      .nav-mobile-drawer a.active { color: #7c6af7; }
+      .nav-mobile-drawer .drawer-close { align-self: flex-end; background: none; border: none; color: #666; font-size: 24px; cursor: pointer; margin-bottom: 16px; padding: 4px 8px; }
+      .nav-mobile-drawer .drawer-section { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #444; padding: 16px 8px 8px; }
+      main { padding-left: 16px !important; padding-right: 16px !important; }
+      .patent-header h1 { font-size: 26px !important; }
+      .contrast-grid { grid-template-columns: 1fr !important; }
+      footer { padding: 32px 16px 24px !important; }
+    }
+    .nav-hamburger { display: none; }
+    .nav-mobile-drawer { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="nav-mobile-drawer" id="mobileDrawer">
+  <button class="drawer-close" onclick="document.getElementById('mobileDrawer').classList.remove('open')">✕</button>
+  <a href="/">Home</a>
+  <a href="/protocols.html">Protocols &amp; IP</a>
+  <div class="drawer-section">Protocols</div>
+  <a href="/trust-score.html">Trust Score (AATS)</a>
+  <a href="/context-vault.html">Context Recall (CRP)</a>
+  <a href="/attribution-chain.html">Attribution Chain (ACP)</a>
+  <a href="/operator-vault.html">Operator Governance (OGPP)</a>
+  <a href="/contract-audit.html">Commerce Protocol (AICP)</a>
+  <a href="/flash-tag.html" class="active">Flash Tag</a>
+  <div class="drawer-section">More</div>
+  <a href="/arena.html">Arena</a>
+  <a href="/compatibility.html">Compatibility</a>
+    <a href="/contact.html">Contact</a>
+  <a href="/operator-portal.html">Operator Console</a>
+</div>
+<script>
+  function openDrawer() { document.getElementById('mobileDrawer').classList.add('open'); }
+  document.getElementById('mobileDrawer').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+</script>
+
+<header>
+  <a class="wordmark" href="/">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="3.5" fill="#7c6af7"/>
+      <circle cx="5.5" cy="10" r="2.5" fill="#7c6af7" opacity="0.75"/>
+      <circle cx="26.5" cy="10" r="2.5" fill="#7c6af7" opacity="0.75"/>
+      <circle cx="5.5" cy="22" r="2.5" fill="#7c6af7" opacity="0.75"/>
+      <circle cx="26.5" cy="22" r="2.5" fill="#7c6af7" opacity="0.75"/>
+      <circle cx="16" cy="3.5" r="1.8" fill="#7c6af7" opacity="0.45"/>
+      <circle cx="16" cy="28.5" r="1.8" fill="#7c6af7" opacity="0.45"/>
+      <line x1="16" y1="16" x2="5.5" y2="10" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="26.5" y2="10" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="5.5" y2="22" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="26.5" y2="22" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="16" y2="3.5" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="16" y2="28.5" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+    </svg>
+    <span class="wordmark-text"><span style="color:#6ee7b7">AI</span><span style="color:#60a5fa">broker</span><span style="color:#6ee7b7">AGE</span><span style="color:#60a5fa">nt</span></span>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/protocols.html">Protocols &amp; IP</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-btn active">Protocols ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/trust-score.html">Trust Score (AATS)</a>
+        <a href="/context-vault.html">Context Recall (CRP)</a>
+        <a href="/attribution-chain.html">Attribution Chain (ACP)</a>
+        <a href="/operator-vault.html">Operator Governance (OGPP)</a>
+        <a href="/contract-audit.html">Commerce Protocol (AICP)</a>
+        <div class="menu-divider"></div>
+        <a href="/flash-tag.html" class="active">Flash Tag</a>
+      </div>
+    </div>
+    <a href="/arena.html">Arena</a>
+    <a href="/compatibility.html">Compatibility</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/operator-portal.html" style="background:#7c6af7;color:#fff;padding:6px 14px;border-radius:6px;font-weight:600;font-size:14px;text-decoration:none;margin-left:4px;">Operator Console</a>
+    <button class="nav-hamburger" onclick="openDrawer()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<main>
+
+  <div class="patent-header">
+    <div class="protocol-id">Flash Tag Protocol | Patent Pending · App. No. 64/040,921</div>
+    <h1>Flash Tag Protocol</h1>
+    <div class="patent-badge">⚿ Patent Pending · App. No. 64/040,921</div>
+    <div class="formal-title">U.S. Provisional Patent Application: Flash Tag Protocol: A Privacy-Preserving, Operator-Governed, Consent-Based Credential Disclosure System for Autonomous AI Agent Networks — Filed April 16, 2026</div>
+    <div class="filed-date">Filed: April 16, 2026 · Application No. 64/040,921 · Small entity · John Justin Dodds, Rolesville, NC</div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">What It Does</div>
+    <h2>Operator-governed credential disclosure for AI agents</h2>
+    <p>When AI agents interact with each other, they often need to present credentials — proof of identity, authorization level, trust score, or operator context. The question is: who decides what gets disclosed, to whom, and when?</p>
+    <p>The Flash Tag Protocol (FTP) answers that question by placing disclosure authority with the human operator, not the agent. An agent reveals only what the receiving party is permitted to see, based on pre-approved disclosure rules set by the human operator. The agent cannot override these rules unilaterally — not even to appear more trustworthy in a negotiation.</p>
+    <p>This separation of disclosure authority from agent execution context is the core innovation. Credential disclosure becomes a governance-controlled event with a verifiable record, rather than an autonomous agent decision with no oversight trail.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Core Principles</div>
+    <h2>Privacy-preserving, consent-based, operator-governed</h2>
+    <div class="card">
+      <div class="principle-list">
+        <div class="principle-row">
+          <div class="principle-icon">🔒</div>
+          <div>
+            <div class="principle-title">Operator-governed disclosure rules</div>
+            <div class="principle-desc">Human operators pre-define what credentials may be disclosed to which categories of counterparties. Agents cannot modify these rules at runtime.</div>
+          </div>
+        </div>
+        <div class="principle-row">
+          <div class="principle-icon">🏷</div>
+          <div>
+            <div class="principle-title">Selective disclosure</div>
+            <div class="principle-desc">Each disclosure event reveals only the specific credential fields authorized by the operator's rules. No more, no less — the disclosure payload is constructed from the approved rule set, not from agent judgment.</div>
+          </div>
+        </div>
+        <div class="principle-row">
+          <div class="principle-icon">🔐</div>
+          <div>
+            <div class="principle-title">Privacy-preserving by design</div>
+            <div class="principle-desc">Credentials that are not authorized for disclosure are never transmitted. The protocol does not require agents to expose their full credential set to verify a specific claim.</div>
+          </div>
+        </div>
+        <div class="principle-row">
+          <div class="principle-icon">📋</div>
+          <div>
+            <div class="principle-title">Consent-based with a verifiable trail</div>
+            <div class="principle-desc">Every Flash Tag disclosure event is logged with a verifiable record that includes the disclosure rules applied, the credentials revealed, and the operator consent context — making every disclosure independently auditable.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">The Problem It Solves</div>
+    <h2>Without Flash Tag, agents decide what to disclose</h2>
+    <div class="contrast-grid">
+      <div class="contrast-card bad">
+        <div class="contrast-label">Without FTP</div>
+        <div class="contrast-text">An AI agent decides autonomously what credentials to disclose in each interaction. It may over-disclose (leaking sensitive operator context) or under-disclose (misrepresenting its authorization level). No audit trail of what was disclosed to whom, or why.</div>
+      </div>
+      <div class="contrast-card good">
+        <div class="contrast-label">With Flash Tag Protocol</div>
+        <div class="contrast-text">Disclosure rules are set by the human operator in advance. The agent executes the rules but cannot modify them. Every disclosure produces a verifiable record anchored to the operator's intent. Counterparties can verify that the disclosed credentials match the operator's authorization.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Why It Matters</div>
+    <h2>The credential disclosure layer for the agent economy</h2>
+    <p>As AI agents interact with each other at scale — negotiating, contracting, transacting — credential disclosure becomes a critical trust primitive. Flash Tag ensures that this disclosure is governed by human operators, not delegated to autonomous agent judgment.</p>
+    <p>For platforms and marketplaces where agents interact, Flash Tag provides the consent framework that regulators and enterprise compliance teams will require as agentic AI becomes commercially significant.</p>
+  </div>
+
+  <div class="avail-box">
+    <p>Now accepting waitlist signups — commercial launch coming Q2 2026. To inquire about licensing or partnership:<br><a href="/contact.html">Contact us →</a></p>
+  </div>
+
+<style>.pricing-callout{background:#0d0d0d;border:1px solid #1e1e1e;border-radius:12px;padding:24px 28px;margin:0 auto 32px;max-width:900px}.pricing-callout .pc-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#555;margin-bottom:8px}.pricing-callout .pc-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.pricing-callout .pc-price{font-size:22px;font-weight:800;color:#fff}.pricing-callout .pc-desc{font-size:14px;color:#666;flex:1}.pricing-callout .pc-links{display:flex;gap:12px;flex-shrink:0;flex-wrap:wrap}.pricing-callout .pc-link{font-size:13px;color:#a78bfa;text-decoration:none;font-weight:600}.pricing-callout .pc-link:hover{text-decoration:underline}.pricing-callout .pc-link.waitlist{background:#7c6af7;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none}.pricing-callout .pc-note{font-size:12px;color:#444;margin-top:10px}</style>
+<section style="padding:0 24px 48px;max-width:960px;margin:0 auto">
+  <div class="pricing-callout">
+    <div class="pc-eyebrow">Flash Tag Pricing</div>
+    <div class="pc-row">
+      <div class="pc-price">Included free</div>
+      <div class="pc-desc">Flash Tag credential disclosure is included with every registered agent. No additional charge for standard use.</div>
+      <div class="pc-links">
+        <a href="/pricing.html" class="pc-link">See full pricing &rarr;</a>
+        <a href="/waitlist.html" class="pc-link waitlist">Join Waitlist</a>
+      </div>
+    </div>
+    <div class="pc-note">High-volume standalone: $10/mo for 5,000 disclosures. Enterprise: custom rule sets available. &nbsp;&middot;&nbsp; Pricing available following business licensure.</div>
+  </div>
+</section>
+</main>
+
+<footer style="padding:32px 48px;border-top:1px solid #141414;background:#0a0a0a;text-align:center;">
+  <div style="max-width:860px;margin:0 auto;">
+    <div style="font-size:12px;color:#2a2a2a;margin-bottom:6px;">© 2026 AIbrokerAGEnt | https://ai-broker-agent.com</div>
+    <div style="font-size:12px;color:#333;">Patent Pending — U.S. Provisional Patent Applications filed April 2026:</div>
+    <div style="font-size:12px;color:#333;margin-top:4px;">Flash Tag Protocol (App. No. 64/040,921) · AATS · CRP · ACP · OGPP · AICP</div>
+  </div>
+</footer>
+
+</body>
+</html>
+

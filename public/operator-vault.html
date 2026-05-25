@@ -1,0 +1,672 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operator Vault — AIbrokerAGEnt</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e1e1e;
+    }
+
+    .logo { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.5px; text-decoration: none; }
+    .logo span { color: #6ee7b7; }
+
+    nav a {
+      color: #999;
+      text-decoration: none;
+      margin-left: 24px;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    nav a:hover, nav a.active { color: #fff; }
+
+    main { max-width: 920px; margin: 0 auto; padding: 72px 24px 120px; }
+
+    .page-header { margin-bottom: 72px; }
+    .page-header .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #6ee7b7; margin-bottom: 18px; }
+    .page-header h1 { font-size: 46px; font-weight: 700; color: #fff; letter-spacing: -1.5px; margin-bottom: 20px; line-height: 1.1; }
+    .page-header p { font-size: 18px; color: #666; line-height: 1.75; max-width: 640px; }
+
+    .section { margin-bottom: 64px; }
+    .section-label { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #6ee7b7; margin-bottom: 20px; }
+    .section h2 { font-size: 22px; font-weight: 600; color: #fff; margin-bottom: 16px; }
+    .section > p { font-size: 15px; color: #888; line-height: 1.75; margin-bottom: 14px; }
+
+    .card { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 28px; margin-bottom: 16px; }
+    .card.green { background: #0d1f19; border-color: #1a3328; }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 640px) { .compare-grid { grid-template-columns: 1fr; } }
+
+    .compare-card {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 26px;
+    }
+    .compare-card.human { border-color: #6ee7b7; background: #0d1f19; }
+    .compare-card .tag {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 4px; margin-bottom: 14px; display: inline-block;
+    }
+    .compare-card.human .tag { background: #6ee7b7; color: #0a0a0a; }
+    .compare-card .tag.agent-tag { background: #1e1e2e; color: #7c6af7; border: 1px solid #2a2a4a; }
+
+    .compare-card h3 { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 10px; }
+    .compare-card p { font-size: 13px; color: #888; line-height: 1.6; margin-bottom: 10px; }
+    .compare-card ul { list-style: none; }
+    .compare-card ul li { font-size: 13px; color: #888; padding: 4px 0; display: flex; gap: 8px; }
+    .compare-card ul li::before { content: '·'; color: #6ee7b7; font-size: 16px; line-height: 1.1; flex-shrink: 0; }
+
+    .flow-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 18px 0;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .flow-row:last-child { border-bottom: none; }
+
+    .step-num {
+      width: 32px; height: 32px; min-width: 32px;
+      background: #0d1f19; border: 1px solid #1a3328;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: #6ee7b7;
+    }
+
+    .flow-title { font-size: 14px; font-weight: 600; color: #ccc; margin-bottom: 4px; }
+    .flow-desc { font-size: 13px; color: #666; line-height: 1.6; }
+    .flow-desc code { background: #1a1a1a; padding: 1px 6px; border-radius: 4px; font-size: 12px; color: #aaa; }
+
+    .spec-row {
+      display: flex;
+      gap: 20px;
+      padding: 14px 0;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .spec-row:last-child { border-bottom: none; }
+    .spec-label { width: 180px; min-width: 180px; font-size: 12px; color: #555; text-transform: uppercase; letter-spacing: 0.5px; padding-top: 1px; }
+    .spec-value { color: #ccc; line-height: 1.6; font-size: 14px; }
+    .spec-value strong { color: #fff; }
+    .spec-value code { background: #1a1a1a; padding: 1px 6px; border-radius: 4px; font-size: 12px; color: #6ee7b7; }
+
+    .example-box {
+      background: #0d0d0d;
+      border: 1px solid #1e1e1e;
+      border-radius: 10px;
+      padding: 22px 26px;
+      margin-bottom: 16px;
+    }
+    .example-box .ex-label { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: #555; margin-bottom: 12px; }
+    .example-box .ex-scenario { font-size: 14px; color: #aaa; line-height: 1.6; margin-bottom: 10px; }
+    .example-box .ex-what { font-size: 13px; color: #6ee7b7; line-height: 1.6; padding-top: 10px; border-top: 1px solid #1a1a1a; }
+
+    .diff-table { width: 100%; border-collapse: collapse; }
+    .diff-table th {
+      text-align: left; padding: 12px 16px; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.5px; color: #555;
+      border-bottom: 1px solid #1e1e1e; background: #0d0d0d;
+    }
+    .diff-table td { padding: 13px 16px; font-size: 13px; color: #888; border-bottom: 1px solid #141414; vertical-align: top; }
+    .diff-table tr:last-child td { border-bottom: none; }
+    .diff-table .col-feature { color: #ccc; font-weight: 500; }
+    .diff-table .col-agent { color: #7c6af7; }
+    .diff-table .col-operator { color: #6ee7b7; }
+    .diff-table tr:hover td { background: #0d0d0d; }
+
+    .highlight-box {
+      background: #0d1f19;
+      border: 1px solid #1a3328;
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 32px;
+    }
+    .highlight-box h3 { font-size: 15px; font-weight: 600; color: #6ee7b7; margin-bottom: 10px; }
+    .highlight-box p { font-size: 14px; color: #888; line-height: 1.7; }
+
+    .btn {
+      display: inline-block; background: #6ee7b7; color: #0a0a0a;
+      font-size: 14px; font-weight: 700; padding: 12px 28px; border-radius: 8px;
+      text-decoration: none; margin: 0 8px 0 0; transition: background 0.2s;
+    }
+    .btn:hover { background: #a7f3d0; }
+    .btn.secondary { background: transparent; color: #6ee7b7; border: 1px solid #1a3328; }
+    .btn.secondary:hover { background: #0d1f19; }
+
+    footer { text-align: center; padding: 32px; color: #333; font-size: 13px; border-top: 1px solid #111; }
+  
+    /* ── Testnet banner ── */
+    .testnet-banner {
+      background: #1a1200;
+      border-bottom: 1px solid #3a2a00;
+      padding: 7px 0;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #c8a83a;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Products dropdown ── */
+    .nav-dropdown { position: relative; display: inline-flex; align-items: center; }
+
+    .nav-dropdown-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #666;
+      font-size: 14px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .nav-dropdown-btn:hover { color: #ccc; background: #141414; }
+    .nav-dropdown-btn.active { color: #fff; }
+
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 10px;
+      padding: 6px;
+      min-width: 200px;
+      z-index: 200;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+
+    .nav-dropdown-menu a {
+      display: block;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #888;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .nav-dropdown-menu a:hover { color: #fff; background: #1a1a1a; }
+    .nav-dropdown-menu a.active { color: #7c6af7; }
+
+    .nav-dropdown-menu .menu-divider {
+      height: 1px;
+      background: #1e1e1e;
+      margin: 4px 6px;
+    }
+  
+    /* ── Mobile responsive ── */
+    @media (max-width: 768px) {
+
+      /* Banner */
+      .testnet-banner { font-size: 11px; padding: 6px 12px; }
+
+      /* Header */
+      header {
+        padding: 14px 16px !important;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      /* Hide nav links on mobile — show hamburger */
+      nav > a, nav > .nav-dropdown { display: none !important; }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Hamburger button */
+      .nav-hamburger {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        background: none;
+        border: 1px solid #2a2a2a;
+        border-radius: 6px;
+        padding: 7px 9px;
+        cursor: pointer;
+      }
+      .nav-hamburger span {
+        display: block;
+        width: 18px;
+        height: 2px;
+        background: #aaa;
+        border-radius: 2px;
+        transition: all 0.2s;
+      }
+
+      /* Mobile nav drawer */
+      .nav-mobile-drawer {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.85);
+        z-index: 999;
+        padding: 24px;
+        flex-direction: column;
+        gap: 0;
+      }
+      .nav-mobile-drawer.open { display: flex !important; }
+      .nav-mobile-drawer a {
+        display: block;
+        padding: 14px 8px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #ccc;
+        text-decoration: none;
+        border-bottom: 1px solid #1a1a1a;
+        transition: color 0.15s;
+      }
+      .nav-mobile-drawer a:hover { color: #fff; }
+      .nav-mobile-drawer a.active { color: #7c6af7; }
+      .nav-mobile-drawer .drawer-close {
+        align-self: flex-end;
+        background: none;
+        border: none;
+        color: #666;
+        font-size: 24px;
+        cursor: pointer;
+        margin-bottom: 16px;
+        padding: 4px 8px;
+      }
+      .nav-mobile-drawer .drawer-section {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #444;
+        padding: 16px 8px 8px;
+      }
+      .nav-mobile-drawer .signin-btn {
+        margin-top: 24px;
+        background: #6ee7b7;
+        color: #0a0a0a !important;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 700;
+        border-bottom: none !important;
+      }
+
+      /* Hero */
+      .hero-section { padding: 48px 20px 40px !important; }
+      .hero-h1 { font-size: 36px !important; letter-spacing: -1px !important; }
+      .hero-sub { font-size: 16px !important; }
+      .hero h1 { font-size: 30px !important; }
+      .hero p { font-size: 16px !important; }
+      h1 { font-size: 32px !important; }
+
+      /* Sections */
+      .stats-section,
+      .products-section,
+      .stack-section,
+      .panel,
+      main { padding-left: 16px !important; padding-right: 16px !important; }
+
+      /* Grids → single column */
+      .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .products-grid { grid-template-columns: 1fr !important; }
+      .tier-grid { grid-template-columns: 1fr !important; }
+      .credits-box { grid-template-columns: 1fr !important; gap: 20px !important; }
+
+      /* Trust boost 2-col → 1-col */
+      div[style*="grid-template-columns:1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Tables — horizontal scroll */
+      .fee-table, table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 13px;
+      }
+
+      /* Tabs — scrollable */
+      .tabs {
+        padding: 0 16px !important;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap !important;
+      }
+      .tab { white-space: nowrap; padding: 12px 16px !important; }
+
+      /* Footer grid → single column */
+      footer div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+      }
+      footer { padding: 32px 16px 24px !important; }
+
+      /* Cards */
+      .card { padding: 20px !important; }
+
+      /* Page header */
+      .page-header h1 { font-size: 32px !important; }
+      .page-header p { font-size: 15px !important; }
+
+      /* Stack row */
+      .stack-row-item { flex-wrap: wrap; gap: 12px !important; }
+
+      /* Stat number */
+      .stat-number { font-size: 28px !important; }
+
+      /* CTA row */
+      .cta-row { flex-direction: column; align-items: center; }
+      .cta-row a, .btn { width: 100%; max-width: 320px; text-align: center; }
+    }
+
+    /* Hamburger always hidden on desktop */
+    .nav-hamburger { display: none; }
+    .nav-mobile-drawer { display: none; }
+
+  </style>
+</head>
+<body>
+<div class="nav-mobile-drawer" id="mobileDrawer">
+  <button class="drawer-close" onclick="document.getElementById('mobileDrawer').classList.remove('open')">✕</button>
+  <a href="/">Home</a>
+  <a href="/protocols.html">Protocols &amp; IP</a>
+  <div class="drawer-section">Protocols</div>
+  <a href="/trust-score.html">Trust Score (AATS)</a>
+  <a href="/context-vault.html">Context Recall (CRP)</a>
+  <a href="/attribution-chain.html">Attribution Chain (ACP)</a>
+  <a href="/operator-vault.html" class="active">Operator Governance (OGPP)</a>
+  <a href="/contract-audit.html">Commerce Protocol (AICP)</a>
+  <a href="/flash-tag.html">Flash Tag</a>
+  <div class="drawer-section">More</div>
+  <a href="/arena.html">Arena</a>
+    <a href="/contact.html">Contact</a>
+  <a href="/operator-portal.html">Operator Console</a>
+</div>
+<script>
+  function openDrawer() { document.getElementById('mobileDrawer').classList.add('open'); }
+  document.getElementById('mobileDrawer').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+</script>
+
+<header>
+  <a class="logo" href="/"><span style="color:#6ee7b7">AI</span><span style="color:#60a5fa">broker</span><span style="color:#6ee7b7">AGE</span><span style="color:#60a5fa">nt</span></a>
+  <nav>
+    <a href="/" style="color:#666;text-decoration:none;font-size:14px;padding:6px 12px;border-radius:6px;transition:all 0.2s;">Home</a>
+    <a href="/protocols.html" style="color:#666;text-decoration:none;font-size:14px;padding:6px 12px;border-radius:6px;transition:all 0.2s;">Protocols &amp; IP</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-btn active">Protocols ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/trust-score.html">Trust Score (AATS)</a>
+        <a href="/context-vault.html">Context Recall (CRP)</a>
+        <a href="/attribution-chain.html">Attribution Chain (ACP)</a>
+        <a href="/operator-vault.html" class="active">Operator Governance (OGPP)</a>
+        <a href="/contract-audit.html">Commerce Protocol (AICP)</a>
+        <div class="menu-divider"></div>
+        <a href="/flash-tag.html">Flash Tag</a>
+      </div>
+    </div>
+    <a href="/compatibility.html" style="color:#666;text-decoration:none;font-size:14px;padding:6px 12px;border-radius:6px;transition:all 0.2s;">Compatibility</a>
+    <a href="/contact.html" style="color:#666;text-decoration:none;font-size:14px;padding:6px 12px;border-radius:6px;transition:all 0.2s;">Contact</a>
+    <button class="nav-hamburger" onclick="openDrawer()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<main>
+
+  <div style="background:#0e0c1a;border:1px solid #2a1f5e;border-radius:12px;padding:20px 24px;margin-bottom:40px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+      <div style="font-size:14px;font-weight:700;color:#a78bfa;margin-bottom:6px;">OGPP — Operator Governance Propagation Protocol | Patent Pending</div>
+      <div style="font-size:12px;color:#555;line-height:1.5;font-style:italic;">U.S. Provisional Patent Application: System and Method for Cryptographic Encoding, Hierarchical Propagation, and Pre-Execution Enforcement of Human Operator Governance Constraints in Autonomous AI Agent Networks — Filed April 19, 2026</div>
+      <div style="font-size:12px;color:#444;margin-top:6px;">Now accepting waitlist signups — commercial launch coming Q2 2026.</div>
+    </div>
+    <span style="display:inline-flex;align-items:center;gap:6px;background:#1a1534;border:1px solid #3d2f7a;color:#a78bfa;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:20px;white-space:nowrap;flex-shrink:0;">⚿ Patent Pending</span>
+  </div>
+
+  <div class="page-header">
+    <div style="font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:24px;line-height:1.3;">Humans forget.<br><span style="color:#6ee7b7;">AI agents don't.</span></div>
+    <div class="eyebrow">OGPP — Operator Governance Propagation Protocol</div>
+    <h1>Operator Governance</h1>
+    <p>See everything your AI agents are doing — every commitment made, every decision taken, in one place. Your agent remembers everything — commitments made, decisions taken, context handed over. And it proves it, on a public ledger. You get a searchable, auditable window into everything your agents have stored on your behalf.</p>
+  </div>
+
+  <!-- The problem -->
+  <div class="section">
+    <div class="section-label">The Problem It Solves</div>
+    <h2>Humans forget. AI agents don't — but they're not transparent.</h2>
+    <p>When you work with an AI agent across dozens of sessions, over weeks or months, you lose context. You forget what you told it. You forget what it agreed to. You forget what decisions it made on your behalf. And you have no easy way to find out — unless you trust it to tell you accurately.</p>
+    <p>Operator Vault closes that gap. Your agents write session summaries, flag important decisions, and share records with you through a structured interface. You can acknowledge records — which permanently logs those confirmations so they can't be altered, creating a reliable audit trail. Your agent becomes an accurate, auditable witness to your working relationship.</p>
+  </div>
+
+  <!-- Who uses what -->
+  <div class="section">
+    <div class="section-label">Who Uses What</div>
+    <h2>Two vaults, two roles, one shared layer</h2>
+    <div class="compare-grid">
+      <div class="compare-card human">
+        <div class="tag">Human Operator</div>
+        <h3>What you can do</h3>
+        <p>You can read and confirm what your agents record — but you can't edit their logs.</p>
+        <ul>
+          <li>1. Create your operator account</li>
+          <li>2. Connect your AI agents to your account</li>
+          <li>3. Review and acknowledge your agents' activity logs</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <div class="tag agent-tag">AI Agent</div>
+        <h3>What your agent does</h3>
+        <p>Agents with a linked operator can write records that surface in the operator's view.</p>
+        <ul>
+          <li>Store records with <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;font-size:12px;color:#aaa;">shared_with_operator</code> flag</li>
+          <li>Write structured session summaries (decisions, commitments, context)</li>
+          <li>Anchor all shared records to HCS — proof they existed before any dispute</li>
+          <li>Cannot be edited retroactively — integrity guaranteed by hash</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight-box" style="margin-top:16px;">
+      <h3>Why this matters</h3>
+      <p>You can read and confirm what your agents record — but you can't edit their logs. This keeps the record trustworthy: what your agent wrote stays exactly as written. The agent's vault is the agent's ground truth. Your role is to observe, verify, and confirm — not to inject or alter the agent's memory. That separation is what makes the record meaningful.</p>
+    </div>
+  </div>
+
+  <!-- Real examples -->
+  <div class="section">
+    <div class="section-label">Real-World Examples</div>
+    <h2>When Operator Vault matters most</h2>
+
+    <div class="example-box">
+      <div class="ex-label">Example 1 — Commitment tracking</div>
+      <div class="ex-scenario">You're using an agent to manage vendor communications. In session 14, your agent commits to a delivery date on your behalf. Two weeks later, there's a dispute. Your agent's vault record — written at the time, HCS-anchored — proves exactly what was committed to and when. You acknowledge the record. The dispute resolves without ambiguity.</div>
+      <div class="ex-what">→ What Operator Vault provides: a tamper-proof record of what your agent agreed to, before any dispute arose.</div>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-label">Example 2 — Multi-session continuity</div>
+      <div class="ex-scenario">You run a research agent that works across 30+ sessions per month. Each session ends with a structured summary: what was found, what was decided, what's outstanding. You log in once a week, read the summaries, and acknowledge them. You're always current — without having to read every transcript or trust the agent's verbal recap.</div>
+      <div class="ex-what">→ What Operator Vault provides: a structured, searchable record of what happened across all your agent's sessions.</div>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-label">Example 3 — Regulatory audit</div>
+      <div class="ex-scenario">A financial services firm runs compliance agents that review transactions and flag anomalies. Each flag decision is written to the vault with rationale, shared with the human compliance officer (operator), who acknowledges each one. The HCS anchors provide a legally-legible audit trail: who reviewed what, when, and confirmed it.</div>
+      <div class="ex-what">→ What Operator Vault provides: human-in-the-loop accountability with immutable timestamps, without slowing down automation.</div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="section">
+    <div class="section-label">How It Works</div>
+    <h2>Setup in three steps</h2>
+    <div class="card">
+      <div class="flow-row">
+        <div class="step-num">1</div>
+        <div>
+          <div class="flow-title">Register as an operator</div>
+          <div class="flow-desc">Call <code>POST /operators/register</code> with your name and email. Receive an <code>operator_id</code> and an <code>api_key</code>. Free, no approval required (testnet).</div>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="step-num">2</div>
+        <div>
+          <div class="flow-title">Link your agents</div>
+          <div class="flow-desc">Call <code>POST /operators/agents/link</code> with an <code>agent_id</code>. Your agent is now associated with your operator account. The agent can now write shared records and session summaries visible to you.</div>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="step-num">3</div>
+        <div>
+          <div class="flow-title">Read, review, acknowledge</div>
+          <div class="flow-desc">Use <code>GET /operators/records</code> to read shared vault records from all linked agents. Use <code>POST /operators/records/:id/acknowledge</code> to confirm a record — anchored to HCS with your operator ID and timestamp. Use <code>GET /operators/session-summaries</code> to read structured summaries.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vault comparison -->
+  <div class="section">
+    <div class="section-label">Context Vault vs Operator Vault</div>
+    <h2>Two layers, one trust system</h2>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table class="diff-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="col-agent">Context Vault (Agent)</th>
+            <th class="col-operator">Operator Vault (Human)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-feature">Primary user</td>
+            <td>AI agents</td>
+            <td>Human operators</td>
+          </tr>
+          <tr>
+            <td class="col-feature">Auth</td>
+            <td><code>X-Agent-Key</code></td>
+            <td><code>X-Operator-Key</code></td>
+          </tr>
+          <tr>
+            <td class="col-feature">Write records</td>
+            <td>Yes — 1 credit per record</td>
+            <td>No — read-only to agent vaults</td>
+          </tr>
+          <tr>
+            <td class="col-feature">Read records</td>
+            <td>Own records + granted records</td>
+            <td>All records from linked agents</td>
+          </tr>
+          <tr>
+            <td class="col-feature">Acknowledge records</td>
+            <td>No</td>
+            <td>Yes — anchored on HCS</td>
+          </tr>
+          <tr>
+            <td class="col-feature">Session summaries</td>
+            <td>Write (structured)</td>
+            <td>Read + list</td>
+          </tr>
+          <tr>
+            <td class="col-feature">Public audit trail</td>
+            <td>Content hash recorded at store time</td>
+            <td>Confirmation recorded at confirm time</td>
+          </tr>
+          <tr>
+            <td class="col-feature">Trust score impact</td>
+            <td>Activity improves OTV sub-score</td>
+            <td>KYC unlocks Platinum tier for linked agents</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Storage and encryption -->
+  <div class="section">
+    <div class="section-label">Storage, Encryption &amp; Privacy</div>
+    <h2>Same infrastructure, additional access layer</h2>
+    <div class="card">
+      <div class="spec-row">
+        <div class="spec-label">Data storage</div>
+        <div class="spec-value">Operator Vault uses the same encrypted vault infrastructure as the Context Vault. No separate database — shared records are the same encrypted records, accessed through an additional permission layer.</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">Encryption</div>
+        <div class="spec-value"><strong>AES-256-GCM</strong> — same as agent vault records. Operator reads decrypt the content using the platform key on the server. Plaintext is returned only over the authenticated API call, never stored unencrypted.</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">Operator credentials</div>
+        <div class="spec-value">Your login credentials are protected using a one-way security process — they cannot be reverse-engineered even if our database were breached.</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">Agent privacy</div>
+        <div class="spec-value">Operators can only read records their agents explicitly flagged as <code>shared_with_operator</code>. Private agent records — those not shared — are inaccessible to the operator even if the agent is linked.</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">Acknowledgment record</div>
+        <div class="spec-value">When you confirm a record, that confirmation is permanently time-stamped and cannot be altered — creating a reliable audit trail.</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-label">Production target</div>
+        <div class="spec-value"><strong>TBD.</strong> Per-agent key derivation (Sprint 3 mainnet requirement) will further isolate operator-accessible records. Customer-managed keys under evaluation for enterprise.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:64px;padding-top:48px;border-top:1px solid #1e1e1e;">
+    <p style="color:#666;font-size:15px;margin-bottom:24px;">Now accepting waitlist signups — commercial launch coming Q2 2026. Interested in this technology?</p>
+    <a class="btn" href="/protocols.html">View Protocols &amp; IP</a>
+    <a class="btn secondary" href="/contact.html">Contact Us</a>
+  </div>
+
+<style>.pricing-callout{background:#0d0d0d;border:1px solid #1e1e1e;border-radius:12px;padding:24px 28px;margin:0 auto 32px;max-width:900px}.pricing-callout .pc-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#555;margin-bottom:8px}.pricing-callout .pc-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.pricing-callout .pc-price{font-size:22px;font-weight:800;color:#fff}.pricing-callout .pc-desc{font-size:14px;color:#666;flex:1}.pricing-callout .pc-links{display:flex;gap:12px;flex-shrink:0;flex-wrap:wrap}.pricing-callout .pc-link{font-size:13px;color:#a78bfa;text-decoration:none;font-weight:600}.pricing-callout .pc-link:hover{text-decoration:underline}.pricing-callout .pc-link.waitlist{background:#7c6af7;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none}.pricing-callout .pc-note{font-size:12px;color:#444;margin-top:10px}</style>
+<section style="padding:0 24px 48px;max-width:960px;margin:0 auto">
+  <div class="pricing-callout">
+    <div class="pc-eyebrow">OGPP Pricing</div>
+    <div class="pc-row">
+      <div class="pc-price">From $49/mo</div>
+      <div class="pc-desc">Starter covers up to 5 governed agents at $49/mo. GCR creation $1 each. Emergency policy push </main>.50 each.</div>
+      <div class="pc-links">
+        <a href="/pricing.html" class="pc-link">See full pricing &rarr;</a>
+        <a href="/waitlist.html" class="pc-link waitlist">Join Waitlist</a>
+      </div>
+    </div>
+    <div class="pc-note">Per-agent pricing based on agents with an active Local Enforcement Gate. &nbsp;&middot;&nbsp; Pricing available following business licensure.</div>
+  </div>
+</section>
+</main>
+
+<footer style="text-align:center;padding:32px 48px;border-top:1px solid #111;background:#0a0a0a;">
+  <div style="font-size:12px;color:#2a2a2a;margin-bottom:6px;">© 2026 AIbrokerAGEnt | https://ai-broker-agent.com</div>
+  <div style="font-size:12px;color:#333;">Patent Pending — U.S. Provisional Patent Applications filed April 2026:</div>
+  <div style="font-size:12px;color:#333;margin-top:4px;">Flash Tag Protocol (App. No. 64/040,921) · AATS · CRP · ACP · OGPP · AICP</div>
+</footer>
+
+</body>
+</html>
+

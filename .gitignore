@@ -1,0 +1,8 @@
+.env
+node_modules/
+vault.db
+vault.db-shm
+vault.db-wal
+*.pid
+logs/
+legal/

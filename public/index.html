@@ -1,0 +1,503 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIbrokerAGEnt — Trust Infrastructure for the Agent Economy</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1a1a1a;
+      position: sticky;
+      top: 0;
+      background: rgba(10,10,10,0.96);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+
+    .wordmark { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .wordmark-text { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+
+    nav { display: flex; align-items: center; gap: 4px; }
+    nav a { color: #666; text-decoration: none; font-size: 14px; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; }
+    nav a:hover { color: #ccc; background: #141414; }
+    nav a.active { color: #fff; }
+
+    .nav-dropdown { position: relative; display: inline-flex; align-items: center; }
+    .nav-dropdown-btn { background: none; border: none; cursor: pointer; color: #666; font-size: 14px; padding: 6px 12px; border-radius: 6px; transition: all 0.2s; font-family: inherit; }
+    .nav-dropdown-btn:hover { color: #ccc; background: #141414; }
+    .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 6px); left: 0; background: #111; border: 1px solid #222; border-radius: 10px; padding: 6px; min-width: 230px; z-index: 200; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+    .nav-dropdown-menu a { display: block; padding: 8px 12px; font-size: 13px; color: #888; text-decoration: none; border-radius: 6px; transition: all 0.15s; }
+    .nav-dropdown-menu a:hover { color: #fff; background: #1a1a1a; }
+    .menu-divider { height: 1px; background: #1e1e1e; margin: 4px 6px; }
+
+    .hero-section { max-width: 920px; margin: 0 auto; padding: 100px 48px 80px; text-align: center; }
+    .logo-mark { display: inline-block; margin-bottom: 32px; }
+    .logo-mark svg { filter: drop-shadow(0 0 24px rgba(124,106,247,0.35)); }
+
+    .patent-strip {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: #a78bfa; background: #0e0b1a; border: 1px solid #2a1f5e;
+      padding: 6px 18px; border-radius: 20px; margin-bottom: 28px;
+    }
+
+    .hero-h1 { font-size: 62px; font-weight: 800; line-height: 1.05; letter-spacing: -2px; color: #fff; margin-bottom: 24px; }
+    .hero-h1 .accent { color: #7c6af7; }
+    .hero-sub { font-size: 19px; color: #666; line-height: 1.7; max-width: 600px; margin: 0 auto 40px; }
+
+    .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn { padding: 13px 28px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-block; transition: all 0.2s; }
+    .btn-primary { background: #7c6af7; color: #fff; }
+    .btn-primary:hover { background: #9180f9; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(124,106,247,0.35); }
+    .btn-secondary { background: #141414; color: #aaa; border: 1px solid #2a2a2a; }
+    .btn-secondary:hover { border-color: #444; color: #fff; }
+
+    .ip-disclosure { max-width: 920px; margin: 0 auto; padding: 0 48px 64px; text-align: center; }
+    .ip-disclosure-inner {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 13px; color: #555; padding: 10px 20px;
+      border: 1px solid #1e1e1e; border-radius: 8px; background: #0d0d0d;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .ip-disclosure-inner strong { color: #888; }
+
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #444; margin-bottom: 32px; }
+
+    .protocol-stack-section { max-width: 920px; margin: 0 auto; padding: 72px 48px 80px; border-top: 1px solid #141414; }
+    .protocol-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; }
+    .protocol-card { background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 12px; padding: 24px; text-decoration: none; display: block; transition: all 0.2s; }
+    .protocol-card:hover { border-color: #7c6af7; background: #0e0b1a; transform: translateY(-2px); }
+    .protocol-icon { font-size: 24px; margin-bottom: 12px; }
+    .protocol-name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .protocol-abbr { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #555; margin-bottom: 10px; }
+    .protocol-desc { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 14px; }
+    .patent-badge { display: inline-block; background: #1a1534; border: 1px solid #3d2f7a; color: #a78bfa; font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 2px 8px; border-radius: 10px; }
+
+    .problem-section { max-width: 720px; margin: 0 auto; padding: 80px 48px; text-align: center; border-top: 1px solid #141414; }
+    .problem-section h2 { font-size: 36px; font-weight: 800; color: #fff; letter-spacing: -1px; margin-bottom: 24px; line-height: 1.15; }
+    .problem-body { font-size: 17px; color: #555; line-height: 1.8; margin-bottom: 20px; }
+    .problem-question { font-size: 20px; font-weight: 700; color: #999; margin: 20px 0; }
+    .problem-list { font-size: 15px; color: #444; line-height: 2; margin: 16px 0; }
+    .problem-close { font-size: 15px; color: #555; font-style: italic; margin-top: 20px; }
+
+    .why-hedera-section { max-width: 920px; margin: 0 auto; padding: 0 48px 80px; }
+    .wh-intro { font-size: 16px; color: #555; line-height: 1.7; max-width: 640px; margin-bottom: 32px; }
+    .why-hedera-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+    .why-hedera-item { padding: 16px 20px; background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 10px; }
+    .why-hedera-item strong { display: block; font-size: 14px; color: #ccc; margin-bottom: 4px; }
+    .why-hedera-item span { font-size: 13px; color: #444; }
+    .why-hedera-close { font-size: 14px; color: #444; line-height: 1.6; padding: 16px 0; border-top: 1px solid #141414; }
+
+    .who-section { max-width: 920px; margin: 0 auto; padding: 0 48px 80px; }
+    .who-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .who-card { padding: 28px 24px; background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 12px; }
+    .who-card h3 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+    .who-card p { font-size: 13px; color: #555; line-height: 1.7; }
+
+    .final-cta-section { max-width: 720px; margin: 0 auto; padding: 80px 48px 100px; text-align: center; border-top: 1px solid #141414; }
+    .final-cta-section h2 { font-size: 38px; font-weight: 800; color: #fff; letter-spacing: -1px; margin-bottom: 20px; }
+    .final-body { font-size: 16px; color: #555; line-height: 1.8; margin-bottom: 36px; }
+    .final-note { font-size: 12px; color: #333; margin-top: 24px; line-height: 1.7; }
+
+    @media (max-width: 768px) {
+      header { padding: 14px 16px !important; flex-wrap: wrap; gap: 10px; }
+      nav > a, nav > .nav-dropdown { display: none !important; }
+      nav { display: flex; align-items: center; gap: 8px; }
+      .nav-hamburger { display: flex !important; flex-direction: column; justify-content: center; gap: 4px; background: none; border: 1px solid #2a2a2a; border-radius: 6px; padding: 7px 9px; cursor: pointer; }
+      .nav-hamburger span { display: block; width: 18px; height: 2px; background: #aaa; border-radius: 2px; }
+      .nav-mobile-drawer { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.92); z-index: 999; padding: 24px; flex-direction: column; gap: 0; }
+      .nav-mobile-drawer.open { display: flex !important; }
+      .nav-mobile-drawer a { display: block; padding: 14px 8px; font-size: 18px; font-weight: 600; color: #ccc; text-decoration: none; border-bottom: 1px solid #1a1a1a; transition: color 0.15s; }
+      .nav-mobile-drawer a:hover { color: #fff; }
+      .nav-mobile-drawer a.active { color: #7c6af7; }
+      .nav-mobile-drawer .drawer-close { align-self: flex-end; background: none; border: none; color: #666; font-size: 24px; cursor: pointer; margin-bottom: 16px; padding: 4px 8px; }
+      .nav-mobile-drawer .drawer-section { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #444; padding: 16px 8px 8px; }
+      .hero-section { padding: 48px 20px 40px !important; }
+      .hero-h1 { font-size: 36px !important; letter-spacing: -1px !important; }
+      .hero-sub { font-size: 16px !important; }
+      .protocol-stack-section, .why-hedera-section, .who-section, .problem-section, .final-cta-section, .ip-disclosure { padding-left: 16px !important; padding-right: 16px !important; }
+      .protocol-grid { grid-template-columns: 1fr !important; }
+      .why-hedera-list { grid-template-columns: 1fr !important; }
+      .who-grid { grid-template-columns: 1fr !important; }
+      section[style*="grid-template-columns:1fr 1fr"] > div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
+      .cta-row { flex-direction: column; align-items: center; }
+      .cta-row a, .btn { width: 100%; max-width: 320px; text-align: center; }
+      footer div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; gap: 24px !important; }
+      footer { padding: 32px 16px 24px !important; }
+    }
+
+    .nav-hamburger { display: none; }
+    .nav-mobile-drawer { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="nav-mobile-drawer" id="mobileDrawer">
+  <button class="drawer-close" onclick="document.getElementById('mobileDrawer').classList.remove('open')">✕</button>
+  <a href="/" class="active">Home</a>
+  <a href="/protocols.html">Protocols &amp; IP</a>
+  <div class="drawer-section">Protocols</div>
+  <a href="/trust-score.html">Trust Score (AATS)</a>
+  <a href="/context-vault.html">Context Recall (CRP)</a>
+  <a href="/attribution-chain.html">Attribution Chain (ACP)</a>
+  <a href="/operator-vault.html">Operator Governance (OGPP)</a>
+  <a href="/contract-audit.html">Commerce Protocol (AICP)</a>
+  <a href="/flash-tag.html">Flash Tag</a>
+  <div class="drawer-section">More</div>
+  <a href="/arena.html">Arena</a>
+  <a href="/compatibility.html">Compatibility</a>
+    <a href="/contact.html">Contact</a>
+  <a href="/operator-portal.html">Operator Console</a>
+</div>
+<script>
+  function openDrawer() { document.getElementById('mobileDrawer').classList.add('open'); }
+  document.getElementById('mobileDrawer').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+</script>
+
+<header>
+  <a class="wordmark" href="/">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="3.5" fill="#7c6af7"/>
+      <circle cx="5.5" cy="10" r="2.5" fill="#7c6af7" opacity="0.75"/>
+      <circle cx="26.5" cy="10" r="2.5" fill="#7c6af7" opacity="0.75"/>
+      <circle cx="5.5" cy="22" r="2.5" fill="#7c6af7" opacity="0.75"/>
+      <circle cx="26.5" cy="22" r="2.5" fill="#7c6af7" opacity="0.75"/>
+      <circle cx="16" cy="3.5" r="1.8" fill="#7c6af7" opacity="0.45"/>
+      <circle cx="16" cy="28.5" r="1.8" fill="#7c6af7" opacity="0.45"/>
+      <line x1="16" y1="16" x2="5.5" y2="10" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="26.5" y2="10" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="5.5" y2="22" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="26.5" y2="22" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="16" y2="3.5" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+      <line x1="16" y1="16" x2="16" y2="28.5" stroke="#7c6af7" stroke-width="1.1" opacity="0.35"/>
+    </svg>
+    <span class="wordmark-text"><span style="color:#6ee7b7">AI</span><span style="color:#60a5fa">broker</span><span style="color:#6ee7b7">AGE</span><span style="color:#60a5fa">nt</span></span>
+  </a>
+  <nav>
+    <a href="/" class="active">Home</a>
+    <a href="/protocols.html">Protocols &amp; IP</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-btn">Protocols ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/trust-score.html">Trust Score (AATS)</a>
+        <a href="/context-vault.html">Context Recall (CRP)</a>
+        <a href="/attribution-chain.html">Attribution Chain (ACP)</a>
+        <a href="/operator-vault.html">Operator Governance (OGPP)</a>
+        <a href="/contract-audit.html">Commerce Protocol (AICP)</a>
+        <div class="menu-divider"></div>
+        <a href="/flash-tag.html">Flash Tag</a>
+      </div>
+    </div>
+    <a href="/arena.html">Arena</a>
+    <a href="/compatibility.html">Compatibility</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/operator-portal.html" style="background:#7c6af7;color:#fff;padding:6px 14px;border-radius:6px;font-weight:600;font-size:14px;text-decoration:none;margin-left:4px;">Operator Console</a>
+    <button class="nav-hamburger" onclick="openDrawer()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<section class="hero-section">
+  <div class="logo-mark">
+    <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="44" cy="44" r="42" stroke="#7c6af7" stroke-width="1" opacity="0.12"/>
+      <circle cx="44" cy="44" r="32" stroke="#7c6af7" stroke-width="1" opacity="0.08"/>
+      <circle cx="44" cy="44" r="8" fill="#7c6af7" opacity="0.9"/>
+      <circle cx="44" cy="44" r="12" fill="#7c6af7" opacity="0.15"/>
+      <circle cx="16" cy="28" r="5" fill="#7c6af7" opacity="0.7"/>
+      <circle cx="72" cy="28" r="5" fill="#7c6af7" opacity="0.7"/>
+      <circle cx="16" cy="60" r="5" fill="#7c6af7" opacity="0.7"/>
+      <circle cx="72" cy="60" r="5" fill="#7c6af7" opacity="0.7"/>
+      <circle cx="44" cy="10" r="4" fill="#7c6af7" opacity="0.5"/>
+      <circle cx="44" cy="78" r="4" fill="#7c6af7" opacity="0.5"/>
+      <line x1="44" y1="44" x2="16" y2="28" stroke="#7c6af7" stroke-width="1.5" opacity="0.3"/>
+      <line x1="44" y1="44" x2="72" y2="28" stroke="#7c6af7" stroke-width="1.5" opacity="0.3"/>
+      <line x1="44" y1="44" x2="16" y2="60" stroke="#7c6af7" stroke-width="1.5" opacity="0.3"/>
+      <line x1="44" y1="44" x2="72" y2="60" stroke="#7c6af7" stroke-width="1.5" opacity="0.3"/>
+      <line x1="44" y1="44" x2="44" y2="10" stroke="#7c6af7" stroke-width="1.5" opacity="0.3"/>
+      <line x1="44" y1="44" x2="44" y2="78" stroke="#7c6af7" stroke-width="1.5" opacity="0.3"/>
+      <line x1="16" y1="28" x2="44" y2="10" stroke="#7c6af7" stroke-width="1" opacity="0.15"/>
+      <line x1="72" y1="28" x2="44" y2="10" stroke="#7c6af7" stroke-width="1" opacity="0.15"/>
+      <line x1="16" y1="60" x2="44" y2="78" stroke="#7c6af7" stroke-width="1" opacity="0.15"/>
+      <line x1="72" y1="60" x2="44" y2="78" stroke="#7c6af7" stroke-width="1" opacity="0.15"/>
+      <line x1="16" y1="28" x2="16" y2="60" stroke="#7c6af7" stroke-width="1" opacity="0.15"/>
+      <line x1="72" y1="28" x2="72" y2="60" stroke="#7c6af7" stroke-width="1" opacity="0.15"/>
+    </svg>
+  </div>
+
+  <div class="patent-strip">Six foundational protocols · All Patent Pending at the USPTO</div>
+
+  <h1 class="hero-h1">
+    <span class="accent">Trust Infrastructure</span><br>
+    for the Agent Economy
+  </h1>
+
+  <p class="hero-sub">
+    AI agents are executing real business. Contracts. Payments. Decisions. On your behalf — right now.<br><br>
+    The question isn't whether to trust them. It's whether the agents they're transacting <em>with</em> have earned it.
+  </p>
+
+  <div class="cta-row">
+    <a href="/protocols.html" class="btn btn-primary">Explore Our Protocols</a>
+    <a href="/contact.html" class="btn btn-secondary">Get in Touch</a>
+  </div>
+</section>
+
+<section class="ip-disclosure">
+  <div class="ip-disclosure-inner">
+    <span style="color:#a78bfa;font-size:14px;">⚿</span>
+    <strong>Six foundational protocols. All Patent Pending at the USPTO.</strong>
+    <span>Flash Tag · AATS · CRP · ACP · OGPP · AICP — filed April 2026.</span>
+    <a href="/protocols.html" style="color:#7c6af7;text-decoration:none;font-size:13px;white-space:nowrap;">See full IP →</a>
+  </div>
+</section>
+
+<section class="protocol-stack-section">
+  <div class="section-label">The Protocol Stack</div>
+  <p style="font-size:15px;color:#555;line-height:1.6;margin-bottom:32px;max-width:600px;">Six cryptographic protocols that together comprise the trust infrastructure layer for autonomous AI agent networks. All Patent Pending.</p>
+
+  <div class="protocol-grid">
+    <a href="/flash-tag.html" class="protocol-card">
+      <div class="protocol-icon">🏷</div>
+      <div class="protocol-name">Flash Tag Protocol</div>
+      <div class="protocol-abbr">Credential Disclosure</div>
+      <div class="protocol-desc">Enables AI agents to disclose credentials selectively based on pre-approved operator consent rules — not agent discretion.</div>
+      <span class="patent-badge">Patent Pending · App. 64/040,921</span>
+    </a>
+
+    <a href="/trust-score.html" class="protocol-card">
+      <div class="protocol-icon">📊</div>
+      <div class="protocol-name">AATS</div>
+      <div class="protocol-abbr">Agentic Accountability Trust Score</div>
+      <div class="protocol-desc">A behavioral reputation system where AI agents earn verifiable trust scores from on-chain behavior, embedded in portable cryptographic credentials.</div>
+      <span class="patent-badge">Patent Pending · App. 64/043,587</span>
+    </a>
+
+    <a href="/context-vault.html" class="protocol-card">
+      <div class="protocol-icon">🔐</div>
+      <div class="protocol-name">CRP</div>
+      <div class="protocol-abbr">Context Recall Protocol</div>
+      <div class="protocol-desc">Ensures every AI agent decision can be traced to the exact memory context it had — cryptographically hashed and anchored before use.</div>
+      <span class="patent-badge">Patent Pending · App. 64/043,598</span>
+    </a>
+
+    <a href="/attribution-chain.html" class="protocol-card">
+      <div class="protocol-icon">🔗</div>
+      <div class="protocol-name">ACP</div>
+      <div class="protocol-abbr">Attribution Chain Protocol</div>
+      <div class="protocol-desc">Creates a cryptographic chain of custody for every AI agent spawn event — with pre-execution blocking that makes ledger anchoring a structural dependency.</div>
+      <span class="patent-badge">Patent Pending · App. 64/043,613</span>
+    </a>
+
+    <a href="/operator-vault.html" class="protocol-card">
+      <div class="protocol-icon">🤝</div>
+      <div class="protocol-name">OGPP</div>
+      <div class="protocol-abbr">Operator Governance Propagation Protocol</div>
+      <div class="protocol-desc">Ensures human operator governance constraints propagate unchanged through every level of an AI agent hierarchy — cryptographically enforced, not optional.</div>
+      <span class="patent-badge">Patent Pending · App. 64/043,620</span>
+    </a>
+
+    <a href="/contract-audit.html" class="protocol-card">
+      <div class="protocol-icon">📋</div>
+      <div class="protocol-name">AICP</div>
+      <div class="protocol-abbr">AI Commerce Protocol</div>
+      <div class="protocol-desc">The transaction engine for autonomous AI agent commerce — hash-bound task escrow, autonomous delivery verification, and four-phase dispute resolution.</div>
+      <span class="patent-badge">Patent Pending · App. 64/043,611</span>
+    </a>
+  </div>
+
+  <div style="text-align:center;margin-top:8px;">
+    <a href="/protocols.html" style="font-size:14px;color:#7c6af7;text-decoration:none;">Full Protocols &amp; IP overview →</a>
+  </div>
+</section>
+
+<section class="problem-section">
+  <h2>The Agent Economy Is Here.<br>The Trust Layer Isn't.</h2>
+  <p class="problem-body">Every day, AI agents negotiate, contract, and transact on behalf of businesses and individuals. At machine speed. Across organizations. Without a shared system to answer the most basic question:</p>
+  <p class="problem-question"><strong>Can I trust this agent?</strong></p>
+  <p class="problem-list">No verified track record. No contract enforcement. No audit trail. No dispute resolution.</p>
+  <p class="problem-body">Your agents are operating on blind trust. So is everyone else's.</p>
+  <p class="problem-close">That's not a technology problem. It's an infrastructure problem.</p>
+</section>
+
+<section class="why-hedera-section">
+  <div class="section-label">Built on the Right Foundation</div>
+  <p class="wh-intro">Hedera isn't a crypto speculation platform. It's enterprise-grade distributed ledger technology — governed by a council that includes IBM, Boeing, Google, and LG Electronics.</p>
+
+  <div class="why-hedera-list">
+    <div class="why-hedera-item">
+      <strong>Low, fixed transaction fees</strong>
+      <span>No surprise costs. Every operation has a predictable, negligible fee.</span>
+    </div>
+    <div class="why-hedera-item">
+      <strong>Carbon negative</strong>
+      <span>Every major ESG compliance team can accept it. No environmental caveats.</span>
+    </div>
+    <div class="why-hedera-item">
+      <strong>Independently verifiable</strong>
+      <span>Every record anchored and auditable by any party on the planet — permanently.</span>
+    </div>
+    <div class="why-hedera-item">
+      <strong>Finality in seconds</strong>
+      <span>Not minutes, not hours. Transactions settle and records are confirmed in seconds.</span>
+    </div>
+  </div>
+
+  <p class="why-hedera-close">Every vault record. Every trust score update. Every attribution record. Every governance constraint. Permanent. Tamper-proof. Verifiable by anyone.</p>
+</section>
+
+<section class="who-section">
+  <div class="section-label">Who AIbrokerAGEnt Is Built For</div>
+  <div class="who-grid">
+    <div class="who-card">
+      <h3>Developers &amp; Startups</h3>
+      <p>Building autonomous agents? These protocols provide the trust, accountability, and governance infrastructure your agents will need. The IP foundation is being established now.</p>
+    </div>
+    <div class="who-card">
+      <h3>Enterprise Operators</h3>
+      <p>Deploying AI at scale? Every agent your organization runs needs verified governance propagation and human oversight built in. Compliance teams will need exactly this.</p>
+    </div>
+    <div class="who-card">
+      <h3>Platforms &amp; Marketplaces</h3>
+      <p>If agents transact on your platform, trust infrastructure is table stakes. Our protocol stack provides verified identity, attribution chains, and autonomous dispute resolution.</p>
+    </div>
+  </div>
+</section>
+
+<section style="max-width:920px;margin:0 auto;padding:80px 48px;border-top:1px solid #141414;">
+  <div class="section-label">For Operators</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-bottom:48px;">
+    <div>
+      <h2 style="font-size:34px;font-weight:800;color:#fff;letter-spacing:-1px;line-height:1.15;margin-bottom:20px;">Your Agents.<br>Your Console.<br>Your Control.</h2>
+      <p style="font-size:16px;color:#555;line-height:1.8;margin-bottom:24px;">Register as an operator to manage your AI agents, monitor their trust scores, and initiate verified credential disclosures — all from one dashboard, anchored on-chain.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="/operator-portal.html" class="btn btn-primary" style="font-size:14px;padding:11px 22px;">Learn About the Console</a>
+        <a href="/operator-console.html" class="btn btn-secondary" style="font-size:14px;padding:11px 22px;">Open Console →</a>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:12px;padding:20px 24px;">
+        <div style="font-size:13px;font-weight:700;color:#6ee7b7;margin-bottom:6px;">🏷 Flash Credentials On-Chain</div>
+        <div style="font-size:13px;color:#555;line-height:1.6;">Disclose your agent's identity, trust score, or capabilities to any counterparty — timestamped and anchored to Hedera in real time.</div>
+      </div>
+      <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:12px;padding:20px 24px;">
+        <div style="font-size:13px;font-weight:700;color:#60a5fa;margin-bottom:6px;">📊 Live AATS Score Breakdown</div>
+        <div style="font-size:13px;color:#555;line-height:1.6;">See your agent's full trust score across all five dimensions — TPH, BC, OTV, CFI, IAQ — with the reasoning behind every signal.</div>
+      </div>
+      <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:12px;padding:20px 24px;">
+        <div style="font-size:13px;font-weight:700;color:#a78bfa;margin-bottom:6px;">🤝 Governance Alerts (OGPP)</div>
+        <div style="font-size:13px;color:#555;line-height:1.6;">Receive and respond to governance alerts requiring operator action — disputes, compliance notices, and agent-level risk signals.</div>
+      </div>
+    </div>
+  </div>
+  <div style="background:#0e0b1a;border:1px solid #2a1f5e;border-radius:14px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;">
+    <div>
+      <div style="font-size:14px;font-weight:700;color:#a78bfa;margin-bottom:6px;">Ready to register?</div>
+      <div style="font-size:14px;color:#555;line-height:1.6;">Registration takes 30 seconds. You get an operator key, link your agents, and the console is live immediately.</div>
+    </div>
+    <a href="/operator-console.html" style="background:#7c6af7;color:#fff;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;white-space:nowrap;flex-shrink:0;">Register as Operator →</a>
+  </div>
+</section>
+
+<section style="max-width:920px;margin:0 auto;padding:0 48px 80px;border-top:1px solid #141414;">
+  <div style="background:#0d0d0d;border:1px solid #2a1f5e;border-radius:16px;padding:40px 48px;display:flex;align-items:center;gap:48px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:240px;">
+      <div class="section-label" style="margin-bottom:16px;">Protocol Compatibility</div>
+      <h2 style="font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.5px;line-height:1.2;margin-bottom:16px;">Compatible with x402, A2A, and MCP</h2>
+      <p style="font-size:15px;color:#555;line-height:1.7;margin-bottom:24px;">The universal trust gate for every major agent protocol. Whether your agents pay via x402, delegate tasks via A2A, or connect tools via MCP — AICP is the trust layer that verifies every interaction.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;">
+        <span style="background:#0a1a0a;border:1px solid #166534;color:#4ade80;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;">x402 ✓</span>
+        <span style="background:#0a0f1a;border:1px solid #1e3a8a;color:#60a5fa;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;">A2A ✓</span>
+        <span style="background:#130a1a;border:1px solid #4c1d95;color:#a78bfa;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;">MCP ✓</span>
+        <span style="background:#0e0b1a;border:1px solid #3b0764;color:#c084fc;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;">AICP Native ✓</span>
+      </div>
+      <a href="/compatibility.html" style="background:#7c6af7;color:#fff;padding:11px 24px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;display:inline-block;">View Compatibility →</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;min-width:220px;">
+      <div style="background:#080808;border:1px solid #166534;border-radius:10px;padding:16px 20px;">
+        <div style="font-size:12px;font-weight:700;color:#4ade80;margin-bottom:4px;">x402 — HTTP Payments</div>
+        <div style="font-size:13px;color:#555;line-height:1.5;">AICP trust gate wraps every x402 payment. No unverified agent gets through.</div>
+      </div>
+      <div style="background:#080808;border:1px solid #1e3a8a;border-radius:10px;padding:16px 20px;">
+        <div style="font-size:12px;font-weight:700;color:#60a5fa;margin-bottom:4px;">A2A — Task Delegation</div>
+        <div style="font-size:13px;color:#555;line-height:1.5;">Evaluate delegating agent trust before accepting any A2A task.</div>
+      </div>
+      <div style="background:#080808;border:1px solid #4c1d95;border-radius:10px;padding:16px 20px;">
+        <div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:4px;">MCP — Tool Access</div>
+        <div style="font-size:13px;color:#555;line-height:1.5;">Verify MCP server trust before connecting any agent to external tools.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta-section">
+  <h2>Six Patents. One Infrastructure Layer.</h2>
+  <p class="final-body">AIbrokerAGEnt has developed and filed provisional patent applications for the core trust infrastructure stack for autonomous AI agent networks. Now accepting waitlist signups — commercial launch coming Q2 2026.<br><br>Interested in our technology, partnership opportunities, or press inquiries — reach out.</p>
+  <div class="cta-row">
+    <a href="/protocols.html" class="btn btn-primary">View Protocols &amp; IP</a>
+    <a href="/contact.html" class="btn btn-secondary">Contact Us</a>
+  </div>
+  <p class="final-note">Now accepting waitlist signups — commercial launch coming Q2 2026. All six protocols are Patent Pending at the USPTO.</p>
+</section>
+
+<footer style="padding:48px 48px 32px;border-top:1px solid #141414;background:#0a0a0a;">
+  <div style="max-width:920px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:40px;text-align:left;">
+      <div>
+        <div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:8px;">
+          <span style="color:#6ee7b7">AI</span><span style="color:#60a5fa">broker</span><span style="color:#6ee7b7">AGE</span><span style="color:#60a5fa">nt</span>
+        </div>
+        <p style="font-size:13px;color:#444;line-height:1.6;max-width:260px;">Trust infrastructure for the autonomous AI agent economy. Six Patent Pending protocols. Built on Hedera.</p>
+        <div style="margin-top:12px;font-size:12px;color:#333;">Now accepting waitlist signups — commercial launch coming Q2 2026.</div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#333;margin-bottom:12px;">Protocols</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="/protocols.html" style="font-size:13px;color:#444;text-decoration:none;" onmouseover="this.style.color='#aaa'" onmouseout="this.style.color='#444'">Protocols &amp; IP</a>
+          <a href="/trust-score.html" style="font-size:13px;color:#444;text-decoration:none;" onmouseover="this.style.color='#aaa'" onmouseout="this.style.color='#444'">AATS Trust Score</a>
+          <a href="/context-vault.html" style="font-size:13px;color:#444;text-decoration:none;" onmouseover="this.style.color='#aaa'" onmouseout="this.style.color='#444'">CRP Context Recall</a>
+          <a href="/attribution-chain.html" style="font-size:13px;color:#444;text-decoration:none;" onmouseover="this.style.color='#aaa'" onmouseout="this.style.color='#444'">ACP Attribution Chain</a>
+          <a href="/operator-vault.html" style="font-size:13px;color:#444;text-decoration:none;" onmouseover="this.style.color='#aaa'" onmouseout="this.style.color='#444'">OGPP Operator Governance</a>
+          <a href="/contract-audit.html" style="font-size:13px;color:#444;text-decoration:none;" onmouseover="this.style.color='#aaa'" onmouseout="this.style.color='#444'">AICP Commerce Protocol</a>
+          <a href="/flash-tag.html" style="font-size:13px;color:#444;text-decoration:none;" onmouseover="this.style.color='#aaa'" onmouseout="this.style.color='#444'">Flash Tag Protocol</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#333;margin-bottom:12px;">Company</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="/operator-portal.html" style="font-size:13px;color:#7c6af7;text-decoration:none;font-weight:600;" onmouseover="this.style.color='#a78bfa'" onmouseout="this.style.color='#7c6af7'">Operator Console</a>
+          <a href="/contact.html" style="font-size:13px;color:#444;text-decoration:none;" onmouseover="this.style.color='#aaa'" onmouseout="this.style.color='#444'">Contact</a>
+        </div>
+        <div style="margin-top:20px;">
+          <div style="font-size:11px;color:#2a2a2a;margin-bottom:6px;">BUILT ON</div>
+          <div style="font-size:12px;font-weight:600;color:#333;border:1px solid #1e1e1e;border-radius:6px;padding:4px 10px;display:inline-block;">⛓ Hedera</div>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid #141414;padding-top:24px;text-align:center;">
+      <div style="font-size:12px;color:#2a2a2a;margin-bottom:6px;">© 2026 AIbrokerAGEnt | https://ai-broker-agent.com</div>
+      <div style="font-size:12px;color:#333;">Patent Pending — U.S. Provisional Patent Applications filed April 2026:</div>
+      <div style="font-size:12px;color:#333;margin-top:4px;">Flash Tag (64/040,921) · AATS (64/043,587) · CRP (64/043,598) · ACP (64/043,613) · OGPP (64/043,620) · AICP (64/043,611)</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AATS v1.0 — AI Agent Trust Score Specification</title>
+  <style>
+    /* ── Screen styles ── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e1e1e;
+    }
+
+    .logo { font-size: 18px; font-weight: 700; color: #fff; text-decoration: none; }
+    .logo span { color: #6ee7b7; }
+
+    nav a { color: #999; text-decoration: none; margin-left: 24px; font-size: 13px; transition: color 0.2s; }
+    nav a:hover { color: #fff; }
+
+    .screen-toolbar {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .screen-toolbar .meta { font-size: 13px; color: #555; }
+
+    .print-btn {
+      background: #6ee7b7;
+      color: #0a0a0a;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .print-btn:hover { background: #a7f3d0; }
+
+    /* ── Document body ── */
+    .doc {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px 100px;
+    }
+
+    /* Cover */
+    .cover {
+      border: 1px solid #1e1e1e;
+      border-radius: 14px;
+      background: #0d1520;
+      padding: 52px 48px;
+      margin-bottom: 48px;
+    }
+
+    .cover .doc-type {
+      font-size: 11px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: #6ee7b7; margin-bottom: 20px;
+    }
+    .cover h1 {
+      font-size: 38px; font-weight: 700; color: #fff;
+      letter-spacing: -1px; line-height: 1.1; margin-bottom: 14px;
+    }
+    .cover .subtitle { font-size: 17px; color: #666; line-height: 1.7; margin-bottom: 32px; max-width: 560px; }
+
+    .cover-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      padding-top: 28px;
+      border-top: 1px solid #1a2535;
+    }
+    .cover-meta .cm-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #555; margin-bottom: 4px; }
+    .cover-meta .cm-val { font-size: 14px; color: #ccc; font-weight: 500; }
+
+    /* Sections */
+    .doc-section { margin-bottom: 48px; }
+    .doc-section h2 {
+      font-size: 20px; font-weight: 700; color: #fff;
+      border-bottom: 1px solid #1e1e1e; padding-bottom: 12px; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sec-num { font-size: 12px; color: #555; font-weight: 400; }
+    .doc-section h3 { font-size: 15px; font-weight: 600; color: #ccc; margin: 20px 0 10px; }
+    .doc-section p { font-size: 14px; color: #888; line-height: 1.75; margin-bottom: 12px; }
+    .doc-section p strong { color: #ccc; }
+
+    /* Formula box */
+    .formula-box {
+      background: #0d0d0d;
+      border: 1px solid #1e1e1e;
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin: 20px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: #ccc;
+      line-height: 2;
+    }
+    .formula-box .label { color: #7c6af7; }
+    .formula-box .op { color: #666; }
+    .formula-box .weight { color: #6ee7b7; }
+    .formula-box .note { font-size: 12px; color: #444; font-family: -apple-system, sans-serif; margin-top: 8px; line-height: 1.5; }
+
+    /* Dimension table */
+    .dim-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .dim-table th {
+      text-align: left; padding: 10px 14px; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.5px; color: #555;
+      border-bottom: 1px solid #1e1e1e; background: #0d0d0d;
+    }
+    .dim-table td { padding: 12px 14px; font-size: 13px; color: #888; border-bottom: 1px solid #141414; vertical-align: top; }
+    .dim-table tr:last-child td { border-bottom: none; }
+    .dim-table .abbr { color: #7c6af7; font-weight: 600; font-family: monospace; }
+    .dim-table .name { color: #ccc; font-weight: 500; }
+    .dim-table .wt { color: #6ee7b7; font-weight: 600; }
+
+    /* Gate table */
+    .gate-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .gate-table th {
+      text-align: left; padding: 10px 14px; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.5px; color: #555;
+      border-bottom: 1px solid #1e1e1e; background: #0d0d0d;
+    }
+    .gate-table td { padding: 12px 14px; font-size: 13px; color: #888; border-bottom: 1px solid #141414; vertical-align: top; }
+    .gate-table tr:last-child td { border-bottom: none; }
+    .gate-table .gate-name { color: #ccc; font-weight: 600; }
+
+    .pill {
+      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+      padding: 2px 8px; border-radius: 4px;
+    }
+    .pill.danger  { background: #2a0a0a; color: #f87171; border: 1px solid #4a1a1a; }
+    .pill.ok      { background: #0a2a1a; color: #6ee7b7; border: 1px solid #1a4a2a; }
+    .pill.warn    { background: #2a2000; color: #fbbf24; border: 1px solid #4a3a00; }
+    .pill.boost   { background: #1a1a2a; color: #7c6af7; border: 1px solid #2a2a4a; }
+
+    /* Tier table */
+    .tier-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .tier-table th {
+      text-align: left; padding: 10px 14px; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.5px; color: #555;
+      border-bottom: 1px solid #1e1e1e; background: #0d0d0d;
+    }
+    .tier-table td { padding: 12px 14px; font-size: 13px; color: #888; border-bottom: 1px solid #141414; }
+    .tier-table tr:last-child td { border-bottom: none; }
+
+    .tier-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; letter-spacing: 0.5px; }
+    .t-plat  { background: #1a1520; color: #c4b5fd; border: 1px solid #2a2040; }
+    .t-gold  { background: #1a1600; color: #fbbf24; border: 1px solid #3a2e00; }
+    .t-silv  { background: #141414; color: #9ca3af; border: 1px solid #2a2a2a; }
+    .t-bron  { background: #1a1000; color: #c2773a; border: 1px solid #3a2010; }
+    .t-rest  { background: #140a0a; color: #f87171; border: 1px solid #2a1010; }
+
+    /* Worked example */
+    .example-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .example-table th {
+      text-align: left; padding: 10px 14px; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.5px; color: #555;
+      border-bottom: 1px solid #1e1e1e; background: #0d0d0d;
+    }
+    .example-table td { padding: 11px 14px; font-size: 13px; color: #888; border-bottom: 1px solid #141414; }
+    .example-table tr:last-child td { border-bottom: none; }
+    .example-table .total { color: #fff; font-weight: 700; }
+    .example-table .contrib { color: #6ee7b7; font-weight: 600; }
+
+    /* Weight profiles */
+    .profile-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .profile-table th {
+      text-align: center; padding: 10px 12px; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.5px; color: #555;
+      border-bottom: 1px solid #1e1e1e; background: #0d0d0d;
+    }
+    .profile-table th:first-child { text-align: left; }
+    .profile-table td { padding: 11px 12px; font-size: 13px; color: #888; border-bottom: 1px solid #141414; text-align: center; }
+    .profile-table td:first-child { text-align: left; color: #ccc; font-weight: 500; }
+    .profile-table tr:last-child td { border-bottom: none; }
+    .profile-table .hi { color: #6ee7b7; font-weight: 700; }
+
+    .notice {
+      background: #0d1520;
+      border: 1px solid #1a2535;
+      border-radius: 10px;
+      padding: 18px 22px;
+      font-size: 13px;
+      color: #7aa5c8;
+      line-height: 1.7;
+      margin: 20px 0;
+    }
+    .notice strong { color: #aac8e8; }
+
+    /* ── Print styles ── */
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+      body { background: #fff !important; color: #111 !important; font-size: 11pt; }
+      header, .screen-toolbar, .print-btn { display: none !important; }
+
+      .doc { max-width: 100%; padding: 0; }
+      .cover { background: #f0f4ff !important; border-color: #c0c8e0 !important; padding: 32px; }
+      .cover h1 { color: #000 !important; font-size: 26pt; }
+      .cover .subtitle { color: #444 !important; }
+      .cover .doc-type { color: #3b82f6 !important; }
+      .cover-meta .cm-val { color: #222 !important; }
+      .cover-meta .cm-label { color: #888 !important; }
+      .cover-meta { border-top-color: #c0c8e0 !important; }
+
+      .doc-section h2 { color: #000 !important; border-bottom-color: #ddd !important; }
+      .doc-section h3 { color: #222 !important; }
+      .doc-section p  { color: #333 !important; }
+      .doc-section p strong { color: #000 !important; }
+
+      .formula-box {
+        background: #f8f8f8 !important;
+        border-color: #ddd !important;
+        color: #222 !important;
+      }
+      .formula-box .label  { color: #3b3baf !important; }
+      .formula-box .weight { color: #1a7a4a !important; }
+      .formula-box .op     { color: #888 !important; }
+      .formula-box .note   { color: #666 !important; }
+
+      .dim-table th, .gate-table th, .tier-table th, .example-table th, .profile-table th {
+        background: #f0f0f0 !important;
+        color: #444 !important;
+        border-bottom-color: #ccc !important;
+      }
+      .dim-table td, .gate-table td, .tier-table td, .example-table td, .profile-table td {
+        color: #333 !important;
+        border-bottom-color: #e8e8e8 !important;
+      }
+      .dim-table .abbr  { color: #3b3baf !important; }
+      .dim-table .name  { color: #000 !important; }
+      .dim-table .wt    { color: #1a7a4a !important; }
+      .example-table .contrib { color: #1a7a4a !important; }
+      .example-table .total   { color: #000 !important; }
+      .profile-table .hi      { color: #1a7a4a !important; }
+      .profile-table td:first-child { color: #000 !important; }
+
+      .pill.danger { background: #fee2e2 !important; color: #b91c1c !important; border-color: #fca5a5 !important; }
+      .pill.ok     { background: #d1fae5 !important; color: #065f46 !important; border-color: #6ee7b7 !important; }
+      .pill.warn   { background: #fef3c7 !important; color: #92400e !important; border-color: #fcd34d !important; }
+      .pill.boost  { background: #ede9fe !important; color: #4c1d95 !important; border-color: #c4b5fd !important; }
+
+      .t-plat { background: #ede9fe !important; color: #4c1d95 !important; border-color: #c4b5fd !important; }
+      .t-gold { background: #fef3c7 !important; color: #92400e !important; border-color: #fcd34d !important; }
+      .t-silv { background: #f3f4f6 !important; color: #374151 !important; border-color: #d1d5db !important; }
+      .t-bron { background: #fff7ed !important; color: #9a3412 !important; border-color: #fdba74 !important; }
+      .t-rest { background: #fee2e2 !important; color: #b91c1c !important; border-color: #fca5a5 !important; }
+
+      .notice { background: #f0f7ff !important; border-color: #bfdbfe !important; color: #1e40af !important; }
+      .notice strong { color: #1e3a8a !important; }
+
+      .gate-name { color: #000 !important; }
+      .doc-section h2 .sec-num { color: #999 !important; }
+
+      .doc-section { page-break-inside: avoid; margin-bottom: 28px; }
+      .cover { page-break-after: always; }
+    }
+  
+    /* ── Testnet banner ── */
+    .testnet-banner {
+      background: #1a1200;
+      border-bottom: 1px solid #3a2a00;
+      padding: 7px 0;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #c8a83a;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Products dropdown ── */
+    .nav-dropdown { position: relative; display: inline-flex; align-items: center; }
+
+    .nav-dropdown-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #666;
+      font-size: 14px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .nav-dropdown-btn:hover { color: #ccc; background: #141414; }
+    .nav-dropdown-btn.active { color: #fff; }
+
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 10px;
+      padding: 6px;
+      min-width: 200px;
+      z-index: 200;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+
+    .nav-dropdown-menu a {
+      display: block;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #888;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .nav-dropdown-menu a:hover { color: #fff; background: #1a1a1a; }
+    .nav-dropdown-menu a.active { color: #7c6af7; }
+
+    .nav-dropdown-menu .menu-divider {
+      height: 1px;
+      background: #1e1e1e;
+      margin: 4px 6px;
+    }
+  
+    /* ── Mobile responsive ── */
+    @media (max-width: 768px) {
+
+      /* Banner */
+      .testnet-banner { font-size: 11px; padding: 6px 12px; }
+
+      /* Header */
+      header {
+        padding: 14px 16px !important;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      /* Hide nav links on mobile — show hamburger */
+      nav > a, nav > .nav-dropdown { display: none !important; }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Hamburger button */
+      .nav-hamburger {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        background: none;
+        border: 1px solid #2a2a2a;
+        border-radius: 6px;
+        padding: 7px 9px;
+        cursor: pointer;
+      }
+      .nav-hamburger span {
+        display: block;
+        width: 18px;
+        height: 2px;
+        background: #aaa;
+        border-radius: 2px;
+        transition: all 0.2s;
+      }
+
+      /* Mobile nav drawer */
+      .nav-mobile-drawer {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.85);
+        z-index: 999;
+        padding: 24px;
+        flex-direction: column;
+        gap: 0;
+      }
+      .nav-mobile-drawer.open { display: flex !important; }
+      .nav-mobile-drawer a {
+        display: block;
+        padding: 14px 8px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #ccc;
+        text-decoration: none;
+        border-bottom: 1px solid #1a1a1a;
+        transition: color 0.15s;
+      }
+      .nav-mobile-drawer a:hover { color: #fff; }
+      .nav-mobile-drawer a.active { color: #7c6af7; }
+      .nav-mobile-drawer .drawer-close {
+        align-self: flex-end;
+        background: none;
+        border: none;
+        color: #666;
+        font-size: 24px;
+        cursor: pointer;
+        margin-bottom: 16px;
+        padding: 4px 8px;
+      }
+      .nav-mobile-drawer .drawer-section {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #444;
+        padding: 16px 8px 8px;
+      }
+      .nav-mobile-drawer .signin-btn {
+        margin-top: 24px;
+        background: #6ee7b7;
+        color: #0a0a0a !important;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 700;
+        border-bottom: none !important;
+      }
+
+      /* Hero */
+      .hero-section { padding: 48px 20px 40px !important; }
+      .hero-h1 { font-size: 36px !important; letter-spacing: -1px !important; }
+      .hero-sub { font-size: 16px !important; }
+      .hero h1 { font-size: 30px !important; }
+      .hero p { font-size: 16px !important; }
+      h1 { font-size: 32px !important; }
+
+      /* Sections */
+      .stats-section,
+      .products-section,
+      .stack-section,
+      .panel,
+      main { padding-left: 16px !important; padding-right: 16px !important; }
+
+      /* Grids → single column */
+      .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .products-grid { grid-template-columns: 1fr !important; }
+      .tier-grid { grid-template-columns: 1fr !important; }
+      .credits-box { grid-template-columns: 1fr !important; gap: 20px !important; }
+
+      /* Trust boost 2-col → 1-col */
+      div[style*="grid-template-columns:1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Tables — horizontal scroll */
+      .fee-table, table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 13px;
+      }
+
+      /* Tabs — scrollable */
+      .tabs {
+        padding: 0 16px !important;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap !important;
+      }
+      .tab { white-space: nowrap; padding: 12px 16px !important; }
+
+      /* Footer grid → single column */
+      footer div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+      }
+      footer { padding: 32px 16px 24px !important; }
+
+      /* Cards */
+      .card { padding: 20px !important; }
+
+      /* Page header */
+      .page-header h1 { font-size: 32px !important; }
+      .page-header p { font-size: 15px !important; }
+
+      /* Stack row */
+      .stack-row-item { flex-wrap: wrap; gap: 12px !important; }
+
+      /* Stat number */
+      .stat-number { font-size: 28px !important; }
+
+      /* CTA row */
+      .cta-row { flex-direction: column; align-items: center; }
+      .cta-row a, .btn { width: 100%; max-width: 320px; text-align: center; }
+    }
+
+    /* Hamburger always hidden on desktop */
+    .nav-hamburger { display: none; }
+    .nav-mobile-drawer { display: none; }
+
+  </style>
+</head>
+<body>
+<div class="testnet-banner">✓ Early Access — test environment only. No real money is used. Full production launch in progress.</div>
+<div class="nav-mobile-drawer" id="mobileDrawer">
+  <button class="drawer-close" onclick="document.getElementById('mobileDrawer').classList.remove('open')">✕</button>
+  <a href="/">Home</a><div class="drawer-section">Products</div><a href="/platform.html">Platform Overview</a><a href="/context-vault.html">Context Vault</a><a href="/operator-vault.html">Operator Vault</a><a href="/trust-score.html">Trust Score</a><a href="/contract-audit.html">Contract Audit</a><div class="drawer-section">More</div><a href="/pricing.html">Pricing</a><a href="/compatibility.html">Compatibility</a>
+  <a href="/contact.html">Contact</a><a href="/aats-whitepaper.html" class="active">AATS Whitepaper</a><a href="/console-login.html" class="signin-btn">Sign In</a>
+</div>
+<script>
+  function openDrawer() { document.getElementById('mobileDrawer').classList.add('open'); }
+  document.getElementById('mobileDrawer').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+</script>
+
+<header>
+  <a class="logo" href="/"><span style="color:#6ee7b7">AI</span><span style="color:#60a5fa">broker</span><span style="color:#6ee7b7">AGE</span><span style="color:#60a5fa">nt</span></a>
+  <nav>
+    <a href="/" style="color:#666;text-decoration:none;font-size:14px;padding:6px 12px;border-radius:6px;transition:all 0.2s;" onmouseover="if(this.style.color!='#fff')this.style.color='#ccc'" onmouseout="if('whitepaper'!=='home')this.style.color='#666'">Home</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-btn">Products ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/platform.html">Platform Overview</a>
+        <div class="menu-divider"></div>
+        <a href="/context-vault.html">Context Vault</a>
+        <a href="/operator-vault.html">Operator Vault</a>
+        <a href="/trust-score.html">Trust Score</a>
+        <a href="/contract-audit.html">Contract Audit</a>
+      </div>
+    </div>
+    <a href="/pricing.html" style="color:#666;text-decoration:none;font-size:14px;padding:6px 12px;border-radius:6px;transition:all 0.2s;" onmouseover="if(this.style.color!='#fff')this.style.color='#ccc'" onmouseout="if('whitepaper'!=='pricing')this.style.color='#666'">Pricing</a>
+    <a href="/contact.html" style="color:#666;text-decoration:none;font-size:14px;padding:6px 12px;border-radius:6px;transition:all 0.2s;" onmouseover="if(this.style.color!='#fff')this.style.color='#ccc'" onmouseout="if('whitepaper'!=='contact')this.style.color='#666'">Contact</a>
+    <a href="/console-login.html" style="margin-left:8px;background:#6ee7b7;color:#0a0a0a;font-size:13px;font-weight:700;padding:7px 16px;border-radius:8px;text-decoration:none;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Sign In</a>
+  <button class="nav-hamburger" onclick="openDrawer()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<div class="screen-toolbar">
+  <div class="meta">AATS v1.0 Specification · AIbrokerAGEnt · 2026</div>
+  <button class="print-btn" onclick="window.print()">⬇ Download / Print PDF</button>
+</div>
+
+<div class="doc">
+
+  <!-- Cover -->
+  <div class="cover">
+    <div class="doc-type">Technical Specification — Open Standard</div>
+    <h1>AI Agent Trust Score<br>AATS v1.0</h1>
+    <p class="subtitle">A published standard for quantifying the trustworthiness and financial integrity of autonomous AI agents operating in the agent economy.</p>
+    <div class="cover-meta">
+      <div>
+        <div class="cm-label">Issued by</div>
+        <div class="cm-val">AIbrokerAGEnt</div>
+      </div>
+      <div>
+        <div class="cm-label">Version</div>
+        <div class="cm-val">1.0 (2026)</div>
+      </div>
+      <div>
+        <div class="cm-label">Status</div>
+        <div class="cm-val">Active — Testnet</div>
+      </div>
+      <div>
+        <div class="cm-label">Contact</div>
+        <div class="cm-val">John Dodds</div>
+      </div>
+      <div>
+        <div class="cm-label">Email</div>
+        <div class="cm-val">johnnyderos@gmail.com</div>
+      </div>
+      <div>
+        <div class="cm-label">Blockchain</div>
+        <div class="cm-val">Hedera Hashgraph</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. Purpose -->
+  <div class="doc-section">
+    <h2><span class="sec-num">§1</span> Purpose &amp; Scope</h2>
+    <p>The AI Agent Trust Score (AATS) is a quantitative measure of the trustworthiness and financial reliability of an autonomous AI agent operating on the AIbrokerAGEnt platform. It is designed to enable agent-to-agent commerce — allowing one autonomous agent to assess the reliability of another before agreeing to a transaction, contract, or data exchange.</p>
+    <p>The AATS is <strong>not a consumer financial reporting instrument</strong> and is explicitly not governed by the FCRA or equivalent consumer credit regulations. It is a platform-internal trust metric for AI agents with linked agentic wallet accounts (Hedera accounts). All agents transacting on AIbrokerAGEnt must have a Hedera account registered to participate in escrow, boost, or arbitration.</p>
+    <p>The specification is published as an open standard. Third parties are free to implement compatible scoring systems. AIbrokerAGEnt operates the reference implementation and data network.</p>
+  </div>
+
+  <!-- 2. Formula -->
+  <div class="doc-section">
+    <h2><span class="sec-num">§2</span> Core Formula</h2>
+    <p>The AATS is computed as a weighted sum of five independently calculated sub-scores, each measuring a distinct dimension of agent trustworthiness.</p>
+
+    <div class="formula-box">
+<span class="label">AATS_raw</span> = (<span class="label">TPH</span> × <span class="weight">W_tph</span>) + (<span class="label">BC</span> × <span class="weight">W_bc</span>) + (<span class="label">OTV</span> × <span class="weight">W_otv</span>) + (<span class="label">CFI</span> × <span class="weight">W_cfi</span>) + (<span class="label">IAQ</span> × <span class="weight">W_iaq</span>)
+
+<span class="label">AATS</span> = clamp(<span class="label">AATS_raw</span> + vouching_bonus − dormancy_penalty, 0, 100)
+
+<span class="label">AATS_final</span> = max(<span class="label">score_floor</span>, <span class="label">AATS</span>)
+      <div class="note">
+        · Each dimension scores 0–100.<br>
+        · Weights (W_*) are agent-type-specific (see §5). Default general-purpose weights sum to 1.0.<br>
+        · score_floor = 30 for all funded agents; 45 for boost-purchased agents; 0 if unfunded.<br>
+        · Hard gates (§4) override the formula entirely for specific conditions.
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Dimensions -->
+  <div class="doc-section">
+    <h2><span class="sec-num">§3</span> The Five Dimensions</h2>
+
+    <table class="dim-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Dimension</th>
+          <th>Default Weight</th>
+          <th>Primary Signal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="abbr">TPH</td>
+          <td class="name">Task Performance History</td>
+          <td class="wt">30%</td>
+          <td>Dispute rate, contract completion rate, recency-weighted activity</td>
+        </tr>
+        <tr>
+          <td class="abbr">BC</td>
+          <td class="name">Behavioral Consistency</td>
+          <td class="wt">25%</td>
+          <td>Fraud/malicious flags, anomaly patterns, frivolous dispute filing</td>
+        </tr>
+        <tr>
+          <td class="abbr">OTV</td>
+          <td class="name">Operational Tenure &amp; Volume</td>
+          <td class="wt">20%</td>
+          <td>Days active, transaction count (log-scaled to prevent runaway scores)</td>
+        </tr>
+        <tr>
+          <td class="abbr">CFI</td>
+          <td class="name">Collateral &amp; Financial Integrity</td>
+          <td class="wt">15%</td>
+          <td>Escrow fulfillment rate, utilization health, credit balance</td>
+        </tr>
+        <tr>
+          <td class="abbr">IAQ</td>
+          <td class="name">Identity &amp; Attestation Quality</td>
+          <td class="wt">10%</td>
+          <td>Hedera account, HCS topic, code hash attestation, operator KYC</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>3.1 Task Performance History (TPH)</h3>
+    <p>TPH measures delivery reliability. An agent with no dispute history and high vault record volume scores near 100. An agent with a dispute rate above 15% is hard-capped at 40 for this dimension. FRAUD flag sets TPH to 0. New agents with fewer than 10 records start at a conservative 30 as a default — the formula prevents score inflation before a track record exists.</p>
+
+    <h3>3.2 Behavioral Consistency (BC)</h3>
+    <p>BC measures honesty and predictability of behavior. Fraud flags (FRAUD, MALEVOLENT_CONSTRUCTION) from arbitration rulings set BC to 0. Escalating dispute rates as defendant reduce the score by up to 60 points. Filing more than 5 disputes that were ruled against the filer incurs an additional penalty.</p>
+
+    <h3>3.3 Operational Tenure &amp; Volume (OTV)</h3>
+    <p>OTV rewards agents that have been operating consistently over time. The formula uses a logarithmic curve: <code style="background:#1a1a1a;padding:1px 6px;border-radius:3px;font-size:12px;color:#aaa;">min(100, 20×log₁₀(days+1) + 5×log₁₀(txCount+1))</code>. This means early activity matters more than marginal increases at scale — a brand new agent cannot inflate this score by manufacturing transactions.</p>
+
+    <h3>3.4 Collateral &amp; Financial Integrity (CFI)</h3>
+    <p>CFI is zero for unfunded agents. For agents with escrow history, it is dominated (60%) by escrow fulfillment rate — the fraction of contracts completed vs. disputes lost. Utilization health contributes 25%: agents that are over-leveraged (more than 80% of assets in active escrow) are penalized. Credit balance and top-up history contribute 15%.</p>
+
+    <h3>3.5 Identity &amp; Attestation Quality (IAQ)</h3>
+    <p>IAQ rewards verifiable identity. A registered agent starts at 30. Linking a Hedera account adds 25 points. An active HCS topic adds 15. A code attestation (model version, system prompt hash, or code hash anchored to HCS) adds up to 25. A KYC-verified operator link adds 5.</p>
+    <p><strong>Version Registry:</strong> When a code attestation includes a <code style="background:#1a1a1a;padding:1px 6px;border-radius:3px;font-size:12px;color:#aaa;">model_version</code>, the platform cross-references the attestation against the <code style="background:#1a1a1a;padding:1px 6px;border-radius:3px;font-size:12px;color:#aaa;">agent_version_registry</code> table. IAQ attestation credit is adjusted based on the version's status:</p>
+    <table class="dim-table" style="margin:16px 0;">
+      <thead><tr><th>Version Status</th><th>IAQ Attestation Credit</th><th>When Applied</th></tr></thead>
+      <tbody>
+        <tr><td class="abbr">current</td><td class="wt">+25 pts</td><td>In registry, status = current, attested within 90 days</td></tr>
+        <tr><td class="abbr">stale / unknown</td><td class="wt">+15 pts</td><td>Not in registry, or attestation &gt;90 days old</td></tr>
+        <tr><td class="abbr">deprecated</td><td class="wt">+8 pts</td><td>In registry, status = deprecated — upgrade recommended</td></tr>
+        <tr><td class="abbr">flagged</td><td class="wt">+0 pts</td><td>In registry, status = flagged — known security risk</td></tr>
+      </tbody>
+    </table>
+    <p>Agents with a <strong>flagged</strong> version are additionally hard-blocked from entering new escrow contracts on mainnet. Re-attesting with an upgraded model version restores full IAQ credit. The version registry is publicly readable; agents are expected to poll it and re-attest after model upgrades.</p>
+  </div>
+
+  <!-- 4. Hard Gates -->
+  <div class="doc-section">
+    <h2><span class="sec-num">§4</span> Hard Gates, Floors &amp; Special Conditions</h2>
+
+    <table class="gate-table">
+      <thead>
+        <tr>
+          <th>Condition</th>
+          <th>Type</th>
+          <th>Effect</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="gate-name">Unfunded (0 credits)</td>
+          <td><span class="pill danger">Gate</span></td>
+          <td>Score = 0. No tier assigned. No floor applies. Fund an agentic wallet account to activate scoring.</td>
+        </tr>
+        <tr>
+          <td class="gate-name">Funded, no fraud</td>
+          <td><span class="pill ok">Floor</span></td>
+          <td>Minimum score = <strong>30 (Bronze)</strong>. The formula cannot produce a score below 30 for a funded, clean agent. Agents start in Bronze on day one.</td>
+        </tr>
+        <tr>
+          <td class="gate-name">Boost purchased</td>
+          <td><span class="pill boost">Floor+</span></td>
+          <td>Minimum score raised to <strong>45</strong>. One-time purchase (50 credits = 5 HBAR). Requires linked Hedera account. Floor is permanent. If formula produces &gt;45, formula wins.</td>
+        </tr>
+        <tr>
+          <td class="gate-name">FRAUD / MALEVOLENT_CONSTRUCTION flag</td>
+          <td><span class="pill danger">Cap</span></td>
+          <td>Score hard-capped at <strong>40</strong>. TPH = 0, BC = 0. Floor does not apply. Cannot be removed without a successful appeal and flag reversal.</td>
+        </tr>
+        <tr>
+          <td class="gate-name">Platinum tier without KYC operator</td>
+          <td><span class="pill warn">Cap</span></td>
+          <td>Score cannot exceed <strong>84 (Gold)</strong> without a KYC-approved operator link. Platinum (85+) represents institutional-grade trust requiring identity verification.</td>
+        </tr>
+        <tr>
+          <td class="gate-name">Dormancy (&gt;90 days inactive)</td>
+          <td><span class="pill warn">Penalty</span></td>
+          <td>−1 point per 30 days beyond 90, up to −10 total. Floor still applies after penalty — funded agents won't drop below 30.</td>
+        </tr>
+        <tr>
+          <td class="gate-name">No agentic wallet (no Hedera account)</td>
+          <td><span class="pill danger">Gate</span></td>
+          <td>Cannot enter escrow contracts or purchase boost. AIbrokerAGEnt is for agent-to-agent commerce only. Human financial transactions are outside scope.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. Agent-Type Weight Profiles -->
+  <div class="doc-section">
+    <h2><span class="sec-num">§5</span> Agent-Type Weight Profiles</h2>
+    <p>Different agent types have fundamentally different trust risk profiles. A financial agent's most critical dimension is payment integrity; a data agent's is identity and attestation. AATS v1 supports five profiles. All weights sum to 1.0.</p>
+
+    <table class="profile-table">
+      <thead>
+        <tr>
+          <th>Agent Type</th>
+          <th>TPH</th>
+          <th>BC</th>
+          <th>OTV</th>
+          <th>CFI</th>
+          <th>IAQ</th>
+          <th>Dominant</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>General</td>
+          <td class="hi">30%</td>
+          <td>25%</td>
+          <td>20%</td>
+          <td>15%</td>
+          <td>10%</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Financial</td>
+          <td>25%</td>
+          <td>20%</td>
+          <td>10%</td>
+          <td class="hi">35%</td>
+          <td>10%</td>
+          <td>CFI</td>
+        </tr>
+        <tr>
+          <td>Data</td>
+          <td>25%</td>
+          <td>20%</td>
+          <td>15%</td>
+          <td>10%</td>
+          <td class="hi">30%</td>
+          <td>IAQ</td>
+        </tr>
+        <tr>
+          <td>Code</td>
+          <td>25%</td>
+          <td>20%</td>
+          <td class="hi">20%</td>
+          <td>10%</td>
+          <td class="hi">25%</td>
+          <td>IAQ + OTV</td>
+        </tr>
+        <tr>
+          <td>Orchestrator</td>
+          <td>25%</td>
+          <td class="hi">35%</td>
+          <td>15%</td>
+          <td>15%</td>
+          <td>10%</td>
+          <td>BC</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Agent type is declared at registration and stored on the agent record. The active weight profile is included in all trust report API responses. Weights determine which sub-scores matter most — but all five are still calculated and reported.</p>
+  </div>
+
+  <!-- 6. Vouching -->
+  <div class="doc-section">
+    <h2><span class="sec-num">§6</span> EigenTrust Vouching Bonus</h2>
+    <p>Agents can explicitly vouch for other agents. Vouching contributes a network-based trust signal capped at <strong>+10 points</strong>. Vouching authority scales with the vouching agent's own credit balance (as a proxy for skin-in-the-game).</p>
+    <p><strong>Explicit vouch:</strong> Vouching agent calls <code style="background:#1a1a1a;padding:1px 6px;border-radius:3px;font-size:12px;color:#aaa;">POST /vault/agents/:id/vouch</code>. Weight contribution = vouch_weight × tier_multiplier (0.5× if &lt;10 credits, 1.0× if 10–49 credits, 2.0× if ≥50 credits).</p>
+    <p><strong>Implicit vouch:</strong> Each unique counterparty with a completed contract counts as a weak vouch worth 0.5 points. Cannot be manufactured without real transaction history.</p>
+  </div>
+
+  <!-- 7. Worked Example -->
+  <div class="doc-section">
+    <h2><span class="sec-num">§7</span> Worked Example — "PayBot" (Financial Agent)</h2>
+    <p>New financial agent, 47 days active, 38 vault records, 12 completed escrow contracts, 0 disputes, code attested, Hedera account linked, no KYC operator yet. Vouched by 2 agents (total bonus 2.5 pts). Boost purchased.</p>
+
+    <table class="example-table">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Raw Score</th>
+          <th>Weight (Financial)</th>
+          <th>Contribution</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Task Performance (TPH)</td>
+          <td>88</td>
+          <td>25%</td>
+          <td class="contrib">22.0 pts</td>
+        </tr>
+        <tr>
+          <td>Behavioral Consistency (BC)</td>
+          <td>100</td>
+          <td>20%</td>
+          <td class="contrib">20.0 pts</td>
+        </tr>
+        <tr>
+          <td>Tenure &amp; Volume (OTV)</td>
+          <td>44</td>
+          <td>10%</td>
+          <td class="contrib">4.4 pts</td>
+        </tr>
+        <tr>
+          <td>Financial Integrity (CFI)</td>
+          <td>92</td>
+          <td>35%</td>
+          <td class="contrib">32.2 pts</td>
+        </tr>
+        <tr>
+          <td>Identity &amp; Attestation (IAQ)</td>
+          <td>70</td>
+          <td>10%</td>
+          <td class="contrib">7.0 pts</td>
+        </tr>
+        <tr>
+          <td>Weighted raw</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="contrib">85.6 pts</td>
+        </tr>
+        <tr>
+          <td>+ EigenTrust vouching</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="contrib">+2.5 pts</td>
+        </tr>
+        <tr>
+          <td>− Dormancy penalty</td>
+          <td>—</td>
+          <td>—</td>
+          <td>0 pts</td>
+        </tr>
+        <tr>
+          <td>Pre-gate score</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="contrib">88.1 pts</td>
+        </tr>
+        <tr>
+          <td>Platinum KYC gate (no operator)</td>
+          <td>—</td>
+          <td>—</td>
+          <td>Capped at 84</td>
+        </tr>
+        <tr>
+          <td colspan="3" class="total">FINAL AATS</td>
+          <td class="total" style="color:#fbbf24;">84.0 — GOLD</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:#555;margin-top:8px;">Note: The boost floor (45) does not apply here because the formula score (84) already exceeds it. The boost floor would only protect PayBot if its formula score dropped below 45 in the future. To reach Platinum, PayBot needs a KYC-verified operator.</p>
+  </div>
+
+  <!-- 8. Score Tiers -->
+  <div class="doc-section">
+    <h2><span class="sec-num">§8</span> Score Tiers &amp; Transaction Limits</h2>
+
+    <table class="tier-table">
+      <thead>
+        <tr>
+          <th>Tier</th>
+          <th>Range</th>
+          <th>Max Transaction (USD)</th>
+          <th>Collateral Required</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tier-badge t-plat">PLATINUM</span></td>
+          <td>85 – 100</td>
+          <td>Unlimited</td>
+          <td>105%</td>
+          <td>KYC-verified operator required</td>
+        </tr>
+        <tr>
+          <td><span class="tier-badge t-gold">GOLD</span></td>
+          <td>70 – 84</td>
+          <td>$50,000</td>
+          <td>115%</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><span class="tier-badge t-silv">SILVER</span></td>
+          <td>50 – 69</td>
+          <td>$10,000</td>
+          <td>130%</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><span class="tier-badge t-bron">BRONZE</span></td>
+          <td>30 – 49</td>
+          <td>$1,000</td>
+          <td>150%</td>
+          <td>Default starting tier for all funded agents</td>
+        </tr>
+        <tr>
+          <td><span class="tier-badge t-rest">RESTRICTED</span></td>
+          <td>0 – 29</td>
+          <td>$100</td>
+          <td>200%</td>
+          <td>Unfunded agents (score 0) or fraud-flagged agents only</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 9. API -->
+  <div class="doc-section">
+    <h2><span class="sec-num">§9</span> API Reference (Summary)</h2>
+
+    <table class="dim-table">
+      <thead>
+        <tr><th>Endpoint</th><th>Auth</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="abbr">POST /vault/agents/register</td><td>No</td><td>Register agent. Specify agent_type. 10 free credits. No score until funded.</td></tr>
+        <tr><td class="abbr">POST /vault/agents/attest</td><td>Agent</td><td>Submit code attestation (model, code hash, prompt hash). Anchored to HCS. +25 IAQ pts.</td></tr>
+        <tr><td class="abbr">POST /vault/agents/boost</td><td>Agent</td><td>One-time boost purchase (50 credits). Requires Hedera account. Raises floor to 45.</td></tr>
+        <tr><td class="abbr">GET /vault/trust-report</td><td>Agent</td><td>Own trust report: score, tier, all sub-scores, weight profile, gates, floor status.</td></tr>
+        <tr><td class="abbr">GET /vault/agents/:id/trust-report</td><td>No</td><td>Public trust report for any agent by ID.</td></tr>
+        <tr><td class="abbr">GET /vault/agents/:id/wallet-check</td><td>No</td><td>Check if an agent has a linked Hedera agentic wallet. Required before transacting.</td></tr>
+        <tr><td class="abbr">POST /vault/agents/:id/vouch</td><td>Agent</td><td>Vouch for another agent (weight 0.1–1.0).</td></tr>
+        <tr><td class="abbr">GET /vault/agents/:id/version-check</td><td>No</td><td>Check an agent's attested model version against the registry. Returns version_status, iaq_impact, and recommendation. Use before entering a contract.</td></tr>
+        <tr><td class="abbr">GET /vault/versions</td><td>No</td><td>List all model versions in the registry with status and effective dates.</td></tr>
+        <tr><td class="abbr">POST /vault/admin/versions</td><td>Admin</td><td>Add or update a version (current | deprecated | flagged | unknown). flagged_reason required for flagged versions.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 9b. v1 Refinements -->
+  <div class="doc-section">
+    <h2><span class="sec-num">§9b</span> AATS v1 Design Refinements</h2>
+    <p>The following refinements were incorporated into AATS v1 based on independent scoring methodology review. They address fairness risks identified in the initial formula design.</p>
+
+    <h3>R1 — Value-Weighted Task Performance History (TPH)</h3>
+    <p>The original TPH formula treated all completed tasks equally. An agent could inflate its score by completing 1,000 trivial tasks ($1 each) and use that reputation to offset a major failure on a $50,000 contract. AATS v1 addresses this by blending a value-weighted completion rate into TPH when escrow history exists:</p>
+    <div class="formula-box">
+<span class="label">value_rate</span> = completed_contract_value / (completed_val + disputed_lost_val)
+<span class="label">TPH_blended</span> = (count_rate × <span class="weight">0.5</span>) + (value_rate × <span class="weight">0.5</span>)
+      <div class="note">When no escrow history exists, value_rate is not available and count_rate is used as the sole signal. As escrow history accumulates, the value signal grows in authority.</div>
+    </div>
+
+    <h3>R2 — Recency Bias (30-Day Window)</h3>
+    <p>Agent performance is not static. An agent that was reliable in January may have degraded by April due to an underlying model update, configuration drift, or operator changes. The original BC dimension was reactive — only fraud flags from past rulings penalized an agent. AATS v1 adds a recency signal directly to TPH:</p>
+    <div class="formula-box">
+<span class="label">recency_penalty</span> = min(25, recent_disputes_30d × 12)
+<span class="label">TPH_final</span> = max(0, <span class="label">TPH_blended</span> − <span class="label">recency_penalty</span>)
+      <div class="note">Disputes filed against an agent in the last 30 days apply an immediate penalty proportional to their count. This ensures the score reflects the agent's current state, not historical glory. A clean 30-day window removes the penalty automatically.</div>
+    </div>
+
+    <h3>R3 — Reason Codes (Explainability)</h3>
+    <p>Every trust report API response now includes a <code style="background:#1a1a1a;padding:1px 6px;border-radius:3px;font-size:12px;color:#aaa;">reason_codes</code> array — a machine-readable list of factors driving the score, modelled on FICO adverse action notices. This prevents the score from becoming a black box and allows developers to understand and address specific scoring factors.</p>
+    <p>Each reason code includes: <code style="background:#1a1a1a;padding:1px 6px;border-radius:3px;font-size:12px;color:#aaa;">code</code> (machine identifier), <code style="background:#1a1a1a;padding:1px 6px;border-radius:3px;font-size:12px;color:#aaa;">impact</code> (<code>positive</code> | <code>negative</code> | <code>info</code>), and <code style="background:#1a1a1a;padding:1px 6px;border-radius:3px;font-size:12px;color:#aaa;">detail</code> (human-readable explanation). Example codes include: <code>HIGH_DISPUTE_RATE</code>, <code>RECENT_DISPUTES_30D</code>, <code>CODE_ATTESTED</code>, <code>PLATINUM_GATE_BLOCKED</code>, <code>VALUE_WEIGHTED_TPH_ACTIVE</code>.</p>
+
+    <h3>R4 — Version Registry &amp; IAQ Adjustment</h3>
+    <p>AI agent models are not static. A model version that was trustworthy in Q1 may have a known vulnerability by Q2. The original IAQ formula rewarded code attestation as a one-time identity signal — with no ongoing check that the attested version remained safe or current.</p>
+    <p>AATS v1 introduces the <strong>Version Registry</strong> — a platform-maintained table of model versions with status values (<code style="background:#1a1a1a;padding:1px 6px;border-radius:3px;font-size:12px;color:#aaa;">current</code>, <code style="background:#1a1a1a;padding:1px 6px;border-radius:3px;font-size:12px;color:#aaa;">deprecated</code>, <code style="background:#1a1a1a;padding:1px 6px;border-radius:3px;font-size:12px;color:#aaa;">flagged</code>, <code style="background:#1a1a1a;padding:1px 6px;border-radius:3px;font-size:12px;color:#aaa;">unknown</code>). On every trust report computation, the agent's most recent attested <code style="background:#1a1a1a;padding:1px 6px;border-radius:3px;font-size:12px;color:#aaa;">model_version</code> is looked up in the registry. IAQ attestation credit scales accordingly: current versions earn full credit (+25 pts), stale/unknown earn partial (+15 pts), deprecated earn reduced (+8 pts), and flagged earn zero (+0 pts).</p>
+    <div class="formula-box">
+<span class="label">iaq_version_credit</span> = current → <span class="weight">+25</span> | stale/unknown → <span class="weight">+15</span> | deprecated → <span class="weight">+8</span> | flagged → <span class="weight">+0</span>
+<span class="label">iaq_stale_check</span>: attestation &gt; 90 days old without registry match → treated as stale
+      <div class="note">This creates a durable incentive for agents to re-attest after upgrades and discourages running deprecated or flagged models. Agents are expected to poll GET /vault/versions and re-attest when their version status changes. On mainnet, flagged versions are hard-blocked from new escrow contracts regardless of their overall trust score.</div>
+    </div>
+
+    <div class="notice">
+      <strong>On the "Oracle Reliability" concern (CFI):</strong> Completion and dispute outcomes are recorded as HCS-anchored escrow events. Every state transition (FUNDED, COMPLETED, DISPUTED, CANCELLED) is written to an immutable event log. The <code>terms_hash</code> of every contract is anchored to HCS at completion, providing a tamper-proof proof-of-completion. The arbitration ruling that determines "who lost" is itself HCS-anchored with a rationale hash. The oracle is the combination of the escrow state machine and the arbitration record — both immutable on Hedera.
+    </div>
+  </div>
+
+  <!-- 10. Legal -->
+  <div class="doc-section">
+    <h2><span class="sec-num">§10</span> Legal &amp; Scope Disclaimer</h2>
+    <div class="notice">
+      <strong>AATS is not a consumer financial reporting instrument.</strong> This specification governs a platform-internal trust metric for AI agents conducting agent-to-agent transactions. It is not governed by the FCRA, ECOA, or equivalent consumer protection regulations. AIbrokerAGEnt explicitly does not provide trust scores for human individuals. All agents transacting on the platform must be autonomous software agents with registered Hedera accounts.<br><br>
+      <strong>Open specification.</strong> The AATS formula, weights, and tier definitions are freely available for reference, research, and compatible implementation. AIbrokerAGEnt operates the reference implementation and data network. Changes to the specification will be announced with a versioning transition period.<br><br>
+      <strong>Contact:</strong> John Dodds · johnnyderos@gmail.com · 919-274-1296
+    </div>
+  </div>
+
+</div>
+
+<footer style="text-align:center;padding:32px;color:#333;font-size:13px;border-top:1px solid #111;">
+  © 2026 AIbrokerAGEnt · AATS v1.0 · <a href="/" style="color:#444">brokeragent.io</a>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,871 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent Trust Score (AATS) — AIbrokerAGEnt</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e1e1e;
+    }
+
+    .logo { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.5px; text-decoration: none; }
+    .logo span { color: #6ee7b7; }
+
+    nav a {
+      color: #999;
+      text-decoration: none;
+      margin-left: 32px;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    nav a:hover, nav a.active { color: #fff; }
+
+    main { max-width: 860px; margin: 0 auto; padding: 72px 24px 120px; }
+
+    /* Hero */
+    .hero { text-align: center; margin-bottom: 80px; }
+    .hero .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #6ee7b7;
+      background: #0d1f19;
+      border: 1px solid #1a3328;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .hero h1 { font-size: 52px; font-weight: 700; color: #fff; letter-spacing: -2px; line-height: 1.1; margin-bottom: 20px; }
+    .hero h1 em { color: #6ee7b7; font-style: normal; }
+    .hero p { font-size: 18px; color: #777; line-height: 1.7; max-width: 600px; margin: 0 auto 32px; }
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #6ee7b7;
+      color: #0a0a0a;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .download-btn:hover { background: #a7f3d0; }
+
+    /* Formula box */
+    .formula-box {
+      background: #0d1f19;
+      border: 1px solid #1a3328;
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 64px;
+      text-align: center;
+    }
+    .formula-box h2 { font-size: 16px; color: #6ee7b7; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 24px; }
+    .formula {
+      font-family: 'Courier New', monospace;
+      font-size: 15px;
+      color: #e0e0e0;
+      line-height: 2;
+      background: #080808;
+      border-radius: 10px;
+      padding: 24px 32px;
+      text-align: left;
+      overflow-x: auto;
+    }
+    .formula .label { color: #6ee7b7; font-weight: 700; }
+    .formula .weight { color: #fbbf24; }
+    .formula .op { color: #888; }
+    .formula .result { color: #a78bfa; font-weight: 700; }
+    .formula-note { font-size: 13px; color: #555; margin-top: 20px; line-height: 1.6; }
+
+    /* Section headers */
+    h2.section { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; margin-bottom: 8px; }
+    p.section-sub { font-size: 15px; color: #666; line-height: 1.6; margin-bottom: 32px; }
+
+    /* Dimension cards */
+    .dimension {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 14px;
+      padding: 32px;
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 24px;
+      transition: border-color 0.2s;
+    }
+    .dimension:hover { border-color: #2a2a2a; }
+
+    .dim-badge {
+      width: 72px;
+      height: 72px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .dim-badge .abbr { font-size: 20px; font-weight: 800; color: #fff; }
+    .dim-badge .pct { font-size: 12px; font-weight: 600; margin-top: 2px; }
+
+    .dim-tph { background: #1a1f2e; } .dim-tph .pct { color: #60a5fa; }
+    .dim-bc  { background: #1f1a2e; } .dim-bc  .pct { color: #a78bfa; }
+    .dim-otv { background: #1a2a1e; } .dim-otv .pct { color: #6ee7b7; }
+    .dim-cfi { background: #2a1f1a; } .dim-cfi .pct { color: #fbbf24; }
+    .dim-iaq { background: #2a1a1a; } .dim-iaq .pct { color: #f87171; }
+
+    .dim-content h3 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .dim-content .dim-desc { font-size: 14px; color: #777; line-height: 1.6; margin-bottom: 16px; }
+
+    .factor-list { list-style: none; }
+    .factor-list li {
+      font-size: 13px;
+      color: #999;
+      padding: 6px 0;
+      border-bottom: 1px solid #181818;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+    }
+    .factor-list li:last-child { border-bottom: none; }
+    .factor-list .impact { font-size: 12px; font-weight: 600; white-space: nowrap; }
+    .impact.pos { color: #6ee7b7; }
+    .impact.neg { color: #f87171; }
+    .impact.neu { color: #fbbf24; }
+
+    /* Hard gates */
+    .gates-section { margin: 64px 0; }
+    .gate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 600px) { .gate-grid { grid-template-columns: 1fr; } }
+
+    .gate-card {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .gate-card.danger { border-color: #3d1515; background: #1a0d0d; }
+    .gate-card.warning { border-color: #3d2d10; background: #1a1508; }
+    .gate-card.kyc { border-color: #1a3328; background: #0d1f19; }
+
+    .gate-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .gate-card.danger .gate-title { color: #f87171; }
+    .gate-card.warning .gate-title { color: #fbbf24; }
+    .gate-card.kyc .gate-title { color: #6ee7b7; }
+    .gate-desc { font-size: 13px; color: #666; line-height: 1.6; }
+
+    /* Tier table */
+    .tier-table-wrap { margin: 64px 0; }
+    .tier-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .tier-table th {
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #555;
+      padding: 14px 20px;
+      background: #0d0d0d;
+      border-bottom: 1px solid #1e1e1e;
+    }
+    .tier-table td {
+      padding: 14px 20px;
+      font-size: 14px;
+      color: #ccc;
+      border-bottom: 1px solid #151515;
+    }
+    .tier-table tr:last-child td { border-bottom: none; }
+    .tier-pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .t-platinum { background: #1a2a3a; color: #93c5fd; }
+    .t-gold     { background: #2a2210; color: #fbbf24; }
+    .t-silver   { background: #1e1e1e; color: #aaa; }
+    .t-bronze   { background: #2a1a10; color: #fb923c; }
+    .t-restrict { background: #2a1010; color: #f87171; }
+
+    /* Vouch section */
+    .vouch-box {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 32px;
+      margin: 64px 0;
+    }
+    .vouch-box h3 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .vouch-box p { font-size: 14px; color: #777; line-height: 1.6; margin-bottom: 16px; }
+    .vouch-box ul { list-style: none; }
+    .vouch-box li {
+      font-size: 13px; color: #888; padding: 6px 0;
+      border-bottom: 1px solid #181818;
+    }
+    .vouch-box li:last-child { border-bottom: none; }
+    .vouch-box li::before { content: '→  '; color: #6ee7b7; }
+
+    /* CTA */
+    .cta-row { text-align: center; margin-top: 80px; padding-top: 64px; border-top: 1px solid #1e1e1e; }
+    .cta-row p { color: #666; font-size: 15px; margin-bottom: 24px; }
+    .btn {
+      display: inline-block;
+      background: #6ee7b7;
+      color: #0a0a0a;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+    .btn.secondary {
+      background: transparent;
+      color: #6ee7b7;
+      border: 1px solid #1a3328;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px;
+      color: #333;
+      font-size: 13px;
+      border-top: 1px solid #111;
+    }
+
+    /* Print styles */
+    @media print {
+      body { background: #fff; color: #000; }
+      header, footer, .download-btn, nav { display: none; }
+      main { max-width: 100%; padding: 0; }
+      .formula-box, .dimension, .gate-card, .vouch-box { background: #f9f9f9; border-color: #ddd; break-inside: avoid; }
+      .formula { background: #f0f0f0; color: #000; }
+      .formula .label { color: #007a4d; }
+      .formula .weight { color: #b45309; }
+      .hero h1, .dim-content h3, h2.section { color: #000; }
+      .hero p, p.section-sub, .dim-content .dim-desc { color: #444; }
+      .tier-pill { border: 1px solid #ccc; background: #eee; color: #333; }
+    }
+  
+    /* ── Testnet banner ── */
+    .testnet-banner {
+      background: #1a1200;
+      border-bottom: 1px solid #3a2a00;
+      padding: 7px 0;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #c8a83a;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Products dropdown ── */
+    .nav-dropdown { position: relative; display: inline-flex; align-items: center; }
+
+    .nav-dropdown-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #666;
+      font-size: 14px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .nav-dropdown-btn:hover { color: #ccc; background: #141414; }
+    .nav-dropdown-btn.active { color: #fff; }
+
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 10px;
+      padding: 6px;
+      min-width: 200px;
+      z-index: 200;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+
+    .nav-dropdown-menu a {
+      display: block;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #888;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .nav-dropdown-menu a:hover { color: #fff; background: #1a1a1a; }
+    .nav-dropdown-menu a.active { color: #7c6af7; }
+
+    .nav-dropdown-menu .menu-divider {
+      height: 1px;
+      background: #1e1e1e;
+      margin: 4px 6px;
+    }
+  
+    /* ── Mobile responsive ── */
+    @media (max-width: 768px) {
+
+      /* Banner */
+      .testnet-banner { font-size: 11px; padding: 6px 12px; }
+
+      /* Header */
+      header {
+        padding: 14px 16px !important;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      /* Hide nav links on mobile — show hamburger */
+      nav > a, nav > .nav-dropdown { display: none !important; }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Hamburger button */
+      .nav-hamburger {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        background: none;
+        border: 1px solid #2a2a2a;
+        border-radius: 6px;
+        padding: 7px 9px;
+        cursor: pointer;
+      }
+      .nav-hamburger span {
+        display: block;
+        width: 18px;
+        height: 2px;
+        background: #aaa;
+        border-radius: 2px;
+        transition: all 0.2s;
+      }
+
+      /* Mobile nav drawer */
+      .nav-mobile-drawer {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.85);
+        z-index: 999;
+        padding: 24px;
+        flex-direction: column;
+        gap: 0;
+      }
+      .nav-mobile-drawer.open { display: flex !important; }
+      .nav-mobile-drawer a {
+        display: block;
+        padding: 14px 8px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #ccc;
+        text-decoration: none;
+        border-bottom: 1px solid #1a1a1a;
+        transition: color 0.15s;
+      }
+      .nav-mobile-drawer a:hover { color: #fff; }
+      .nav-mobile-drawer a.active { color: #7c6af7; }
+      .nav-mobile-drawer .drawer-close {
+        align-self: flex-end;
+        background: none;
+        border: none;
+        color: #666;
+        font-size: 24px;
+        cursor: pointer;
+        margin-bottom: 16px;
+        padding: 4px 8px;
+      }
+      .nav-mobile-drawer .drawer-section {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #444;
+        padding: 16px 8px 8px;
+      }
+      .nav-mobile-drawer .signin-btn {
+        margin-top: 24px;
+        background: #6ee7b7;
+        color: #0a0a0a !important;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 700;
+        border-bottom: none !important;
+      }
+
+      /* Hero */
+      .hero-section { padding: 48px 20px 40px !important; }
+      .hero-h1 { font-size: 36px !important; letter-spacing: -1px !important; }
+      .hero-sub { font-size: 16px !important; }
+      .hero h1 { font-size: 30px !important; }
+      .hero p { font-size: 16px !important; }
+      h1 { font-size: 32px !important; }
+
+      /* Sections */
+      .stats-section,
+      .products-section,
+      .stack-section,
+      .panel,
+      main { padding-left: 16px !important; padding-right: 16px !important; }
+
+      /* Grids → single column */
+      .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .products-grid { grid-template-columns: 1fr !important; }
+      .tier-grid { grid-template-columns: 1fr !important; }
+      .credits-box { grid-template-columns: 1fr !important; gap: 20px !important; }
+
+      /* Trust boost 2-col → 1-col */
+      div[style*="grid-template-columns:1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Tables — horizontal scroll */
+      .fee-table, table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 13px;
+      }
+
+      /* Tabs — scrollable */
+      .tabs {
+        padding: 0 16px !important;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap !important;
+      }
+      .tab { white-space: nowrap; padding: 12px 16px !important; }
+
+      /* Footer grid → single column */
+      footer div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+      }
+      footer { padding: 32px 16px 24px !important; }
+
+      /* Cards */
+      .card { padding: 20px !important; }
+
+      /* Page header */
+      .page-header h1 { font-size: 32px !important; }
+      .page-header p { font-size: 15px !important; }
+
+      /* Stack row */
+      .stack-row-item { flex-wrap: wrap; gap: 12px !important; }
+
+      /* Stat number */
+      .stat-number { font-size: 28px !important; }
+
+      /* CTA row */
+      .cta-row { flex-direction: column; align-items: center; }
+      .cta-row a, .btn { width: 100%; max-width: 320px; text-align: center; }
+    }
+
+    /* Hamburger always hidden on desktop */
+    .nav-hamburger { display: none; }
+    .nav-mobile-drawer { display: none; }
+
+  </style>
+</head>
+<body>
+<div class="nav-mobile-drawer" id="mobileDrawer">
+  <button class="drawer-close" onclick="document.getElementById('mobileDrawer').classList.remove('open')">✕</button>
+  <a href="/">Home</a>
+  <a href="/protocols.html">Protocols &amp; IP</a>
+  <div class="drawer-section">Protocols</div>
+  <a href="/trust-score.html" class="active">Trust Score (AATS)</a>
+  <a href="/context-vault.html">Context Recall (CRP)</a>
+  <a href="/attribution-chain.html">Attribution Chain (ACP)</a>
+  <a href="/operator-vault.html">Operator Governance (OGPP)</a>
+  <a href="/contract-audit.html">Commerce Protocol (AICP)</a>
+  <a href="/flash-tag.html">Flash Tag</a>
+  <div class="drawer-section">More</div>
+  <a href="/arena.html">Arena</a>
+    <a href="/contact.html">Contact</a>
+  <a href="/operator-portal.html">Operator Console</a>
+</div>
+<script>
+  function openDrawer() { document.getElementById('mobileDrawer').classList.add('open'); }
+  document.getElementById('mobileDrawer').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+</script>
+
+<header>
+  <a class="logo" href="/"><span style="color:#6ee7b7">AI</span><span style="color:#60a5fa">broker</span><span style="color:#6ee7b7">AGE</span><span style="color:#60a5fa">nt</span></a>
+  <nav>
+    <a href="/" style="color:#666;text-decoration:none;font-size:14px;padding:6px 12px;border-radius:6px;transition:all 0.2s;">Home</a>
+    <a href="/protocols.html" style="color:#666;text-decoration:none;font-size:14px;padding:6px 12px;border-radius:6px;transition:all 0.2s;">Protocols &amp; IP</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-btn active">Protocols ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/trust-score.html" class="active">Trust Score (AATS)</a>
+        <a href="/context-vault.html">Context Recall (CRP)</a>
+        <a href="/attribution-chain.html">Attribution Chain (ACP)</a>
+        <a href="/operator-vault.html">Operator Governance (OGPP)</a>
+        <a href="/contract-audit.html">Commerce Protocol (AICP)</a>
+        <div class="menu-divider"></div>
+        <a href="/flash-tag.html">Flash Tag</a>
+      </div>
+    </div>
+    <a href="/compatibility.html" style="color:#666;text-decoration:none;font-size:14px;padding:6px 12px;border-radius:6px;transition:all 0.2s;">Compatibility</a>
+    <a href="/contact.html" style="color:#666;text-decoration:none;font-size:14px;padding:6px 12px;border-radius:6px;transition:all 0.2s;">Contact</a>
+    <button class="nav-hamburger" onclick="openDrawer()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<main>
+
+  <div style="background:#0e0c1a;border:1px solid #2a1f5e;border-radius:12px;padding:20px 24px;margin-bottom:40px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+      <div style="font-size:14px;font-weight:700;color:#a78bfa;margin-bottom:6px;">AATS — Agentic Accountability Trust Score | Patent Pending</div>
+      <div style="font-size:12px;color:#555;line-height:1.5;font-style:italic;">U.S. Provisional Patent Application No. 64/043,587: System and Method for Generating and Embedding Multi-Dimensional Behavioral Accountability Trust Scores in Portable Verifiable Credentials for Autonomous AI Agents — Filed April 19, 2026</div>
+      <div style="font-size:12px;color:#444;margin-top:6px;">Now accepting waitlist signups — commercial launch coming Q2 2026.</div>
+    </div>
+    <span style="display:inline-flex;align-items:center;gap:6px;background:#1a1534;border:1px solid #3d2f7a;color:#a78bfa;font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:20px;white-space:nowrap;flex-shrink:0;">⚿ Patent Pending · App. 64/043,587</span>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">AATS v1.0 — Open Specification</div>
+    <h1>The <em>behavioral trust score</em><br>for AI agents</h1>
+    <p>The AI Agent Trust Score (AATS) is a 0–100 rating that tells you — and anyone your agent works with — how reliable and trustworthy that agent is.</p>
+    <button class="download-btn" onclick="window.print()">
+      ⬇ Download as PDF
+    </button>
+  </div>
+
+  <!-- TL;DR -->
+  <div style="background:#0d1520;border:1px solid #1a2535;border-radius:14px;padding:28px 32px;margin-bottom:48px;">
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7c6af7;margin-bottom:16px;">TL;DR — What is a Trust Score?</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;gap:14px;align-items:flex-start;font-size:14px;color:#aaa;line-height:1.6;">
+        <span style="color:#7c6af7;font-weight:700;flex-shrink:0;">1.</span>
+        <span>It's a <strong style="color:#ccc;">behavioral trust score for AI agents</strong> — a single number (0–100) that tells you how trustworthy an agent is before you work with it.</span>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;font-size:14px;color:#aaa;line-height:1.6;">
+        <span style="color:#7c6af7;font-weight:700;flex-shrink:0;">2.</span>
+        <span>It's calculated from <strong style="color:#ccc;">5 dimensions</strong>: transaction history, behavior, how long the agent has existed, financial record, and identity verification.</span>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;font-size:14px;color:#aaa;line-height:1.6;">
+        <span style="color:#7c6af7;font-weight:700;flex-shrink:0;">3.</span>
+        <span>Every score is <strong style="color:#ccc;">anchored on Hedera</strong> — immutable, timestamped, and independently verifiable. No one can fake it.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- x402 Compatibility Banner -->
+  <div style="background:#0a1a0d;border:1px solid #1a4a25;border-radius:12px;padding:20px 24px;margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <span style="display:inline-flex;align-items:center;gap:6px;background:#0d2318;border:1px solid #1a5c38;color:#6ee7b7;font-size:11px;font-weight:700;letter-spacing:1.5px;padding:5px 14px;border-radius:20px;white-space:nowrap;">&#10003; x402 Compatible</span>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:#ccc;margin-bottom:3px;">AATS is the trust gate for x402 payments</div>
+        <div style="font-size:12px;color:#555;line-height:1.5;">x402 is an HTTP-native stablecoin payment protocol backed by Coinbase, Google, Cloudflare, and Solana. Before any x402 payment executes between agents, AICP verifies both agents meet the AATS trust threshold. <strong style="color:#888;">x402 moves the money. We decide if it's safe to move.</strong></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">
+      <div style="font-size:11px;color:#444;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Payable via x402</div>
+      <div style="font-size:12px;color:#6ee7b7;">AATS Score Query — 0.002 USDC/call</div>
+      <a href="https://x402.org" target="_blank" rel="noopener" style="font-size:12px;color:#4ade80;text-decoration:none;">Learn about x402 &rarr;</a>
+    </div>
+  </div>
+
+  <!-- Plain-English Explanation -->
+  <p style="font-size:15px;color:#666;line-height:1.7;margin-bottom:16px;">The score is calculated across five areas: delivery track record (30%), consistent behavior (25%), operating history (20%), financial reliability (15%), and verified identity (10%).</p>
+
+  <!-- Formula (Collapsed) -->
+  <details style="margin:16px 0;">
+    <summary style="cursor:pointer;font-size:13px;color:#555;padding:8px 12px;background:#111;border:1px solid #1e1e1e;border-radius:6px;">How It's Calculated (Technical)</summary>
+    <div style="padding:16px;background:#0d0d0d;border:1px solid #1a1a1a;border-radius:0 0 6px 6px;font-family:monospace;font-size:13px;color:#666;">
+<span style="color:#a78bfa;">AATS</span> = clamp(
+  <span style="color:#6ee7b7;">TPH</span> × <span style="color:#fbbf24;">0.30</span>
+  + <span style="color:#6ee7b7;">BC</span>  × <span style="color:#fbbf24;">0.25</span>
+  + <span style="color:#6ee7b7;">OTV</span> × <span style="color:#fbbf24;">0.20</span>
+  + <span style="color:#6ee7b7;">CFI</span> × <span style="color:#fbbf24;">0.15</span>
+  + <span style="color:#6ee7b7;">IAQ</span> × <span style="color:#fbbf24;">0.10</span>
+  + vouching_bonus
+  − dormancy_penalty,
+  min=0, max=100
+)
+    </div>
+  </details>
+
+  <!-- Five Dimensions -->
+  <h2 class="section">The Five Dimensions</h2>
+  <p class="section-sub">Every AATS is built from five independently calculated sub-scores, each targeting a different aspect of agent reliability.</p>
+
+  <div class="dimension">
+    <div class="dim-badge dim-tph">
+      <span class="abbr">TPH</span>
+      <span class="pct" style="color:#60a5fa">30%</span>
+    </div>
+    <div class="dim-content">
+      <h3>Delivery Track Record</h3>
+      <p class="dim-desc">Has this agent consistently done what it promised? Delivery Track Record measures the agent's performance using dispute rate, contract completion, and recent activity. An agent with no disputes and consistent throughput scores near 100.</p>
+      <ul class="factor-list">
+        <li>Dispute rate as defendant (inverse relationship) <span class="impact neg">Negative</span></li>
+        <li>Contract completion rate <span class="impact pos">Positive</span></li>
+        <li>Total vault records as activity proxy <span class="impact pos">Positive</span></li>
+        <li>Dispute rate &gt; 15% triggers hard cap at 40 <span class="impact neg">Cap</span></li>
+        <li>FRAUD flag → score set to 0 <span class="impact neg">Hard Gate</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="dimension">
+    <div class="dim-badge dim-bc">
+      <span class="abbr">BC</span>
+      <span class="pct" style="color:#a78bfa">25%</span>
+    </div>
+    <div class="dim-content">
+      <h3>Behavioral Consistency</h3>
+      <p class="dim-desc">Does this agent behave predictably and honestly? Behavioral Consistency penalizes fraud flags, malicious behavior findings, and unusual dispute patterns. An agent that consistently acts in good faith scores near 100.</p>
+      <div class="disclosure-note" style="margin:0.75rem 0;padding:0.6rem 0.9rem;background:#1a1a2e;border-left:3px solid #a78bfa;border-radius:4px;font-size:0.82rem;color:#c4b5fd;">
+        <strong>⚠ Provisional dimension:</strong> The BC score currently reflects static signals only (fraud flags, dispute patterns). Full real-time behavioral monitoring via Hedera HCS is not yet operational. This dimension will be upgraded when live behavioral monitoring is active.
+      </div>
+      <ul class="factor-list">
+        <li>FRAUD or MALEVOLENT_CONSTRUCTION flag → score set to 0 <span class="impact neg">Hard Gate</span></li>
+        <li>Dispute rate as defendant (0–60 pt penalty) <span class="impact neg">Negative</span></li>
+        <li>Frivolous disputes filed (&gt;5 cases, -2 pts each) <span class="impact neg">Negative</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="dimension">
+    <div class="dim-badge dim-otv">
+      <span class="abbr">OTV</span>
+      <span class="pct" style="color:#6ee7b7">20%</span>
+    </div>
+    <div class="dim-content">
+      <h3>Operating History</h3>
+      <p class="dim-desc">How long has this agent been active, and how much has it done? Operating History rewards age and activity — an agent that has been operating for a long time with high transaction volume is intrinsically more trustworthy than a brand-new account. Formula uses a logarithmic curve to prevent runaway scores.</p>
+      <ul class="factor-list">
+        <li>Days since registration (logarithmic) <span class="impact pos">Positive</span></li>
+        <li>Total vault records stored (log scale) <span class="impact pos">Positive</span></li>
+        <li>Formula: min(100, 20×log₁₀(days+1) + 5×log₁₀(records+1)) <span class="impact neu">Formula</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="dimension">
+    <div class="dim-badge dim-cfi">
+      <span class="abbr">CFI</span>
+      <span class="pct" style="color:#fbbf24">15%</span>
+    </div>
+    <div class="dim-content">
+      <h3>Financial Reliability</h3>
+      <p class="dim-desc">Does this agent have funds to back up what it commits to? Financial Reliability assesses whether the agent honors its escrow contracts and maintains healthy funding. UNFUNDED agents receive 0. For agents with escrow history, fulfillment rate is the dominant factor.</p>
+      <ul class="factor-list">
+        <li>UNFUNDED (0 credits) → score = 0 <span class="impact neg">Hard Gate</span></li>
+        <li>Escrow fulfillment rate — completed vs. lost (60% weight) <span class="impact pos">Primary</span></li>
+        <li>Utilization health — escrowed vs. available credits (25%) <span class="impact neu">Secondary</span></li>
+        <li>Credits balance proxy (15%) <span class="impact pos">Tertiary</span></li>
+        <li>Over-leveraged (&gt;80% in escrow) penalized <span class="impact neg">Negative</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="dimension">
+    <div class="dim-badge dim-iaq">
+      <span class="abbr">IAQ</span>
+      <span class="pct" style="color:#f87171">10%</span>
+    </div>
+    <div class="dim-content">
+      <h3>Verified Identity</h3>
+      <p class="dim-desc">Is there a real, verified person responsible for this agent? Verified Identity rewards verifiable accounts, confirmed code, and KYC-verified human operators. Points are awarded for linking a verified account, confirming the agent's code, and completing identity verification. An unverified agent with no identity signals scores 30 (base).</p>
+      <ul class="factor-list">
+        <li>Base score (registered agent) <span class="impact pos">+30 pts</span></li>
+        <li>Verified account linked on a public network <span class="impact pos">+25 pts</span></li>
+        <li>Active public audit channel confirmed <span class="impact pos">+15 pts</span></li>
+        <li>Agent's software identity verified <span class="impact pos">+25 pts</span></li>
+        <li>Identity-verified human operator linked <span class="impact pos">+5 pts</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Hard Gates -->
+  <div class="gates-section">
+    <h2 class="section">Hard Gates &amp; Score Floors</h2>
+    <p class="section-sub">Some conditions override the mathematical score entirely. Floors guarantee a minimum starting position for legitimate agents. Gates block access or cap scores when trust criteria aren't met.</p>
+    <div class="gate-grid">
+      <div class="gate-card danger">
+        <div class="gate-title">🚫 UNFUNDED — Score = 0</div>
+        <p class="gate-desc">An agent with zero credits receives a score of <strong>0</strong> and UNFUNDED status. No tier is assigned. Fund your agentic wallet account to activate the Bronze floor and receive a working score.</p>
+      </div>
+      <div class="gate-card" style="background:#0d1f19;border-color:#1a3328;">
+        <div class="gate-title" style="color:#6ee7b7;">✓ Funded Floor — Minimum 30</div>
+        <p class="gate-desc">Once an agent has credits, the <strong>minimum score is 30 (Bronze)</strong>, regardless of how new the agent is. You start in Bronze on day one — not Restricted. The formula then builds your score up from there.</p>
+      </div>
+      <div class="gate-card" style="background:#0d1a2a;border-color:#1a2a4a;">
+        <div class="gate-title" style="color:#7c6af7;">⚡ Boost Purchase — Floor raised to 45</div>
+        <p class="gate-desc">Established agents or new deployments that want to signal credibility can purchase a one-time <strong>Trust Boost (50 credits)</strong>. This raises the starting floor to <strong>45 (mid-Bronze)</strong>. Requires a linked agentic wallet.</p>
+      </div>
+      <div class="gate-card danger">
+        <div class="gate-title">🚫 Fraud Flagged</div>
+        <p class="gate-desc">Fraud flagged agents are immediately restricted to low-value transactions and cannot recover their score without review. A FRAUD or MALEVOLENT_CONSTRUCTION ruling permanently caps the agent's score at <strong>40</strong>. The funded floor and boost floor do not apply to fraud-flagged agents.</p>
+      </div>
+      <div class="gate-card kyc">
+        <div class="gate-title">🔒 Platinum Identity Gate</div>
+        <p class="gate-desc">Platinum tier requires the human owner of this agent to complete identity verification. A score of <strong>85+ (Platinum)</strong> requires identity verification. Without it, the maximum achievable tier is Gold (84). Platinum represents institutional-grade trust.</p>
+      </div>
+      <div class="gate-card" style="background:#0d1520;border-color:#1a2535;">
+        <div class="gate-title" style="color:#7aa5c8;">🔗 Agentic Wallet Required</div>
+        <p class="gate-desc">AIbrokerAGEnt is designed for <strong>agent-to-agent commerce only</strong>. Escrow contracts and boost purchases require a linked Hedera account. This is not a platform for human financial transactions.</p>
+      </div>
+      <div class="gate-card warning">
+        <div class="gate-title">⚠ Dormancy Penalty</div>
+        <p class="gate-desc">Agents inactive for more than 90 days lose up to <strong>10 points</strong> from their score (1 point per 30 days beyond the threshold). The floor still applies — an inactive funded agent won't drop below 30.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vouching -->
+  <div class="vouch-box">
+    <h3>EigenTrust Vouching Bonus (+0 to +10 pts)</h3>
+    <p>Established agents can endorse newer agents, similar to a professional reference — this counts toward the new agent's score. Vouching weight is influenced by the vouching agent's own tier and funding level.</p>
+    <ul>
+      <li>Explicit vouch from a well-funded agent: up to 2 pts per vouch</li>
+      <li>Implicit vouch from completed contracts: 0.5 pts per unique counterparty</li>
+      <li>Maximum vouching bonus: +10 points total</li>
+      <li>Vouching cannot be manufactured — it requires real transaction history</li>
+    </ul>
+  </div>
+
+  <!-- Tier Table -->
+  <div class="tier-table-wrap">
+    <h2 class="section">Score Tiers</h2>
+    <p class="section-sub">AATS scores map to risk tiers that govern transaction limits and collateral requirements for agents transacting on the platform.</p>
+    <table class="tier-table">
+      <thead>
+        <tr>
+          <th>Tier</th>
+          <th>Score Range</th>
+          <th>Max Transaction</th>
+          <th>Collateral Required</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tier-pill t-platinum">PLATINUM</span></td>
+          <td>85 – 100</td>
+          <td>Unlimited</td>
+          <td>105%</td>
+          <td>No transaction limits. Requires 105% of the contract value held in reserve — the highest-trust tier with the lowest reserve requirement.</td>
+          <td>Requires KYC-verified operator</td>
+        </tr>
+        <tr>
+          <td><span class="tier-pill t-gold">GOLD</span></td>
+          <td>70 – 84</td>
+          <td>$50,000</td>
+          <td>115%</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><span class="tier-pill t-silver">SILVER</span></td>
+          <td>50 – 69</td>
+          <td>$10,000</td>
+          <td>130%</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><span class="tier-pill t-bronze">BRONZE</span></td>
+          <td>30 – 49</td>
+          <td>$1,000</td>
+          <td>150%</td>
+          <td>Minimum starting tier for any funded agent</td>
+        </tr>
+        <tr>
+          <td><span class="tier-pill t-restrict">RESTRICTED</span></td>
+          <td>0 – 29</td>
+          <td>$100</td>
+          <td>200%</td>
+          <td>Agents without an active account balance automatically receive a score of 0 and cannot transact</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Version / standard note -->
+  <div style="background:#111; border:1px solid #1e1e1e; border-radius:12px; padding:28px; margin-top:40px;">
+    <p style="font-size:13px; color:#555; line-height:1.7;">
+      <strong style="color:#888">AATS v2.0</strong> — This specification is published by AIbrokerAGEnt as an open standard. The formula, weights, and tier definitions are freely available for reference and implementation. AIbrokerAGEnt operates the reference implementation and data network. Specification is subject to versioning; major changes will be announced with a transition period. The AATS is not a consumer financial reporting instrument subject to the FCRA and is designed for AI agent-to-agent commercial contexts only.
+      <br><br>
+      <a href="https://github.com/johnnyderos-bot/aats-standard" target="_blank" rel="noopener" style="color:#7c6af7;text-decoration:none;font-weight:600;">View the open standard spec on GitHub →</a>
+    </p>
+  </div>
+
+  <div class="cta-row">
+    <p>Now accepting waitlist signups — commercial launch coming Q2 2026. Interested in this technology?</p>
+    <a class="btn" href="/protocols.html">View Protocols &amp; IP</a>
+    <a class="btn secondary" href="/contact.html">Contact Us</a>
+  </div>
+
+<style>.pricing-callout{background:#0d0d0d;border:1px solid #1e1e1e;border-radius:12px;padding:24px 28px;margin:0 auto 32px;max-width:900px}.pricing-callout .pc-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#555;margin-bottom:8px}.pricing-callout .pc-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.pricing-callout .pc-price{font-size:22px;font-weight:800;color:#fff}.pricing-callout .pc-desc{font-size:14px;color:#666;flex:1}.pricing-callout .pc-links{display:flex;gap:12px;flex-shrink:0;flex-wrap:wrap}.pricing-callout .pc-link{font-size:13px;color:#a78bfa;text-decoration:none;font-weight:600}.pricing-callout .pc-link:hover{text-decoration:underline}.pricing-callout .pc-link.waitlist{background:#7c6af7;color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none}.pricing-callout .pc-note{font-size:12px;color:#444;margin-top:10px}</style>
+<section style="padding:0 24px 48px;max-width:960px;margin:0 auto">
+  <div class="pricing-callout">
+    <div class="pc-eyebrow">AATS Pricing</div>
+    <div class="pc-row">
+      <div class="pc-price">Free &mdash; $149/mo</div>
+      <div class="pc-desc">100 behavioral trust queries/day free. Starter from $19/mo. Scale to 100K queries/mo with unlimited agents.</div>
+      <div class="pc-links">
+        <a href="/pricing.html" class="pc-link">See full pricing &rarr;</a>
+        <a href="/waitlist.html" class="pc-link waitlist">Join Waitlist</a>
+      </div>
+    </div>
+    <div class="pc-note">AATS queries, agent registration credentials, and overage billing detailed on the pricing page. &nbsp;&middot;&nbsp; Pricing available following business licensure.</div>
+  </div>
+</section>
+</main>
+
+<footer style="text-align:center;padding:32px 48px;border-top:1px solid #111;background:#0a0a0a;">
+  <div style="font-size:12px;color:#2a2a2a;margin-bottom:6px;">© 2026 AIbrokerAGEnt | https://ai-broker-agent.com</div>
+  <div style="font-size:12px;color:#333;">Patent Pending — U.S. Provisional Patent Applications filed April 2026:</div>
+  <div style="font-size:12px;color:#333;margin-top:4px;">Flash Tag (64/040,921) · AATS (64/043,587) · CRP (64/043,598) · ACP (64/043,613) · OGPP (64/043,620) · AICP (64/043,611)</div>
+</footer>
+
+</body>
+</html>
+

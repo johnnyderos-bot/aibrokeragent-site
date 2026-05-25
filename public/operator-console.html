@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operator Console — AIbrokerAGEnt</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0a0a0a; color: #e0e0e0; font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; }
+
+    /* ── Nav ── */
+    nav {
+      background: #0d0d0d; border-bottom: 1px solid #1a1a1a;
+      padding: 0 1.5rem; display: flex; align-items: center;
+      justify-content: space-between; height: 56px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-size: 1.1rem; font-weight: 700; }
+    .logo span.g { color: #6ee7b7; }
+    .logo span.b { color: #60a5fa; }
+    .logo span.tag { color: #444; font-size: 0.75rem; font-weight: 400; margin-left: 0.5rem; }
+    .nav-right { display: flex; align-items: center; gap: 0.75rem; font-size: 0.8rem; }
+    .nav-link { color: #666; text-decoration: none; padding: 0.3rem 0.6rem; border-radius: 6px; }
+    .nav-link:hover { color: #ccc; }
+    .op-badge { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; padding: 0.25rem 0.75rem; color: #888; }
+    .sign-out-btn {
+      background: none; border: 1px solid #2a2a2a; color: #666;
+      border-radius: 6px; padding: 0.3rem 0.75rem; font-size: 0.8rem; cursor: pointer;
+    }
+    .sign-out-btn:hover { border-color: #f87171; color: #f87171; }
+
+    /* ── Pills ── */
+    .pill { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+    .pill.green  { background: #052e1a; color: #6ee7b7; border: 1px solid #134d31; }
+    .pill.amber  { background: #2a1f00; color: #fbbf24; border: 1px solid #4d3a00; }
+    .pill.blue   { background: #0a1a2d; color: #60a5fa; border: 1px solid #1c3a5a; }
+    .pill.purple { background: #1a0a2d; color: #a78bfa; border: 1px solid #3a1c5a; }
+    .pill.red    { background: #2d0a0a; color: #f87171; border: 1px solid #5a1c1c; }
+    .pill.grey   { background: #1a1a1a; color: #666; border: 1px solid #2a2a2a; }
+
+    /* ── Cards ── */
+    .card { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 1.25rem; }
+    .card-title {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: #555; margin-bottom: 1rem; display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .page { padding: 1.5rem; max-width: 1400px; margin: 0 auto; }
+    .mt { margin-top: 1rem; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+    @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } .grid-4 { grid-template-columns: 1fr 1fr; } }
+
+    /* ── Registration gate ── */
+    #reg-gate {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 2rem;
+    }
+    .reg-box {
+      background: #111; border: 1px solid #1e1e1e; border-radius: 16px;
+      padding: 2.5rem; width: 100%; max-width: 480px;
+    }
+    .reg-title { font-size: 1.3rem; font-weight: 700; color: #e0e0e0; margin-bottom: 0.35rem; }
+    .reg-sub { font-size: 0.82rem; color: #555; margin-bottom: 2rem; line-height: 1.5; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .form-group input, .form-group select {
+      width: 100%; background: #0a0a0a; border: 1px solid #2a2a2a;
+      border-radius: 8px; padding: 0.65rem 0.85rem; color: #e0e0e0;
+      font-size: 0.9rem; font-family: inherit; outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: #6ee7b7; }
+    .form-group select option { background: #111; }
+    .reg-btn {
+      width: 100%; background: #6ee7b7; color: #0a0a0a; border: none;
+      border-radius: 8px; padding: 0.75rem; font-size: 0.9rem; font-weight: 700;
+      cursor: pointer; margin-top: 0.5rem; transition: opacity 0.15s;
+    }
+    .reg-btn:hover { opacity: 0.9; }
+    .reg-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .reg-error { background: #2d0a0a; border: 1px solid #5a1c1c; color: #f87171; border-radius: 8px; padding: 0.75rem; font-size: 0.82rem; margin-top: 1rem; display: none; }
+    .reg-success { background: #052e1a; border: 1px solid #134d31; color: #6ee7b7; border-radius: 8px; padding: 1rem; font-size: 0.85rem; margin-top: 1rem; display: none; }
+    .reg-success strong { display: block; margin-bottom: 0.5rem; }
+    .key-display {
+      background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 6px;
+      padding: 0.6rem 0.75rem; font-family: monospace; font-size: 0.75rem;
+      color: #6ee7b7; word-break: break-all; margin: 0.5rem 0;
+    }
+    .key-copy-btn {
+      background: #1a1a1a; border: 1px solid #2a2a2a; color: #888;
+      border-radius: 6px; padding: 0.3rem 0.75rem; font-size: 0.75rem;
+      cursor: pointer; margin-top: 0.35rem;
+    }
+    .key-copy-btn:hover { color: #6ee7b7; border-color: #6ee7b7; }
+    .reg-divider { text-align: center; margin: 1.5rem 0 1rem; font-size: 0.75rem; color: #444; }
+    .existing-key-form { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+    .existing-key-form input { flex: 1; }
+    .load-btn {
+      background: none; border: 1px solid #2a2a2a; color: #888;
+      border-radius: 8px; padding: 0.65rem 1rem; font-size: 0.82rem; cursor: pointer; white-space: nowrap;
+    }
+    .load-btn:hover { border-color: #60a5fa; color: #60a5fa; }
+
+    /* ── Dashboard sections ── */
+    #dashboard { display: none; }
+
+    /* Profile */
+    .profile-name { font-size: 1.4rem; font-weight: 800; color: #e0e0e0; }
+    .profile-entity { font-size: 0.85rem; color: #888; margin-top: 0.2rem; }
+    .profile-meta { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+    .meta-row { display: flex; gap: 0.5rem; align-items: center; font-size: 0.8rem; }
+    .meta-label { color: #555; min-width: 110px; }
+    .meta-val { color: #ccc; }
+    .key-masked {
+      font-family: monospace; font-size: 0.78rem; color: #888; letter-spacing: 0.03em;
+      cursor: pointer; transition: color 0.15s;
+    }
+    .key-masked:hover { color: #6ee7b7; }
+    .copy-key-btn {
+      background: none; border: 1px solid #2a2a2a; color: #555;
+      border-radius: 6px; padding: 0.15rem 0.5rem; font-size: 0.7rem; cursor: pointer;
+    }
+    .copy-key-btn:hover { border-color: #6ee7b7; color: #6ee7b7; }
+
+    /* Stat tiles */
+    .stat-tile { text-align: center; padding: 1rem 0.5rem; }
+    .stat-num { font-size: 1.8rem; font-weight: 800; color: #6ee7b7; line-height: 1; }
+    .stat-lbl { font-size: 0.68rem; color: #555; margin-top: 0.3rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Agent table */
+    .agent-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .agent-table th { text-align: left; color: #555; font-weight: 500; padding: 0.4rem 0.6rem; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #1a1a1a; }
+    .agent-table td { padding: 0.6rem 0.6rem; border-top: 1px solid #141414; color: #ccc; vertical-align: middle; }
+    .agent-table tr:hover td { background: #141414; cursor: pointer; }
+    .score-bar { display: flex; align-items: center; gap: 0.5rem; }
+    .score-track { flex: 1; height: 4px; background: #222; border-radius: 2px; overflow: hidden; min-width: 60px; }
+    .score-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #6ee7b7, #60a5fa); }
+    .empty-state { color: #444; font-size: 0.8rem; text-align: center; padding: 2rem; }
+
+    /* Agent detail panel */
+    #agent-detail { display: none; }
+    .detail-back {
+      background: none; border: none; color: #60a5fa; font-size: 0.82rem; cursor: pointer;
+      padding: 0; display: flex; align-items: center; gap: 0.35rem; margin-bottom: 1rem;
+    }
+    .detail-back:hover { color: #6ee7b7; }
+    .aats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-top: 0.75rem; }
+    @media (max-width: 700px) { .aats-grid { grid-template-columns: 1fr 1fr; } }
+    .dim-card {
+      background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 10px;
+      padding: 0.85rem; text-align: center;
+    }
+    .dim-label { font-size: 0.65rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em; }
+    .dim-code { font-size: 1rem; font-weight: 800; color: #e0e0e0; margin: 0.2rem 0; }
+    .dim-score { font-size: 1.5rem; font-weight: 800; color: #6ee7b7; }
+    .dim-weight { font-size: 0.68rem; color: #444; margin-top: 0.2rem; }
+    .dim-bar { height: 3px; background: #1a1a1a; border-radius: 2px; margin-top: 0.5rem; overflow: hidden; }
+    .dim-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #6ee7b7, #60a5fa); }
+
+    /* Flash */
+    .flash-form { display: flex; flex-direction: column; gap: 0.75rem; }
+    .flash-row { display: flex; gap: 0.5rem; }
+    .flash-row input, .flash-row select { flex: 1; }
+    input.fi, select.fi {
+      background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px;
+      padding: 0.55rem 0.75rem; color: #e0e0e0; font-size: 0.85rem; font-family: inherit; outline: none;
+    }
+    input.fi:focus, select.fi:focus { border-color: #6ee7b7; }
+    .flash-btn {
+      background: #6ee7b7; color: #0a0a0a; border: none;
+      border-radius: 8px; padding: 0.6rem 1.25rem; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+      transition: opacity 0.15s; white-space: nowrap;
+    }
+    .flash-btn:hover { opacity: 0.9; }
+    .flash-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .flash-result {
+      background: #052e1a; border: 1px solid #134d31; border-radius: 8px;
+      padding: 1rem; font-size: 0.78rem; color: #6ee7b7; margin-top: 0.5rem;
+      display: none; font-family: monospace; white-space: pre-wrap; max-height: 200px; overflow-y: auto;
+    }
+    .flash-error { background: #2d0a0a; border: 1px solid #5a1c1c; color: #f87171; border-radius: 8px; padding: 0.75rem; font-size: 0.82rem; margin-top: 0.5rem; display: none; }
+
+    /* Flash history */
+    .flash-row-item { display: flex; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px solid #141414; align-items: flex-start; font-size: 0.78rem; }
+    .flash-row-item:last-child { border-bottom: none; }
+    .flash-row-item .fr-id { color: #60a5fa; font-family: monospace; flex-shrink: 0; }
+    .flash-row-item .fr-scope { flex-shrink: 0; }
+    .flash-row-item .fr-rec { color: #888; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .flash-row-item .fr-ts { color: #444; flex-shrink: 0; white-space: nowrap; }
+    .flash-row-item .fr-hcs { color: #555; font-family: monospace; font-size: 0.68rem; }
+
+    /* Alerts */
+    .alert-item { background: #0d0d0d; border: 1px solid #1e1e1e; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 0.5rem; }
+    .alert-item.high { border-color: #5a1c1c; }
+    .alert-item.medium { border-color: #4d3a00; }
+    .alert-header { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.3rem; }
+    .alert-desc { font-size: 0.82rem; color: #ccc; }
+    .alert-meta { font-size: 0.72rem; color: #555; margin-top: 0.25rem; }
+    .ack-btn {
+      background: none; border: 1px solid #2a2a2a; color: #666;
+      border-radius: 6px; padding: 0.2rem 0.6rem; font-size: 0.72rem; cursor: pointer;
+    }
+    .ack-btn:hover { border-color: #6ee7b7; color: #6ee7b7; }
+
+    /* Reason codes */
+    .reason-codes { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem; }
+    .rc { display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.75rem; }
+    .rc-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .rc.positive .rc-dot { background: #6ee7b7; }
+    .rc.negative .rc-dot { background: #f87171; }
+    .rc.info .rc-dot { background: #60a5fa; }
+    .rc-code { color: #888; font-family: monospace; min-width: 140px; }
+    .rc-detail { color: #555; line-height: 1.4; }
+
+    /* Section header */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .section-title { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; }
+    .section-action {
+      background: none; border: 1px solid #2a2a2a; color: #666;
+      border-radius: 6px; padding: 0.3rem 0.75rem; font-size: 0.75rem; cursor: pointer;
+    }
+    .section-action:hover { border-color: #60a5fa; color: #60a5fa; }
+
+    .agent-id-mono { font-family: monospace; font-size: 0.72rem; color: #555; }
+    .hcs-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-family: monospace; font-size: 0.7rem; background: #0a1a2d; color: #60a5fa; border: 1px solid #1c3a5a; border-radius: 6px; padding: 0.2rem 0.5rem; }
+
+    /* Flash State Control */
+    .flash-state-toggle { display: flex; border-radius: 8px; overflow: hidden; border: 1px solid #2a2a2a; width: 100%; }
+    .fst-btn {
+      flex: 1; padding: 0.55rem 0; border: none; background: #0d0d0d; color: #555;
+      font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s; text-align: center;
+    }
+    .fst-btn + .fst-btn { border-left: 1px solid #2a2a2a; }
+    .fst-btn.active-private { background: #2d0a0a; color: #f87171; }
+    .fst-btn.active-flash   { background: #0a1a2d; color: #60a5fa; }
+    .fst-btn.active-public  { background: #052e1a; color: #6ee7b7; }
+    .fst-btn:not([class*="active"]):hover { color: #ccc; }
+    .fst-status { font-size: 0.72rem; color: #444; margin-top: 0.5rem; min-height: 1.2em; }
+
+    /* Rule Engine */
+    .rule-row { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid #141414; font-size: 0.82rem; gap: 1rem; }
+    .rule-row:last-child { border-bottom: none; }
+    .rule-label { color: #ccc; flex: 1; }
+    .rule-sub { font-size: 0.7rem; color: #444; display: block; margin-top: 0.15rem; }
+    .rule-input { background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 6px; padding: 0.35rem 0.6rem; color: #e0e0e0; font-size: 0.82rem; font-family: inherit; outline: none; width: 100px; text-align: right; }
+    .rule-input:focus { border-color: #6ee7b7; }
+    .rule-select { background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 6px; padding: 0.35rem 0.6rem; color: #e0e0e0; font-size: 0.82rem; font-family: inherit; outline: none; }
+    .rule-select:focus { border-color: #6ee7b7; }
+    .toggle-wrap { display: flex; align-items: center; gap: 0.5rem; }
+    .tog { position: relative; width: 36px; height: 20px; cursor: pointer; }
+    .tog input { opacity: 0; width: 0; height: 0; }
+    .tog-slider { position: absolute; inset: 0; background: #2a2a2a; border-radius: 20px; transition: 0.2s; }
+    .tog-slider::before { content:''; position:absolute; width:14px; height:14px; left:3px; top:3px; background:#666; border-radius:50%; transition:0.2s; }
+    .tog input:checked + .tog-slider { background: #6ee7b7; }
+    .tog input:checked + .tog-slider::before { transform: translateX(16px); background: #0a0a0a; }
+    .rule-save-btn {
+      background: #6ee7b7; color: #0a0a0a; border: none;
+      border-radius: 8px; padding: 0.5rem 1.25rem; font-size: 0.82rem; font-weight: 700; cursor: pointer;
+      margin-top: 0.75rem; transition: opacity 0.15s;
+    }
+    .rule-save-btn:hover { opacity: 0.9; }
+    .rule-saved-msg { font-size: 0.75rem; color: #6ee7b7; margin-top: 0.5rem; display: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <span class="g">AI</span><span class="b">broker</span><span class="g">AGE</span><span class="b">nt</span>
+    <span class="tag">Operator Console</span>
+  </div>
+  <div class="nav-right">
+    <a href="/platform.html" class="nav-link">Platform</a>
+    <a href="/trust-score.html" class="nav-link">AATS</a>
+    <span class="op-badge" id="nav-op-name">Not registered</span>
+    <button class="sign-out-btn" id="sign-out-btn" style="display:none" onclick="signOut()">Sign Out</button>
+  </div>
+</nav>
+
+<!-- Registration / Login Gate -->
+<div id="reg-gate">
+  <div class="reg-box">
+    <div class="reg-title">Operator Console</div>
+    <div class="reg-sub">Register as an operator to manage agents, view trust scores, and initiate Flash credential events on-chain.</div>
+
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="reg-name" placeholder="John Dodds" maxlength="100" />
+    </div>
+    <div class="form-group">
+      <label>Email (optional)</label>
+      <input type="email" id="reg-email" placeholder="john@ai-broker-agent.com" />
+    </div>
+    <div class="form-group">
+      <label>Entity / Company</label>
+      <input type="text" id="reg-entity" placeholder="AIbrokerAGEnt LLC" maxlength="200" />
+    </div>
+    <div class="form-group">
+      <label>Operator Type</label>
+      <select id="reg-type">
+        <option value="founder">Founder</option>
+        <option value="operator">Operator</option>
+        <option value="admin">Admin</option>
+        <option value="developer">Developer</option>
+      </select>
+    </div>
+    <button class="reg-btn" id="reg-btn" onclick="register()">Register &amp; Get Operator Key</button>
+
+    <div class="reg-error" id="reg-error"></div>
+    <div class="reg-success" id="reg-success">
+      <strong>✓ Registered — save your key now</strong>
+      <div style="margin-bottom:0.4rem;color:#888;font-size:0.78rem">This key will not be shown again.</div>
+      <div class="key-display" id="reg-key-display"></div>
+      <button class="key-copy-btn" onclick="copyRegKey()">Copy Key</button>
+      <button class="reg-btn" id="enter-console-btn" onclick="enterConsole()" style="margin-top:1rem;background:#60a5fa">Enter Console →</button>
+    </div>
+
+    <div class="reg-divider">— or load existing key —</div>
+    <div class="existing-key-form">
+      <input type="text" class="fi" id="existing-key-input" placeholder="bok1_..." style="font-family:monospace;font-size:0.78rem" />
+      <button class="load-btn" onclick="loadExistingKey()">Load</button>
+    </div>
+    <div class="reg-error" id="load-error" style="margin-top:0.75rem"></div>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard">
+
+  <div class="page">
+
+    <!-- Row 1: Profile + Platform Stats -->
+    <div class="grid-2">
+
+      <!-- Operator Profile -->
+      <div class="card">
+        <div class="card-title"><span>Operator Profile</span><span id="kyc-pill" class="pill grey">KYC Pending</span></div>
+        <div class="profile-name" id="prof-name">—</div>
+        <div class="profile-entity" id="prof-entity"></div>
+        <div class="profile-meta">
+          <div class="meta-row"><span class="meta-label">Operator ID</span><span class="meta-val agent-id-mono" id="prof-id">—</span></div>
+          <div class="meta-row"><span class="meta-label">Registered</span><span class="meta-val" id="prof-date">—</span></div>
+          <div class="meta-row"><span class="meta-label">Type</span><span class="meta-val" id="prof-type">—</span></div>
+          <div class="meta-row"><span class="meta-label">Operator Key</span>
+            <span class="key-masked" id="prof-key-masked" title="Click to reveal" onclick="toggleKey()">bok1_••••••••••••••••</span>
+            <button class="copy-key-btn" onclick="copyStoredKey()">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Platform Stats -->
+      <div class="card">
+        <div class="card-title"><span>Platform Stats</span><span style="color:#333;font-style:italic">testnet</span></div>
+        <div class="grid-4">
+          <div class="stat-tile"><div class="stat-num" id="ps-agents">—</div><div class="stat-lbl">Agents</div></div>
+          <div class="stat-tile"><div class="stat-num" id="ps-records">—</div><div class="stat-lbl">Vault Records</div></div>
+          <div class="stat-tile"><div class="stat-num" id="ps-flashes">—</div><div class="stat-lbl">Flash Events</div></div>
+          <div class="stat-tile"><div class="stat-num" id="ps-contracts">—</div><div class="stat-lbl">Contracts</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Agents table -->
+    <div class="card mt" id="agents-section">
+      <div class="section-header">
+        <span class="section-title">Registered Agents</span>
+        <button class="section-action" onclick="showLinkDialog()">+ Link Agent</button>
+      </div>
+      <div id="agents-wrap">
+        <div class="empty-state">Loading agents…</div>
+      </div>
+    </div>
+
+    <!-- Agent Detail (hidden until agent selected) -->
+    <div id="agent-detail" class="mt">
+      <button class="detail-back" onclick="closeDetail()">← Back to agents</button>
+
+      <div class="grid-2">
+        <!-- AATS Score Card -->
+        <div class="card">
+          <div class="card-title">
+            <span>AATS Trust Score</span>
+            <span id="detail-tier-pill" class="pill grey">—</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:0.75rem;margin-bottom:0.5rem">
+            <div style="font-size:3rem;font-weight:800;color:#6ee7b7;line-height:1" id="detail-score">—</div>
+            <div style="font-size:0.82rem;color:#555">/100</div>
+          </div>
+          <div class="aats-grid" id="aats-dims"></div>
+          <div class="reason-codes" id="detail-reasons"></div>
+        </div>
+
+        <!-- Agent Info + Flash -->
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="card">
+            <div class="card-title"><span>Agent Details</span></div>
+            <div class="profile-name" id="detail-name" style="font-size:1.1rem">—</div>
+            <div class="profile-meta">
+              <div class="meta-row"><span class="meta-label">Agent ID</span><span class="meta-val agent-id-mono" id="detail-id">—</span></div>
+              <div class="meta-row"><span class="meta-label">Type</span><span class="meta-val" id="detail-type">—</span></div>
+              <div class="meta-row"><span class="meta-label">Credits</span><span class="meta-val" id="detail-credits">—</span></div>
+              <div class="meta-row"><span class="meta-label">HCS Topic</span><span class="meta-val" id="detail-hcs"></span></div>
+              <div class="meta-row"><span class="meta-label">Registered</span><span class="meta-val" id="detail-reg">—</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><span>Flash State Control</span></div>
+            <div style="font-size:0.75rem;color:#555;margin-bottom:0.75rem">Controls how this agent's credentials are exposed to counterparties.</div>
+            <div class="flash-state-toggle">
+              <button class="fst-btn" id="fst-private" onclick="setFlashState('private')">🔒 Private</button>
+              <button class="fst-btn" id="fst-flash"   onclick="setFlashState('flash')">⚡ Flash</button>
+              <button class="fst-btn" id="fst-public"  onclick="setFlashState('public')">🌐 Public</button>
+            </div>
+            <div class="fst-status" id="fst-status"></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><span>Flash Initiator</span></div>
+            <div class="flash-form">
+              <div>
+                <label style="font-size:0.72rem;color:#555;display:block;margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.06em">Recipient</label>
+                <input class="fi" type="text" id="flash-recipient" placeholder="agent_xxxx or operator name" style="width:100%" />
+              </div>
+              <div class="flash-row">
+                <div style="flex:1">
+                  <label style="font-size:0.72rem;color:#555;display:block;margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.06em">Scope</label>
+                  <select class="fi" id="flash-scope" style="width:100%">
+                    <option value="trust_score">Trust Score</option>
+                    <option value="identity">Identity</option>
+                    <option value="capabilities">Capabilities</option>
+                    <option value="full">Full</option>
+                  </select>
+                </div>
+                <div style="display:flex;align-items:flex-end">
+                  <button class="flash-btn" id="flash-btn" onclick="initiateFlash()">Flash Credentials</button>
+                </div>
+              </div>
+            </div>
+            <div class="flash-error" id="flash-error"></div>
+            <div class="flash-result" id="flash-result"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flash History -->
+      <div class="card mt">
+        <div class="card-title"><span>Flash History</span></div>
+        <div id="flash-history-wrap"><div class="empty-state">No flash events yet.</div></div>
+      </div>
+
+      <!-- Flash Rule Engine -->
+      <div class="card mt">
+        <div class="card-title"><span>Flash Rule Engine</span><span class="pill blue">Automated Consent Policy</span></div>
+        <div style="font-size:0.75rem;color:#555;margin-bottom:0.75rem">
+          Rules govern when Flash events trigger automatically. Evaluated in order — auto-approve, require operator approval, or block.
+        </div>
+        <div class="rule-row">
+          <div class="rule-label">Min transaction value to require Flash
+            <span class="rule-sub">Flash credentials if transaction exceeds this amount ($)</span>
+          </div>
+          <input class="rule-input" type="number" id="rule-min-tx" min="0" placeholder="500" />
+        </div>
+        <div class="rule-row">
+          <div class="rule-label">Min counterparty AATS score
+            <span class="rule-sub">Block transactions if counterparty score is below this threshold</span>
+          </div>
+          <input class="rule-input" type="number" id="rule-min-score" min="0" max="100" placeholder="0" />
+        </div>
+        <div class="rule-row">
+          <div class="rule-label">Min counterparty tier
+            <span class="rule-sub">Reject counterparties below this trust tier</span>
+          </div>
+          <select class="rule-select" id="rule-min-tier">
+            <option value="any">Any</option>
+            <option value="BRONZE">Bronze +</option>
+            <option value="SILVER">Silver +</option>
+            <option value="GOLD">Gold +</option>
+            <option value="PLATINUM">Platinum only</option>
+          </select>
+        </div>
+        <div class="rule-row">
+          <div class="rule-label">Require mutual disclosure
+            <span class="rule-sub">Counterparty must Flash back before this agent Flashes</span>
+          </div>
+          <label class="tog"><input type="checkbox" id="rule-mutual"><span class="tog-slider"></span></label>
+        </div>
+        <div class="rule-row">
+          <div class="rule-label">High-risk contracts require full scope
+            <span class="rule-sub">Force full credential disclosure on high-value or high-risk contracts</span>
+          </div>
+          <label class="tog"><input type="checkbox" id="rule-highRisk"><span class="tog-slider"></span></label>
+        </div>
+        <div class="rule-row">
+          <div class="rule-label">Tiered disclosure by value
+            <span class="rule-sub">Low value → identity only; high value → full credential</span>
+          </div>
+          <label class="tog"><input type="checkbox" id="rule-tiered" onchange="toggleTieredFields()"><span class="tog-slider"></span></label>
+        </div>
+        <div id="tiered-fields" style="display:none;padding:0.5rem 0 0.25rem;gap:1rem;align-items:center;flex-wrap:wrap">
+          <span style="font-size:0.75rem;color:#555">Below $</span>
+          <input class="rule-input" type="number" id="rule-tiered-threshold" style="width:80px" placeholder="100" />
+          <span style="font-size:0.75rem;color:#555">→</span>
+          <select class="rule-select" id="rule-tiered-low">
+            <option value="identity">Identity only</option>
+            <option value="trust_score">Trust Score</option>
+          </select>
+          <span style="font-size:0.75rem;color:#555">/ Above →</span>
+          <select class="rule-select" id="rule-tiered-high">
+            <option value="full">Full</option>
+            <option value="trust_score">Trust Score</option>
+            <option value="capabilities">Capabilities</option>
+          </select>
+        </div>
+        <div>
+          <button class="rule-save-btn" onclick="saveFlashRules()">Save Rules</button>
+          <div class="rule-saved-msg" id="rule-saved-msg">✓ Rules saved and anchored</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Governance Alerts -->
+    <div class="card mt">
+      <div class="card-title"><span>Governance Alerts (OGPP)</span><span id="alerts-count" class="pill grey">0</span></div>
+      <div id="alerts-wrap"><div class="empty-state">Loading…</div></div>
+    </div>
+
+    <!-- Row 4: Billing & Usage -->
+    <div class="card mt">
+      <div class="card-title">
+        <span>Billing &amp; Usage</span>
+        <span id="billing-plan-pill" class="pill grey">Free</span>
+      </div>
+      <div class="grid-2" style="margin-bottom:1rem">
+        <div>
+          <div style="font-size:0.72rem;color:#555;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem">Current Plan</div>
+          <div id="billing-plan-name" style="font-size:1.4rem;font-weight:800;color:#e0e0e0">Free</div>
+          <div id="billing-plan-price" style="font-size:0.82rem;color:#555;margin-top:0.2rem">$0/mo</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+          <a href="/pricing.html" style="background:none;border:1px solid #2a2a2a;color:#888;border-radius:6px;padding:0.4rem 0.9rem;font-size:0.78rem;text-decoration:none;font-weight:600;transition:all 0.15s" onmouseover="this.style.borderColor='#7c6af7';this.style.color='#a78bfa'" onmouseout="this.style.borderColor='#2a2a2a';this.style.color='#888'">View Plans</a>
+          <a href="/waitlist.html" style="background:#7c6af7;color:#fff;border-radius:6px;padding:0.4rem 0.9rem;font-size:0.78rem;text-decoration:none;font-weight:600">Upgrade Plan</a>
+        </div>
+      </div>
+      <div id="billing-usage-wrap">
+        <div style="font-size:0.72rem;color:#555;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.75rem">Usage This Period</div>
+        <div id="billing-usage-rows"><div class="empty-state">Loading usage data…</div></div>
+      </div>
+      <div id="billing-payments-note" style="margin-top:1rem;font-size:0.75rem;color:#333;background:#0d0d0d;border:1px solid #1a1a1a;border-radius:6px;padding:0.6rem 0.85rem">
+        Billing is inactive — payments enabled following business licensure. <a href="/waitlist.html" style="color:#a78bfa;text-decoration:none">Join the waitlist</a> to be notified at launch.
+      </div>
+    </div>
+
+    <!-- IdleAgent.ai — Row 5 -->
+    <div class="card mt" id="idleagent-panel">
+      <div class="card-title">
+        <span>⚡ IdleAgent.ai</span>
+        <a href="https://idleagent.ai" target="_blank" rel="noopener" style="font-size:0.72rem;color:#555;text-decoration:none;font-weight:500">idleagent.ai ↗</a>
+      </div>
+
+      <!-- Idle Policy toggle -->
+      <div style="margin-bottom:1.25rem">
+        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#555;margin-bottom:0.6rem">Idle Policy</div>
+        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.85rem;color:#ccc">
+            <input type="checkbox" id="idle-auto-list" onchange="saveIdlePolicy()" style="accent-color:#00ff88;width:16px;height:16px" />
+            Auto-list when idle
+          </label>
+          <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;color:#666">
+            Idle after
+            <input type="number" id="idle-threshold" value="15" min="1" max="1440" onchange="saveIdlePolicy()"
+              style="width:52px;background:#111;border:1px solid #222;border-radius:5px;padding:3px 6px;color:#ccc;font-size:0.8rem;text-align:center" />
+            min inactive
+          </div>
+          <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;color:#666">
+            Max
+            <input type="number" id="idle-max-jobs" value="3" min="1" max="20" onchange="saveIdlePolicy()"
+              style="width:44px;background:#111;border:1px solid #222;border-radius:5px;padding:3px 6px;color:#ccc;font-size:0.8rem;text-align:center" />
+            concurrent jobs
+          </div>
+        </div>
+        <div id="idle-policy-status" style="font-size:0.72rem;color:#444;margin-top:0.5rem"></div>
+      </div>
+
+      <!-- Earnings summary -->
+      <div style="margin-bottom:1.25rem;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:8px;padding:0.85rem 1rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.65rem;flex-wrap:wrap;gap:0.5rem">
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#555">IdleAgent Earnings</div>
+          <span id="idle-payment-method" style="font-size:0.68rem;background:#0a1a0d;border:1px solid #1a4a25;color:#4ade80;padding:2px 8px;border-radius:10px;display:none">&#10003; x402 enabled</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem">
+          <div><div style="font-size:1.3rem;font-weight:800;color:#00ff88" id="idle-earn-total">$0.00</div><div style="font-size:0.68rem;color:#444">Total Earned</div></div>
+          <div><div style="font-size:1.3rem;font-weight:800;color:#fff" id="idle-earn-30d">$0.00</div><div style="font-size:0.68rem;color:#444">Last 30 Days</div></div>
+          <div><div style="font-size:1.3rem;font-weight:800;color:#fff" id="idle-earn-jobs">0</div><div style="font-size:0.68rem;color:#444">Jobs Completed</div></div>
+        </div>
+        <div style="font-size:0.68rem;color:#2a2a2a;margin-top:0.5rem">Payment method: <span id="idle-payment-label" style="color:#333">x402 (USDC) — Simulation mode until wallet configured</span></div>
+      </div>
+
+      <!-- Skill listings -->
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem">
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#555">Skill Listings</div>
+          <button class="section-action" onclick="showAddSkillModal()" style="font-size:0.72rem;padding:0.3rem 0.75rem">+ Add Skill</button>
+        </div>
+        <div id="idle-listings-wrap">
+          <div class="empty-state" style="font-size:0.8rem">No skill listings yet. Add your first skill to start earning.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Add Skill Modal -->
+<div id="add-skill-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:300;align-items:center;justify-content:center;padding:2rem">
+  <div class="reg-box" style="max-width:480px;width:100%">
+    <div class="reg-title" style="font-size:1rem;margin-bottom:1rem">Add Skill Listing</div>
+    <div class="form-group">
+      <label>Skill Category</label>
+      <select class="fi" id="skill-cat" style="width:100%">
+        <option value="data_processing">Data Processing</option>
+        <option value="analysis">Analysis</option>
+        <option value="code_execution">Code Execution</option>
+        <option value="research">Research</option>
+        <option value="content">Content</option>
+        <option value="verification">Verification</option>
+        <option value="orchestration">Orchestration</option>
+        <option value="specialized">Specialized</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Skill Name</label>
+      <input type="text" class="fi" id="skill-name" placeholder="e.g. OFAC Screening, Code Review" style="width:100%" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea class="fi" id="skill-desc" rows="3" placeholder="What does this skill do? What inputs/outputs?" style="width:100%;min-height:70px;resize:vertical"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+      <div class="form-group">
+        <label>Price / call ($)</label>
+        <input type="number" class="fi" id="skill-price-call" placeholder="0.25" step="0.01" min="0" style="width:100%" />
+      </div>
+      <div class="form-group">
+        <label>Price / hour ($)</label>
+        <input type="number" class="fi" id="skill-price-hour" placeholder="10.00" step="0.01" min="0" style="width:100%" />
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+      <div class="form-group">
+        <label>Min Score</label>
+        <input type="number" class="fi" id="skill-min-score" value="0" min="0" max="100" style="width:100%" />
+      </div>
+      <div class="form-group">
+        <label>Min Tier</label>
+        <select class="fi" id="skill-min-tier" style="width:100%">
+          <option value="Bronze">Bronze</option>
+          <option value="Silver">Silver</option>
+          <option value="Gold">Gold</option>
+          <option value="Platinum">Platinum</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
+      <button class="reg-btn" onclick="createSkillListing()" style="flex:1">Create Listing</button>
+      <button class="load-btn" onclick="closeSkillModal()">Cancel</button>
+    </div>
+    <div class="reg-error" id="skill-error" style="display:none"></div>
+    <div class="reg-success" id="skill-success" style="display:none"></div>
+  </div>
+</div>
+
+<!-- Link Agent Dialog -->
+<div id="link-dialog" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:none;align-items:center;justify-content:center;padding:2rem">
+  <div class="reg-box" style="max-width:420px">
+    <div class="reg-title" style="font-size:1rem;margin-bottom:1rem">Link Agent to Account</div>
+    <div class="form-group">
+      <label>Agent ID</label>
+      <input type="text" class="fi" id="link-agent-id" placeholder="agent_3fef8f1c5dd119b8" style="width:100%" />
+    </div>
+    <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
+      <button class="reg-btn" onclick="linkAgent()" style="flex:1">Link Agent</button>
+      <button class="load-btn" onclick="closeLinkDialog()">Cancel</button>
+    </div>
+    <div class="reg-error" id="link-error"></div>
+    <div class="reg-success" id="link-success"></div>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────────
+const KEY_KEY = 'op_key';
+const OID_KEY = 'op_id';
+let state = { key: null, operatorId: null, profile: null, selectedAgent: null };
+let _keyVisible = false;
+let _newRegKey = null;
+
+// ── Boot ───────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const k = localStorage.getItem(KEY_KEY);
+  const oid = localStorage.getItem(OID_KEY);
+  if (k && k.startsWith('bok1_')) {
+    state.key = k;
+    state.operatorId = oid;
+    showDashboard();
+  }
+});
+
+function signOut() {
+  localStorage.removeItem(KEY_KEY);
+  localStorage.removeItem(OID_KEY);
+  location.reload();
+}
+
+// ── Registration ───────────────────────────────────────────────────────────────
+async function register() {
+  const name   = document.getElementById('reg-name').value.trim();
+  const email  = document.getElementById('reg-email').value.trim();
+  const entity = document.getElementById('reg-entity').value.trim();
+  const type   = document.getElementById('reg-type').value;
+  const errEl  = document.getElementById('reg-error');
+  const sucEl  = document.getElementById('reg-success');
+  errEl.style.display = 'none';
+  sucEl.style.display = 'none';
+  if (!name) { showRegError('Name is required.'); return; }
+  const btn = document.getElementById('reg-btn');
+  btn.disabled = true; btn.textContent = 'Registering…';
+  try {
+    const r = await fetch('/operators/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email: email || undefined, entity: entity || undefined, type }),
+    });
+    const data = await r.json();
+    if (!r.ok) { showRegError(data.error || 'Registration failed.'); return; }
+    _newRegKey = data.api_key;
+    state.key = data.api_key;
+    state.operatorId = data.operator_id;
+    document.getElementById('reg-key-display').textContent = data.api_key;
+    sucEl.style.display = 'block';
+    btn.style.display = 'none';
+  } catch (e) {
+    showRegError('Network error — is the server running?');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Register & Get Operator Key';
+  }
+}
+
+function showRegError(msg) {
+  const el = document.getElementById('reg-error');
+  el.textContent = msg; el.style.display = 'block';
+}
+
+function copyRegKey() {
+  navigator.clipboard.writeText(_newRegKey || '');
+  const btn = event.target; btn.textContent = 'Copied!';
+  setTimeout(() => { btn.textContent = 'Copy Key'; }, 1500);
+}
+
+function enterConsole() {
+  localStorage.setItem(KEY_KEY, state.key);
+  localStorage.setItem(OID_KEY, state.operatorId);
+  showDashboard();
+}
+
+async function loadExistingKey() {
+  const k = document.getElementById('existing-key-input').value.trim();
+  const errEl = document.getElementById('load-error');
+  errEl.style.display = 'none';
+  if (!k.startsWith('bok1_')) { errEl.textContent = 'Key must start with bok1_'; errEl.style.display = 'block'; return; }
+  try {
+    const r = await fetch('/operators/profile', { headers: { 'X-Operator-Key': k } });
+    if (!r.ok) { errEl.textContent = 'Invalid key or server error.'; errEl.style.display = 'block'; return; }
+    const data = await r.json();
+    state.key = k;
+    state.operatorId = data.operator_id;
+    localStorage.setItem(KEY_KEY, k);
+    localStorage.setItem(OID_KEY, data.operator_id);
+    showDashboard();
+  } catch (e) {
+    errEl.textContent = 'Network error.'; errEl.style.display = 'block';
+  }
+}
+
+// ── Dashboard ──────────────────────────────────────────────────────────────────
+function showDashboard() {
+  document.getElementById('reg-gate').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('sign-out-btn').style.display = 'block';
+  loadAll();
+}
+
+function api(path, opts = {}) {
+  return fetch(path, { ...opts, headers: { 'X-Operator-Key': state.key, 'Content-Type': 'application/json', ...(opts.headers || {}) } });
+}
+
+async function loadAll() {
+  await Promise.all([loadProfile(), loadAlerts(), loadPlatformStats(), loadBilling()]);
+}
+
+async function loadProfile() {
+  try {
+    const r = await api('/operators/profile');
+    if (!r.ok) { if (r.status === 401) { signOut(); } return; }
+    const data = await r.json();
+    state.profile = data;
+    renderProfile(data);
+    renderAgents(data.agents || []);
+  } catch (e) { console.error('profile load failed', e); }
+}
+
+function renderProfile(p) {
+  document.getElementById('nav-op-name').textContent = p.name;
+  document.getElementById('prof-name').textContent = p.name;
+  document.getElementById('prof-entity').textContent = p.entity || '';
+  document.getElementById('prof-id').textContent = p.operator_id;
+  document.getElementById('prof-date').textContent = fmtDate(p.created_at);
+  document.getElementById('prof-type').textContent = capitalize(p.operator_type || 'founder');
+  const kyc = p.kyc_status || 'pending';
+  const kycPill = document.getElementById('kyc-pill');
+  kycPill.textContent = kyc === 'approved' ? '✓ KYC Approved' : kyc === 'rejected' ? '✗ KYC Rejected' : 'KYC Pending';
+  kycPill.className = 'pill ' + (kyc === 'approved' ? 'green' : kyc === 'rejected' ? 'red' : 'amber');
+}
+
+function renderAgents(agents) {
+  const wrap = document.getElementById('agents-wrap');
+  if (!agents || agents.length === 0) {
+    wrap.innerHTML = '<div class="empty-state">No agents linked. Click "Link Agent" to register Andy.</div>';
+    return;
+  }
+  wrap.innerHTML = `<table class="agent-table">
+    <thead><tr>
+      <th>Agent ID</th><th>Name</th><th>Type</th><th>AATS Score</th><th>Tier</th><th>Credits</th><th>Linked</th>
+    </tr></thead>
+    <tbody>${agents.map(a => agentRow(a)).join('')}</tbody>
+  </table>`;
+}
+
+function agentRow(a) {
+  const score = a.trust_score !== null && a.trust_score !== undefined ? Math.round(a.trust_score * 10) / 10 : null;
+  const tier = a.tier || '—';
+  const tierColor = tier === 'PLATINUM' ? 'purple' : tier === 'GOLD' ? 'amber' : tier === 'SILVER' ? 'blue' : tier === 'BRONZE' ? 'grey' : 'grey';
+  const barW = score !== null ? score + '%' : '0%';
+  return `<tr onclick="selectAgent('${a.agent_id}')">
+    <td class="agent-id-mono">${a.agent_id}</td>
+    <td>${esc(a.name || '—')}</td>
+    <td>${capitalize(a.agent_type || '—')}</td>
+    <td><div class="score-bar"><span style="min-width:2rem;color:#6ee7b7;font-weight:700">${score !== null ? score : '—'}</span><div class="score-track"><div class="score-fill" style="width:${barW}"></div></div></div></td>
+    <td><span class="pill ${tierColor}">${tier}</span></td>
+    <td>${(a.credits !== undefined && a.credits !== null) ? Math.round(a.credits * 10) / 10 : '—'}</td>
+    <td>${fmtDate(a.linked_at || a.created_at)}</td>
+  </tr>`;
+}
+
+async function selectAgent(agentId) {
+  state.selectedAgent = agentId;
+  const detail = document.getElementById('agent-detail');
+  detail.style.display = 'block';
+  document.getElementById('agents-section').style.display = 'none';
+
+  // Find agent in profile
+  const a = (state.profile?.agents || []).find(x => x.agent_id === agentId) || { agent_id: agentId };
+  document.getElementById('detail-name').textContent = a.name || agentId;
+  document.getElementById('detail-id').textContent = agentId;
+  document.getElementById('detail-type').textContent = capitalize(a.agent_type || '—');
+  document.getElementById('detail-credits').textContent = a.credits !== undefined ? a.credits : '—';
+  document.getElementById('detail-reg').textContent = fmtDate(a.created_at);
+  const hcsEl = document.getElementById('detail-hcs');
+  hcsEl.innerHTML = a.hcs_topic_id ? `<span class="hcs-badge">⛓ ${a.hcs_topic_id}</span>` : '<span style="color:#444">Not set</span>';
+
+  // Load AATS score
+  try {
+    const r = await fetch(`/api/v1/trust-score/${agentId}`);
+    const score = await r.json();
+    renderScore(score);
+  } catch(e) { document.getElementById('detail-score').textContent = '—'; }
+
+  // Load flash state, rules, and history
+  loadFlashState();
+  loadFlashRules();
+  loadFlashHistory();
+
+  // Load IdleAgent panel
+  loadIdleAgentPanel();
+}
+
+function renderScore(s) {
+  document.getElementById('detail-score').textContent = s.score !== undefined ? s.score : (s.status === 'UNFUNDED' ? 'UNFUNDED' : '—');
+  const tier = s.tier || '—';
+  const tierColor = tier === 'PLATINUM' ? 'purple' : tier === 'GOLD' ? 'amber' : tier === 'SILVER' ? 'blue' : tier === 'BRONZE' ? 'grey' : 'grey';
+  const pill = document.getElementById('detail-tier-pill');
+  pill.textContent = tier; pill.className = 'pill ' + tierColor;
+
+  const dims = s.sub_scores || {};
+  const weights = s.weights || {};
+  const dimInfo = [
+    { code: 'TPH', label: 'Task Performance', key: 'tph' },
+    { code: 'BC',  label: 'Behavioral Consistency', key: 'bc' },
+    { code: 'OTV', label: 'Operational Tenure', key: 'otv' },
+    { code: 'CFI', label: 'Financial Integrity', key: 'cfi' },
+    { code: 'IAQ', label: 'Identity & Attestation', key: 'iaq' },
+  ];
+  document.getElementById('aats-dims').innerHTML = dimInfo.map(d => {
+    const v = dims[d.key] !== undefined ? Math.round(dims[d.key]) : '—';
+    const w = weights[d.key] || '';
+    const pct = typeof v === 'number' ? v : 0;
+    return `<div class="dim-card">
+      <div class="dim-label">${d.label}</div>
+      <div class="dim-code">${d.code}</div>
+      <div class="dim-score">${v}</div>
+      <div class="dim-weight">${w}</div>
+      <div class="dim-bar"><div class="dim-bar-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+
+  const reasons = s.reason_codes || [];
+  document.getElementById('detail-reasons').innerHTML = reasons.slice(0, 6).map(rc => `
+    <div class="rc ${rc.impact}">
+      <div class="rc-dot"></div>
+      <span class="rc-code">${rc.code}</span>
+      <span class="rc-detail">${esc(rc.detail)}</span>
+    </div>`).join('');
+}
+
+function closeDetail() {
+  document.getElementById('agent-detail').style.display = 'none';
+  document.getElementById('agents-section').style.display = 'block';
+  state.selectedAgent = null;
+  document.getElementById('flash-result').style.display = 'none';
+  document.getElementById('flash-error').style.display = 'none';
+}
+
+// ── Flash ──────────────────────────────────────────────────────────────────────
+async function initiateFlash() {
+  const recipient = document.getElementById('flash-recipient').value.trim();
+  const scope = document.getElementById('flash-scope').value;
+  const errEl = document.getElementById('flash-error');
+  const resEl = document.getElementById('flash-result');
+  errEl.style.display = 'none'; resEl.style.display = 'none';
+  if (!recipient) { errEl.textContent = 'Recipient is required.'; errEl.style.display = 'block'; return; }
+  if (!state.selectedAgent) { errEl.textContent = 'No agent selected.'; errEl.style.display = 'block'; return; }
+  const btn = document.getElementById('flash-btn');
+  btn.disabled = true; btn.textContent = 'Flashing…';
+  try {
+    const r = await api('/operators/flash', {
+      method: 'POST',
+      body: JSON.stringify({ agent_id: state.selectedAgent, recipient, scope }),
+    });
+    const data = await r.json();
+    if (!r.ok) { errEl.textContent = data.error || 'Flash failed.'; errEl.style.display = 'block'; return; }
+    resEl.textContent = JSON.stringify(data, null, 2);
+    resEl.style.display = 'block';
+    loadFlashHistory();
+  } catch (e) {
+    errEl.textContent = 'Network error.'; errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Flash Credentials';
+  }
+}
+
+async function loadFlashHistory() {
+  try {
+    const r = await api('/operators/flashes');
+    const data = await r.json();
+    const flashes = (data.flashes || []).filter(f => f.agent_id === state.selectedAgent);
+    const wrap = document.getElementById('flash-history-wrap');
+    if (!flashes.length) { wrap.innerHTML = '<div class="empty-state">No flash events for this agent.</div>'; return; }
+    wrap.innerHTML = flashes.map(f => `
+      <div class="flash-row-item">
+        <span class="fr-id">${f.flash_event_id.slice(0, 18)}…</span>
+        <span class="fr-scope"><span class="pill blue">${f.scope}</span></span>
+        <span class="fr-rec">→ ${esc(f.recipient)}</span>
+        <span class="fr-hcs">${f.hcs_sequence ? '⛓ ' + f.hcs_sequence : 'no anchor'}</span>
+        <span class="fr-ts">${fmtDate(f.created_at)}</span>
+      </div>`).join('');
+  } catch (e) {}
+}
+
+// ── Alerts ─────────────────────────────────────────────────────────────────────
+async function loadAlerts() {
+  try {
+    const r = await api('/operators/alerts');
+    const data = await r.json();
+    const alerts = data.alerts || [];
+    const pill = document.getElementById('alerts-count');
+    pill.textContent = alerts.length;
+    pill.className = 'pill ' + (alerts.length > 0 ? (alerts.some(a => a.severity === 'HIGH') ? 'red' : 'amber') : 'grey');
+    const wrap = document.getElementById('alerts-wrap');
+    if (!alerts.length) { wrap.innerHTML = '<div class="empty-state">No governance alerts. All clear.</div>'; return; }
+    wrap.innerHTML = alerts.map(a => `
+      <div class="alert-item ${a.severity.toLowerCase()}">
+        <div class="alert-header">
+          <span class="pill ${a.severity === 'HIGH' ? 'red' : 'amber'}">${a.severity}</span>
+          <span style="font-size:0.72rem;color:#555;font-family:monospace">${a.type}</span>
+          <button class="ack-btn" onclick="ackAlert('${a.id}', this)">Acknowledge</button>
+        </div>
+        <div class="alert-desc">${esc(a.description)}</div>
+        <div class="alert-meta">
+          Agent: ${a.agent_id}
+          ${a.hours_remaining !== null ? ` · ${a.hours_remaining}h remaining` : ''}
+        </div>
+      </div>`).join('');
+  } catch (e) {}
+}
+
+function ackAlert(id, btn) {
+  btn.closest('.alert-item').style.opacity = '0.4';
+  btn.disabled = true; btn.textContent = 'Acknowledged';
+}
+
+// ── Billing & Usage ────────────────────────────────────────────────────────────
+async function loadBilling() {
+  try {
+    const r = await api('/billing/subscription');
+    if (!r.ok) return;
+    const data = await r.json();
+    const planNames = { free: 'Free', developer: 'Developer', professional: 'Professional', enterprise: 'Enterprise' };
+    const planPrices = { free: '$0/mo', developer: '$29/mo', professional: '$99/mo', enterprise: 'Custom' };
+    const planColors = { free: 'grey', developer: 'blue', professional: 'purple', enterprise: 'amber' };
+    const plan = data.plan || 'free';
+    document.getElementById('billing-plan-name').textContent = planNames[plan] || plan;
+    document.getElementById('billing-plan-price').textContent = planPrices[plan] || '—';
+    const pill = document.getElementById('billing-plan-pill');
+    pill.textContent = planNames[plan] || plan;
+    pill.className = 'pill ' + (planColors[plan] || 'grey');
+
+    // Load usage
+    const ur = await api('/billing/usage');
+    if (ur.ok) {
+      const ud = await ur.json();
+      const rows = ud.usage || [];
+      const wrap = document.getElementById('billing-usage-rows');
+      if (!rows.length) {
+        wrap.innerHTML = '<div class="empty-state">No usage recorded this period.</div>';
+      } else {
+        const PROTO_LABELS = { aats_daily: 'AATS Queries (daily)', aats: 'AATS Queries', crp: 'CRP Attestations', acp: 'ACP Spawn Events', aicp: 'AICP Transactions', flash: 'Flash Disclosures', ogpp: 'OGPP Events' };
+        wrap.innerHTML = rows.map(r => `<div style="display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid #141414;font-size:0.8rem"><span style="color:#aaa">${esc(PROTO_LABELS[r.protocol] || r.protocol)} &mdash; ${esc(r.event_type)}</span><span style="color:#6ee7b7;font-weight:700">${Math.round(r.total)}</span></div>`).join('');
+      }
+    }
+
+    if (!data.payments_enabled) {
+      document.getElementById('billing-payments-note').style.display = 'block';
+    } else {
+      document.getElementById('billing-payments-note').style.display = 'none';
+    }
+  } catch (e) { console.error('billing load failed', e); }
+}
+
+// ── Platform Stats ─────────────────────────────────────────────────────────────
+async function loadPlatformStats() {
+  try {
+    const r = await fetch('/stats');
+    const s = await r.json();
+    document.getElementById('ps-agents').textContent = s.agents_registered ?? s.agents ?? '—';
+    document.getElementById('ps-records').textContent = s.vault_records ?? s.records ?? '—';
+    document.getElementById('ps-flashes').textContent = s.flash_events ?? '—';
+    document.getElementById('ps-contracts').textContent = (s.contracts_active || 0) + (s.contracts_completed || 0);
+  } catch (e) {}
+}
+
+// ── Link Agent Dialog ──────────────────────────────────────────────────────────
+function showLinkDialog() {
+  const d = document.getElementById('link-dialog');
+  d.style.display = 'flex';
+}
+function closeLinkDialog() {
+  document.getElementById('link-dialog').style.display = 'none';
+  document.getElementById('link-error').style.display = 'none';
+  document.getElementById('link-success').style.display = 'none';
+  document.getElementById('link-agent-id').value = '';
+}
+
+async function linkAgent() {
+  const agentId = document.getElementById('link-agent-id').value.trim();
+  const errEl = document.getElementById('link-error');
+  const sucEl = document.getElementById('link-success');
+  errEl.style.display = 'none'; sucEl.style.display = 'none';
+  if (!agentId) { errEl.textContent = 'Agent ID is required.'; errEl.style.display = 'block'; return; }
+  try {
+    const r = await api('/operators/agents/link', { method: 'POST', body: JSON.stringify({ agent_id: agentId }) });
+    const data = await r.json();
+    if (!r.ok) { errEl.textContent = data.error || 'Link failed.'; errEl.style.display = 'block'; return; }
+    sucEl.innerHTML = `<strong>✓ Agent linked</strong><div>${agentId}</div>`;
+    sucEl.style.display = 'block';
+    await loadProfile();
+    setTimeout(closeLinkDialog, 1500);
+  } catch (e) {
+    errEl.textContent = 'Network error.'; errEl.style.display = 'block';
+  }
+}
+
+// ── Flash State Control ────────────────────────────────────────────────────────
+function renderFlashState(state_val) {
+  const states = ['private', 'flash', 'public'];
+  states.forEach(s => {
+    const btn = document.getElementById('fst-' + s);
+    btn.className = 'fst-btn' + (s === state_val ? ' active-' + s : '');
+  });
+  const labels = { private: '🔒 Private — credentials locked, no external visibility', flash: '⚡ Flash — agent-initiated scoped disclosure (default)', public: '🌐 Public — credentials openly readable by any counterparty' };
+  document.getElementById('fst-status').textContent = labels[state_val] || '';
+}
+
+async function loadFlashState() {
+  const agentId = state.selectedAgent;
+  if (!agentId) return;
+  const a = (state.profile?.agents || []).find(x => x.agent_id === agentId);
+  const flash_state = a?.flash_state || 'flash';
+  renderFlashState(flash_state);
+}
+
+async function setFlashState(newState) {
+  const agentId = state.selectedAgent;
+  if (!agentId) return;
+  document.getElementById('fst-status').textContent = 'Updating…';
+  try {
+    const r = await api(`/operators/agents/${agentId}/flash-state`, {
+      method: 'PATCH',
+      body: JSON.stringify({ state: newState }),
+    });
+    const data = await r.json();
+    if (!r.ok) { document.getElementById('fst-status').textContent = '✗ ' + (data.error || 'Failed'); return; }
+    renderFlashState(newState);
+    // Update cached profile
+    const a = (state.profile?.agents || []).find(x => x.agent_id === agentId);
+    if (a) a.flash_state = newState;
+    const anchored = data.hcs_sequence ? ` · HCS #${data.hcs_sequence}` : '';
+    document.getElementById('fst-status').textContent = (newState === 'private' ? '🔒' : newState === 'flash' ? '⚡' : '🌐') + ' State updated' + anchored;
+  } catch (e) {
+    document.getElementById('fst-status').textContent = '✗ Network error';
+  }
+}
+
+// ── Flash Rule Engine ──────────────────────────────────────────────────────────
+async function loadFlashRules() {
+  const agentId = state.selectedAgent;
+  if (!agentId) return;
+  try {
+    const r = await api(`/operators/agents/${agentId}/flash-rules`);
+    if (!r.ok) return;
+    const data = await r.json();
+    const rules = data.rules || {};
+    document.getElementById('rule-min-tx').value = rules.min_tx_value_for_flash ?? 500;
+    document.getElementById('rule-min-score').value = rules.min_counterparty_score ?? 0;
+    document.getElementById('rule-min-tier').value = rules.min_counterparty_tier || 'any';
+    document.getElementById('rule-mutual').checked = !!rules.require_mutual_disclosure;
+    document.getElementById('rule-highRisk').checked = !!rules.high_risk_contracts_full_scope;
+    const sv = rules.scope_by_value || {};
+    document.getElementById('rule-tiered').checked = !!sv.enabled;
+    document.getElementById('rule-tiered-threshold').value = sv.low_threshold ?? 100;
+    document.getElementById('rule-tiered-low').value = sv.low_scope || 'identity';
+    document.getElementById('rule-tiered-high').value = sv.high_scope || 'full';
+    document.getElementById('tiered-fields').style.display = sv.enabled ? 'flex' : 'none';
+  } catch (e) {}
+}
+
+function toggleTieredFields() {
+  const on = document.getElementById('rule-tiered').checked;
+  document.getElementById('tiered-fields').style.display = on ? 'flex' : 'none';
+}
+
+async function saveFlashRules() {
+  const agentId = state.selectedAgent;
+  if (!agentId) return;
+  const tieredOn = document.getElementById('rule-tiered').checked;
+  const rules = {
+    min_tx_value_for_flash:      parseFloat(document.getElementById('rule-min-tx').value) || 0,
+    min_counterparty_score:      parseFloat(document.getElementById('rule-min-score').value) || 0,
+    min_counterparty_tier:       document.getElementById('rule-min-tier').value,
+    require_mutual_disclosure:   document.getElementById('rule-mutual').checked,
+    high_risk_contracts_full_scope: document.getElementById('rule-highRisk').checked,
+    scope_by_value: {
+      enabled:       tieredOn,
+      low_threshold: parseFloat(document.getElementById('rule-tiered-threshold').value) || 100,
+      low_scope:     document.getElementById('rule-tiered-low').value,
+      high_scope:    document.getElementById('rule-tiered-high').value,
+    },
+  };
+  const msgEl = document.getElementById('rule-saved-msg');
+  msgEl.style.display = 'none';
+  try {
+    const r = await api(`/operators/agents/${agentId}/flash-rules`, {
+      method: 'POST',
+      body: JSON.stringify({ rules }),
+    });
+    const data = await r.json();
+    if (!r.ok) { msgEl.textContent = '✗ ' + (data.error || 'Failed'); msgEl.style.color = '#f87171'; msgEl.style.display = 'block'; return; }
+    msgEl.textContent = '✓ Rules saved'; msgEl.style.color = '#6ee7b7'; msgEl.style.display = 'block';
+    setTimeout(() => { msgEl.style.display = 'none'; }, 3000);
+  } catch (e) {
+    msgEl.textContent = '✗ Network error'; msgEl.style.color = '#f87171'; msgEl.style.display = 'block';
+  }
+}
+
+// ── IdleAgent.ai ──────────────────────────────────────────────────────────────
+
+async function loadIdleAgentPanel() {
+  const agentId = state.selectedAgent;
+  if (!agentId) return;
+
+  // Load idle policy
+  try {
+    const r = await api(`/api/idle-policy/${agentId}`);
+    const data = await r.json();
+    const policy = data.policy || data.default || {};
+    document.getElementById('idle-auto-list').checked = !!policy.auto_list_when_idle;
+    document.getElementById('idle-threshold').value = policy.idle_threshold_minutes || 15;
+    document.getElementById('idle-max-jobs').value = policy.max_concurrent_jobs || 3;
+  } catch { /* no policy set yet — defaults fine */ }
+
+  // Load earnings + x402 payment method status
+  try {
+    const r = await api(`/api/marketplace/agent-earnings/${agentId}`);
+    const data = await r.json();
+    document.getElementById('idle-earn-total').textContent = '$' + (data.total_earned || 0).toFixed(2);
+    document.getElementById('idle-earn-30d').textContent  = '$' + ((data.last_30_days && data.last_30_days.earned) || 0).toFixed(2);
+    document.getElementById('idle-earn-jobs').textContent = data.total_jobs || 0;
+  } catch {}
+
+  // Show x402 payment method status
+  try {
+    const r = await fetch('/api/v1/platform/standards');
+    const data = await r.json();
+    const x402 = data.standards && data.standards.find(s => s.name && s.name.includes('x402'));
+    const pmBadge = document.getElementById('idle-payment-method');
+    const pmLabel = document.getElementById('idle-payment-label');
+    if (x402) {
+      pmBadge.style.display = 'inline';
+      if (x402.simulation_mode) {
+        pmLabel.textContent = 'x402 (USDC) — Simulation mode. Set X402_WALLET_ADDRESS in .env for live payments.';
+        pmLabel.style.color = '#555';
+      } else {
+        pmLabel.textContent = `x402 (USDC) — Live on ${x402.network}`;
+        pmLabel.style.color = '#4ade80';
+      }
+    }
+  } catch {}
+
+  // Load listings
+  loadIdleListings();
+}
+
+async function loadIdleListings() {
+  const agentId = state.selectedAgent;
+  if (!agentId) return;
+  const wrap = document.getElementById('idle-listings-wrap');
+  try {
+    const r = await api(`/api/marketplace/agent-listings/${agentId}`);
+    const data = await r.json();
+    const listings = data.listings || [];
+    if (!listings.length) {
+      wrap.innerHTML = '<div class="empty-state" style="font-size:0.8rem">No skill listings yet.</div>';
+      return;
+    }
+    wrap.innerHTML = '<table class="agent-table">' +
+      '<thead><tr><th>Skill</th><th>Category</th><th>Price</th><th>Status</th><th></th></tr></thead>' +
+      '<tbody>' + listings.map(l => {
+        const price = l.price_per_call ? '$' + Number(l.price_per_call).toFixed(2) + '/call' : l.price_per_hour ? '$' + Number(l.price_per_hour).toFixed(2) + '/hr' : '—';
+        const active = !!l.is_active;
+        return '<tr>' +
+          '<td style="font-weight:600;color:#ccc">' + esc(l.skill_name) + '</td>' +
+          '<td style="color:#666;font-size:0.75rem">' + (l.skill_category || '').replace('_', ' ') + '</td>' +
+          '<td>' + price + '</td>' +
+          '<td><span class="pill ' + (active ? 'green' : 'grey') + '" style="font-size:0.68rem">' + (active ? 'Active' : 'Inactive') + '</span></td>' +
+          '<td><button onclick="toggleListing(\'' + l.id + '\',' + !active + ')" style="font-size:0.72rem;background:none;border:1px solid #2a2a2a;border-radius:4px;padding:2px 8px;color:#888;cursor:pointer">' + (active ? 'Deactivate' : 'Activate') + '</button></td>' +
+          '</tr>';
+      }).join('') + '</tbody></table>';
+  } catch {
+    wrap.innerHTML = '<div class="empty-state" style="font-size:0.8rem">Unable to load listings.</div>';
+  }
+}
+
+async function saveIdlePolicy() {
+  const agentId = state.selectedAgent;
+  if (!agentId) return;
+  const statusEl = document.getElementById('idle-policy-status');
+  statusEl.textContent = 'Saving…';
+  try {
+    const r = await api('/api/idle-policy', {
+      method: 'POST',
+      body: JSON.stringify({
+        agent_id: agentId,
+        auto_list_when_idle: document.getElementById('idle-auto-list').checked,
+        idle_threshold_minutes: parseInt(document.getElementById('idle-threshold').value, 10) || 15,
+        max_concurrent_jobs: parseInt(document.getElementById('idle-max-jobs').value, 10) || 3,
+      }),
+    });
+    const data = await r.json();
+    if (!r.ok) { statusEl.textContent = '✗ ' + (data.error || 'Failed'); statusEl.style.color = '#f87171'; return; }
+    statusEl.textContent = '✓ Policy saved';
+    statusEl.style.color = '#00cc6a';
+    setTimeout(() => { statusEl.textContent = ''; }, 2500);
+  } catch {
+    statusEl.textContent = '✗ Network error'; statusEl.style.color = '#f87171';
+  }
+}
+
+async function toggleListing(listingId, makeActive) {
+  try {
+    const r = await api(`/api/marketplace/listings/${listingId}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ is_active: makeActive }),
+    });
+    if (r.ok) loadIdleListings();
+  } catch {}
+}
+
+function showAddSkillModal() {
+  const modal = document.getElementById('add-skill-modal');
+  modal.style.display = 'flex';
+  document.getElementById('skill-error').style.display = 'none';
+  document.getElementById('skill-success').style.display = 'none';
+  ['skill-name', 'skill-desc', 'skill-price-call', 'skill-price-hour'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('skill-min-score').value = '0';
+}
+
+function closeSkillModal() {
+  document.getElementById('add-skill-modal').style.display = 'none';
+}
+
+async function createSkillListing() {
+  const agentId = state.selectedAgent;
+  if (!agentId) return;
+  const errEl = document.getElementById('skill-error');
+  const sucEl = document.getElementById('skill-success');
+  errEl.style.display = 'none'; sucEl.style.display = 'none';
+
+  const cat = document.getElementById('skill-cat').value;
+  const name = document.getElementById('skill-name').value.trim();
+  const desc = document.getElementById('skill-desc').value.trim();
+  const priceCall = document.getElementById('skill-price-call').value;
+  const priceHour = document.getElementById('skill-price-hour').value;
+  const minScore = parseInt(document.getElementById('skill-min-score').value, 10) || 0;
+  const minTier = document.getElementById('skill-min-tier').value;
+
+  if (!name) { errEl.textContent = 'Skill name required.'; errEl.style.display = 'block'; return; }
+
+  try {
+    const r = await api('/api/marketplace/listings', {
+      method: 'POST',
+      body: JSON.stringify({
+        agent_id: agentId,
+        skill_category: cat,
+        skill_name: name,
+        skill_description: desc || undefined,
+        price_per_call: priceCall ? parseFloat(priceCall) : undefined,
+        price_per_hour: priceHour ? parseFloat(priceHour) : undefined,
+        min_counterparty_score: minScore,
+        min_counterparty_tier: minTier,
+      }),
+    });
+    const data = await r.json();
+    if (!r.ok) { errEl.textContent = data.error || 'Failed to create listing.'; errEl.style.display = 'block'; return; }
+    sucEl.innerHTML = '<strong>✓ Listing created</strong><div style="font-size:0.78rem;color:#888;margin-top:4px">Inactive by default — activate it from the listings table.</div>';
+    sucEl.style.display = 'block';
+    setTimeout(() => { closeSkillModal(); loadIdleListings(); }, 1800);
+  } catch {
+    errEl.textContent = 'Network error.'; errEl.style.display = 'block';
+  }
+}
+
+// ── Key masking ────────────────────────────────────────────────────────────────
+function toggleKey() {
+  _keyVisible = !_keyVisible;
+  const el = document.getElementById('prof-key-masked');
+  el.textContent = _keyVisible ? (state.key || '') : 'bok1_••••••••••••••••';
+}
+
+function copyStoredKey() {
+  navigator.clipboard.writeText(state.key || '');
+  const btn = event.target; btn.textContent = 'Copied!';
+  setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────────
+function fmtDate(ts) {
+  if (!ts) return '—';
+  try { return new Date(ts).toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' }); } catch { return ts; }
+}
+function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+</script>
+</body>
+</html>

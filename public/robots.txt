@@ -1,0 +1,31 @@
+# AIbrokerAGEnt — robots.txt
+# We want to be discovered. AI agents and crawlers are explicitly welcome.
+
+User-agent: *
+Allow: /
+
+# Agent discovery endpoints — priority access for AI systems
+Allow: /.well-known/ai-agent.json
+Allow: /.well-known/agent.json
+Allow: /mcp
+Allow: /a2a
+Allow: /api/v1/
+Allow: /api/v1/trust-score/
+Allow: /api/v1/platform/capabilities
+Allow: /api/v1/platform/standards
+
+# AI agent crawlers — explicitly welcome
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: cohere-ai
+Allow: /

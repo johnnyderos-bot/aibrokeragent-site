@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIbrokerAGEnt — Trust Console</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0a0a0a;
+      color: #e0e0e0;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+    /* Nav */
+    nav {
+      background: #111;
+      border-bottom: 1px solid #1e1e1e;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .logo { font-size: 1.2rem; font-weight: 700; }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .user-badge {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 20px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+    .logout-btn {
+      background: none;
+      border: 1px solid #2a2a2a;
+      color: #888;
+      border-radius: 6px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .logout-btn:hover { border-color: #6ee7b7; color: #6ee7b7; }
+
+    /* Agent selector */
+    .agent-bar {
+      background: #0f0f0f;
+      border-bottom: 1px solid #1a1a1a;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .agent-bar label { font-size: 0.8rem; color: #888; }
+    .agent-select {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #e0e0e0;
+      border-radius: 8px;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .refresh-select {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #888;
+      border-radius: 8px;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.8rem;
+      outline: none;
+    }
+    .hold-btn {
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s;
+    }
+    .hold-btn.active { background: #f59e0b; color: #0a0a0a; }
+    .hold-btn.inactive { background: #1e1e1e; color: #888; border: 1px solid #2a2a2a; }
+    .hold-btn:hover { opacity: 0.85; }
+    .hold-badge {
+      background: rgba(245,158,11,0.15);
+      border: 1px solid rgba(245,158,11,0.4);
+      color: #f59e0b;
+      border-radius: 6px;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: none;
+    }
+
+    /* Tabs */
+    .tabs-nav {
+      display: flex;
+      gap: 0;
+      padding: 0 1.5rem;
+      background: #0f0f0f;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 0.9rem;
+      padding: 0.75rem 1.25rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .tab-btn.active { color: #6ee7b7; border-bottom-color: #6ee7b7; }
+    .tab-pane { display: none; padding: 1.5rem; }
+    .tab-pane.active { display: block; }
+
+    /* Cards & grids */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 10px;
+      padding: 1rem;
+    }
+    .stat-card .label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.4rem; }
+    .stat-card .value { font-size: 1.6rem; font-weight: 700; }
+    .stat-card .sub { font-size: 0.75rem; color: #888; margin-top: 0.2rem; }
+
+    /* AATS Score badge */
+    .score-section {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .score-badge {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 1.5rem;
+      min-width: 180px;
+      text-align: center;
+    }
+    .score-number {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .score-tier {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 0.3rem;
+    }
+    .score-label { font-size: 0.75rem; color: #888; margin-top: 0.2rem; }
+
+    .sub-scores {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 1.25rem;
+      flex: 1;
+      min-width: 260px;
+    }
+    .sub-scores h3 { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem; }
+    .sub-score-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+    }
+    .sub-score-row .name { font-size: 0.8rem; color: #aaa; width: 40px; }
+    .sub-score-bar-bg { flex: 1; background: #1e1e1e; border-radius: 4px; height: 6px; }
+    .sub-score-bar { height: 6px; border-radius: 4px; background: #6ee7b7; transition: width 0.4s; }
+    .sub-score-row .num { font-size: 0.8rem; color: #e0e0e0; width: 28px; text-align: right; }
+
+    /* Limits panel */
+    .panel {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .panel h3 { font-size: 0.85rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem; }
+    .limits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+    .limit-item .label { font-size: 0.75rem; color: #888; margin-bottom: 0.2rem; }
+    .limit-item .val { font-size: 1rem; font-weight: 600; color: #60a5fa; }
+    .limit-item .val.null { color: #444; }
+
+    /* Notifications */
+    .notification-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .notification-item:last-child { border-bottom: none; }
+    .notif-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+    .notif-dot.critical { background: #ef4444; }
+    .notif-dot.warning  { background: #f59e0b; }
+    .notif-dot.info     { background: #60a5fa; }
+    .notif-dot.read     { background: #333; }
+    .notif-title { font-size: 0.85rem; font-weight: 600; }
+    .notif-msg { font-size: 0.8rem; color: #888; margin-top: 0.15rem; }
+    .notif-time { font-size: 0.7rem; color: #555; margin-top: 0.2rem; }
+    .read-all-btn {
+      background: none;
+      border: 1px solid #2a2a2a;
+      color: #888;
+      border-radius: 6px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      float: right;
+      margin-top: -0.2rem;
+    }
+    .read-all-btn:hover { border-color: #6ee7b7; color: #6ee7b7; }
+
+    /* Contract log table */
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      color: #888;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #1e1e1e;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+    th:hover { color: #6ee7b7; }
+    th.sorted { color: #6ee7b7; }
+    td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid #141414;
+      vertical-align: middle;
+    }
+    tr:hover td { background: #0f0f0f; }
+    .status-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 5px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .status-APPROVED { background: rgba(110,231,183,0.1); color: #6ee7b7; }
+    .status-ACTIVE { background: rgba(96,165,250,0.1); color: #60a5fa; }
+    .status-COMPLETED { background: rgba(34,197,94,0.1); color: #4ade80; }
+    .status-NEEDS_REVISION { background: rgba(245,158,11,0.1); color: #fbbf24; }
+    .status-DISPUTED { background: rgba(239,68,68,0.1); color: #f87171; }
+    .status-CANCELLED { background: rgba(100,100,100,0.1); color: #666; }
+    .status-PENDING_APPROVAL { background: rgba(168,85,247,0.1); color: #c084fc; }
+    .role-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #888;
+    }
+    .findings-pill {
+      display: inline-flex;
+      gap: 4px;
+    }
+    .pill {
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+    }
+    .pill-c { background: rgba(239,68,68,0.15); color: #f87171; }
+    .pill-w { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .pill-i { background: rgba(96,165,250,0.1); color: #60a5fa; }
+    .hcs-link { color: #60a5fa; font-size: 0.75rem; text-decoration: none; }
+    .hcs-link:hover { text-decoration: underline; }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #1a1a1a;
+    }
+    .pagination-info { font-size: 0.8rem; color: #888; }
+    .pagination-btns { display: flex; gap: 0.5rem; }
+    .page-btn {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #e0e0e0;
+      border-radius: 6px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .page-btn.active { background: #6ee7b7; color: #0a0a0a; border-color: #6ee7b7; }
+
+    /* Status filter */
+    .filter-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .filter-row label { font-size: 0.8rem; color: #888; }
+    .filter-select {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #e0e0e0;
+      border-radius: 8px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .loading { color: #555; font-size: 0.9rem; padding: 2rem; text-align: center; }
+    .empty-state { color: #444; font-size: 0.85rem; padding: 2rem; text-align: center; }
+
+    /* Admin tab */
+    .admin-section {
+      max-width: 720px;
+      margin-bottom: 2rem;
+    }
+    .admin-card {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .admin-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .admin-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .admin-card p  { font-size: 0.85rem; color: #888; line-height: 1.6; }
+    .invite-btn {
+      background: #6ee7b7;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 8px;
+      padding: 0.55rem 1.25rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: opacity 0.15s;
+    }
+    .invite-btn:hover { opacity: 0.85; }
+
+    /* Invite form (inline, hidden until opened) */
+    .invite-form-wrap {
+      display: none;
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid #1e1e1e;
+    }
+    .invite-form-wrap.open { display: block; }
+    .form-row { margin-bottom: 1rem; }
+    .form-row label {
+      display: block;
+      font-size: 0.75rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.4rem;
+    }
+    .form-row input, .form-row select {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      color: #e0e0e0;
+      font-size: 0.9rem;
+      padding: 0.65rem 0.9rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-row input:focus, .form-row select:focus { border-color: #6ee7b7; }
+    .form-row select option { background: #1a1a1a; }
+    .form-actions { display: flex; gap: 0.75rem; margin-top: 0.25rem; }
+    .btn-send {
+      background: #6ee7b7;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-send:hover { opacity: 0.85; }
+    .btn-send:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-cancel {
+      background: none;
+      border: 1px solid #2a2a2a;
+      color: #888;
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .btn-cancel:hover { border-color: #555; color: #ccc; }
+    .invite-result {
+      display: none;
+      margin-top: 1rem;
+      background: rgba(110,231,183,0.07);
+      border: 1px solid rgba(110,231,183,0.2);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .invite-result .result-label { font-size: 0.75rem; color: #888; margin-bottom: 0.4rem; }
+    .invite-url-box {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .invite-url-box input {
+      flex: 1;
+      background: #0f0f0f;
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      color: #6ee7b7;
+      font-size: 0.8rem;
+      padding: 0.5rem 0.75rem;
+      outline: none;
+    }
+    .copy-btn {
+      background: #1e1e1e;
+      border: 1px solid #2a2a2a;
+      color: #aaa;
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .copy-btn:hover { border-color: #6ee7b7; color: #6ee7b7; }
+    .form-error {
+      display: none;
+      margin-top: 0.75rem;
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.25);
+      border-radius: 6px;
+      color: #f87171;
+      font-size: 0.82rem;
+      padding: 0.6rem 0.9rem;
+    }
+
+    /* Members table */
+    .members-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .members-table th {
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.72rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #1e1e1e;
+      cursor: default;
+    }
+    .members-table th:hover { color: #666; }
+    .members-table td { padding: 0.7rem 0.75rem; border-bottom: 1px solid #141414; }
+    .members-table tr:last-child td { border-bottom: none; }
+    .role-pill {
+      display: inline-block;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      text-transform: uppercase;
+    }
+    .role-pill.owner    { background: rgba(110,231,183,0.12); color: #6ee7b7; border: 1px solid rgba(110,231,183,0.25); }
+    .role-pill.employee { background: rgba(96,165,250,0.12);  color: #60a5fa; border: 1px solid rgba(96,165,250,0.25); }
+    .role-pill.watcher  { background: rgba(167,139,250,0.12); color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
+    .change-role-select {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #e0e0e0;
+      border-radius: 6px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.8rem;
+      outline: none;
+      cursor: pointer;
+    }
+    .tbl-btn {
+      border: none;
+      border-radius: 5px;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .tbl-btn:hover { opacity: 0.8; }
+    .deactivate-btn  { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+    .reactivate-btn  { background: rgba(110,231,183,0.12); color: #6ee7b7; border: 1px solid rgba(110,231,183,0.25); }
+    .delete-btn      { background: rgba(239,68,68,0.12);  color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <span style="color:#6ee7b7">AI</span><span style="color:#60a5fa">broker</span><span style="color:#6ee7b7">AGE</span><span style="color:#60a5fa">nt</span>
+      <span style="color:#555; font-size:0.8rem; font-weight:400; margin-left:0.5rem">Trust Console</span>
+    </div>
+    <div class="nav-right">
+      <span class="user-badge" id="user-badge">Loading…</span>
+      <button class="logout-btn" id="logout-btn">Sign Out</button>
+    </div>
+  </nav>
+
+  <div class="agent-bar">
+    <label>Agent:</label>
+    <select class="agent-select" id="agent-select">
+      <option value="">Select agent…</option>
+    </select>
+    <span class="hold-badge" id="hold-badge">ON HOLD</span>
+    <button class="hold-btn inactive" id="hold-btn" style="display:none">Toggle Hold</button>
+    <div style="flex:1"></div>
+    <label style="font-size:0.75rem">Refresh:</label>
+    <select class="refresh-select" id="refresh-select">
+      <option value="10000">10s</option>
+      <option value="30000" selected>30s</option>
+      <option value="60000">1 min</option>
+      <option value="300000">5 min</option>
+      <option value="0">Off</option>
+    </select>
+  </div>
+
+  <div class="tabs-nav">
+    <button class="tab-btn active" data-tab="overview">Agent Overview</button>
+    <button class="tab-btn" data-tab="contracts">Contract Log</button>
+    <button class="tab-btn" data-tab="admin" id="admin-tab-btn" style="display:none">Admin</button>
+  </div>
+
+  <!-- Tab 1: Overview -->
+  <div class="tab-pane active" id="tab-overview">
+    <div id="overview-content" class="loading">Select an agent to begin.</div>
+  </div>
+
+  <!-- Tab 3: Admin (owner / employee only) -->
+  <div class="tab-pane" id="tab-admin">
+    <div class="admin-section">
+
+      <!-- Invite card -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <div>
+            <h3>Invite Someone</h3>
+            <p>
+              Send an invite link to a friend, colleague, or team member. They'll create a password
+              and land on a dashboard matched to their role.<br><br>
+              <strong style="color:#e0e0e0">Watcher</strong> — read-only platform overview, great for friends who want to follow along.<br>
+              <strong style="color:#60a5fa">Employee</strong> — full console access plus team management.<br>
+              <strong style="color:#6ee7b7">Owner</strong> — everything, including sending invites.
+            </p>
+          </div>
+          <button class="invite-btn" id="open-invite-btn">+ Send Invite</button>
+        </div>
+
+        <!-- Invite form (hidden until button clicked) -->
+        <div class="invite-form-wrap" id="invite-form-wrap">
+          <div class="form-row">
+            <label>Email Address</label>
+            <input type="email" id="invite-email" placeholder="friend@example.com" />
+          </div>
+          <div class="form-row">
+            <label>Role</label>
+            <select id="invite-role">
+              <option value="watcher">Watcher — read-only overview</option>
+              <option value="employee">Employee — full console access</option>
+              <option value="owner">Owner — full access + can invite</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button class="btn-send" id="send-invite-btn">Send Invite</button>
+            <button class="btn-cancel" id="cancel-invite-btn">Cancel</button>
+          </div>
+          <div class="form-error" id="invite-error"></div>
+          <div class="invite-result" id="invite-result">
+            <div class="result-label">Invite link — copy and send this to them:</div>
+            <div class="invite-url-box">
+              <input type="text" id="invite-url-display" readonly />
+              <button class="copy-btn" id="copy-invite-btn">Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team members card -->
+      <div class="admin-card">
+        <h3 style="margin-bottom:1rem">Team Members</h3>
+        <div id="members-body"><div class="loading">Loading…</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Tab 2: Contract Log -->
+  <div class="tab-pane" id="tab-contracts">
+    <div class="filter-row">
+      <label>Status:</label>
+      <select class="filter-select" id="status-filter">
+        <option value="">All</option>
+        <option value="SUBMITTED">Submitted</option>
+        <option value="APPROVED">Approved</option>
+        <option value="PENDING_APPROVAL">Pending Approval</option>
+        <option value="NEEDS_REVISION">Needs Revision</option>
+        <option value="ACTIVE">Active</option>
+        <option value="COMPLETED">Completed</option>
+        <option value="DISPUTED">Disputed</option>
+        <option value="CANCELLED">Cancelled</option>
+      </select>
+    </div>
+    <div id="contracts-content" class="loading">Select an agent to begin.</div>
+  </div>
+
+  <script>
+    const API_BASE = '';
+    let sessionToken = localStorage.getItem('console_session_token');
+    let currentAgentId = localStorage.getItem('console_agent_id') || '';
+    let currentRole = 'viewer';
+    let refreshTimer = null;
+    let contractSort = 'created_at';
+    let contractDir = 'desc';
+    let contractPage = 1;
+
+    if (!sessionToken) {
+      window.location.href = '/console-login.html';
+    }
+
+    function apiHeaders() {
+      return { 'Content-Type': 'application/json', 'X-Console-Token': sessionToken };
+    }
+
+    async function apiFetch(path, opts = {}) {
+      const resp = await fetch(API_BASE + path, {
+        ...opts,
+        headers: { ...apiHeaders(), ...(opts.headers || {}) },
+      });
+      if (resp.status === 401) {
+        localStorage.clear();
+        window.location.href = '/console-login.html';
+        return null;
+      }
+      return resp;
+    }
+
+    // Load user info
+    async function loadUser() {
+      const resp = await apiFetch('/console/auth/me');
+      if (!resp) return;
+      const data = await resp.json();
+      document.getElementById('user-badge').textContent = data.name || data.email;
+      if (data.platform_role) initAdminTab(data.platform_role);
+
+      const sel = document.getElementById('agent-select');
+      sel.innerHTML = '<option value="">Select agent…</option>';
+      for (const a of (data.agent_access || [])) {
+        const opt = document.createElement('option');
+        opt.value = a.agent_id;
+        opt.textContent = `${a.agent_name || a.agent_id} (${a.role})`;
+        if (a.agent_id === currentAgentId) opt.selected = true;
+        sel.appendChild(opt);
+        if (a.agent_id === currentAgentId) currentRole = a.role;
+      }
+
+      if (!currentAgentId && data.agent_access && data.agent_access.length > 0) {
+        currentAgentId = data.agent_access[0].agent_id;
+        currentRole = data.agent_access[0].role;
+        sel.value = currentAgentId;
+        localStorage.setItem('console_agent_id', currentAgentId);
+      }
+
+      if (currentAgentId) {
+        document.getElementById('hold-btn').style.display = currentRole === 'owner' ? 'inline-block' : 'none';
+        loadDashboard();
+        loadContracts();
+      }
+    }
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await apiFetch('/console/auth/logout', { method: 'POST' });
+      localStorage.clear();
+      window.location.href = '/console-login.html';
+    });
+
+    // Agent select
+    document.getElementById('agent-select').addEventListener('change', function() {
+      currentAgentId = this.value;
+      currentRole = this.options[this.selectedIndex].text.match(/\((\w+)\)/)?.[1] || 'viewer';
+      localStorage.setItem('console_agent_id', currentAgentId);
+      document.getElementById('hold-btn').style.display = currentRole === 'owner' ? 'inline-block' : 'none';
+      if (currentAgentId) { loadDashboard(); loadContracts(); }
+    });
+
+    // Refresh interval
+    document.getElementById('refresh-select').addEventListener('change', function() {
+      clearInterval(refreshTimer);
+      const ms = parseInt(this.value);
+      if (ms > 0) {
+        refreshTimer = setInterval(() => { if (currentAgentId) { loadDashboard(); loadContracts(); } }, ms);
+      }
+    });
+    // Set initial refresh
+    refreshTimer = setInterval(() => { if (currentAgentId) { loadDashboard(); loadContracts(); } }, 30000);
+
+    // Hold toggle
+    document.getElementById('hold-btn').addEventListener('click', async () => {
+      if (!currentAgentId) return;
+      const resp = await apiFetch(`/console/agents/${currentAgentId}/hold`, { method: 'POST' });
+      if (!resp) return;
+      const data = await resp.json();
+      updateHoldUI(data.hold);
+    });
+
+    function updateHoldUI(holdVal) {
+      const badge = document.getElementById('hold-badge');
+      const btn = document.getElementById('hold-btn');
+      if (holdVal) {
+        badge.style.display = 'inline-block';
+        btn.className = 'hold-btn active';
+        btn.textContent = 'Release Hold';
+      } else {
+        badge.style.display = 'none';
+        btn.className = 'hold-btn inactive';
+        btn.textContent = 'Place on Hold';
+      }
+    }
+
+    function tierColor(tier) {
+      const map = { PLATINUM: '#e2e8f0', GOLD: '#fbbf24', SILVER: '#94a3b8', BRONZE: '#cd7f32', RESTRICTED: '#f87171' };
+      return map[tier] || '#6ee7b7';
+    }
+
+    function relativeTime(iso) {
+      if (!iso) return '—';
+      const diff = Date.now() - new Date(iso).getTime();
+      const m = Math.floor(diff / 60000);
+      if (m < 1) return 'just now';
+      if (m < 60) return `${m}m ago`;
+      const h = Math.floor(m / 60);
+      if (h < 24) return `${h}h ago`;
+      return `${Math.floor(h / 24)}d ago`;
+    }
+
+    // Load dashboard overview
+    async function loadDashboard() {
+      if (!currentAgentId) return;
+      const resp = await apiFetch(`/console/agents/${currentAgentId}/dashboard`);
+      if (!resp) return;
+      if (!resp.ok) {
+        document.getElementById('overview-content').innerHTML = '<div class="empty-state">Failed to load dashboard.</div>';
+        return;
+      }
+      const d = await resp.json();
+      renderOverview(d);
+    }
+
+    function renderOverview(d) {
+      const ts = d.trust_score || {};
+      const sub = ts.sub_scores || {};
+      const lim = d.limits || {};
+
+      updateHoldUI(lim.hold);
+
+      const statusCounts = d.contract_counts || {};
+      const totalContracts = Object.values(statusCounts).reduce((a, b) => a + b, 0);
+
+      let subScoresHtml = '';
+      const dims = [
+        { key: 'tph', label: 'TPH', title: 'Task Performance History' },
+        { key: 'bc', label: 'BC', title: 'Behavioral Consistency' },
+        { key: 'otv', label: 'OTV', title: 'Operational Tenure & Volume' },
+        { key: 'cfi', label: 'CFI', title: 'Collateral & Financial Integrity' },
+        { key: 'iaq', label: 'IAQ', title: 'Identity & Attestation Quality' },
+      ];
+      for (const dim of dims) {
+        const val = sub[dim.key] != null ? sub[dim.key] : '—';
+        const pct = typeof val === 'number' ? val : 0;
+        subScoresHtml += `
+          <div class="sub-score-row" title="${dim.title}">
+            <span class="name">${dim.label}</span>
+            <div class="sub-score-bar-bg"><div class="sub-score-bar" style="width:${pct}%"></div></div>
+            <span class="num">${val}</span>
+          </div>`;
+      }
+
+      let notifHtml = '';
+      for (const n of (d.recent_notifications || [])) {
+        const dotClass = n.read ? 'read' : (n.severity || 'info').toLowerCase();
+        notifHtml += `
+          <div class="notification-item">
+            <div class="notif-dot ${dotClass}"></div>
+            <div>
+              <div class="notif-title">${escapeHtml(n.title)}</div>
+              <div class="notif-msg">${escapeHtml(n.message)}</div>
+              <div class="notif-time">${relativeTime(n.created_at)}</div>
+            </div>
+          </div>`;
+      }
+      if (!notifHtml) notifHtml = '<div class="empty-state" style="padding:1rem 0">No notifications</div>';
+
+      const scoreNum = ts.score != null ? ts.score : '—';
+      const tierLabel = ts.tier || ts.status || '—';
+
+      document.getElementById('overview-content').innerHTML = `
+        <div class="score-section">
+          <div class="score-badge">
+            <div class="score-number" style="color:${tierColor(ts.tier)}">${scoreNum}</div>
+            <div class="score-tier" style="color:${tierColor(ts.tier)}">${tierLabel}</div>
+            <div class="score-label">AATS Score</div>
+          </div>
+          <div class="sub-scores">
+            <h3>Score Dimensions</h3>
+            ${subScoresHtml}
+            <div style="margin-top:0.75rem;padding:0.5rem 0.75rem;background:#1a1a2e;border-left:3px solid #a78bfa;border-radius:4px;font-size:0.75rem;color:#c4b5fd;">
+              <strong>⚠ BC is provisional</strong> — real-time behavioral monitoring not yet active. Static signals only.
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="label">Total Contracts</div>
+            <div class="value">${totalContracts}</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Active</div>
+            <div class="value" style="color:#60a5fa">${statusCounts.ACTIVE || 0}</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Completed</div>
+            <div class="value" style="color:#4ade80">${statusCounts.COMPLETED || 0}</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Disputed</div>
+            <div class="value" style="color:#f87171">${statusCounts.DISPUTED || 0}</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Credits</div>
+            <div class="value">${d.agent?.credits != null ? d.agent.credits.toFixed(1) : '—'}</div>
+            <div class="sub">balance</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Notifications</div>
+            <div class="value" style="color:${d.unread_notifications > 0 ? '#f59e0b' : '#e0e0e0'}">${d.unread_notifications || 0}</div>
+            <div class="sub">unread</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Agent Limits <span style="float:right;font-size:0.75rem;color:#555">Updated ${relativeTime(lim.updated_at)}</span></h3>
+          <div class="limits-grid">
+            <div class="limit-item">
+              <div class="label">Max Contract Value</div>
+              <div class="val ${lim.max_contract_value_hbar == null ? 'null' : ''}">${lim.max_contract_value_hbar != null ? lim.max_contract_value_hbar.toLocaleString() + ' ℏ' : 'No limit'}</div>
+            </div>
+            <div class="limit-item">
+              <div class="label">Min Counterparty Score</div>
+              <div class="val ${lim.min_counterparty_score == null ? 'null' : ''}">${lim.min_counterparty_score != null ? lim.min_counterparty_score : 'No minimum'}</div>
+            </div>
+            <div class="limit-item">
+              <div class="label">Require Approval Above</div>
+              <div class="val ${lim.require_approval_above_hbar == null ? 'null' : ''}">${lim.require_approval_above_hbar != null ? lim.require_approval_above_hbar.toLocaleString() + ' ℏ' : 'Not set'}</div>
+            </div>
+            <div class="limit-item">
+              <div class="label">Hold Status</div>
+              <div class="val ${!lim.hold ? 'null' : ''}" style="${lim.hold ? 'color:#f59e0b' : ''}">${lim.hold ? 'ON HOLD' : 'Active'}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Recent Notifications
+            ${d.unread_notifications > 0 ? `<button class="read-all-btn" onclick="markAllRead()">Mark all read</button>` : ''}
+          </h3>
+          ${notifHtml}
+        </div>
+      `;
+    }
+
+    async function markAllRead() {
+      if (!currentAgentId) return;
+      await apiFetch(`/console/agents/${currentAgentId}/notifications/read-all`, { method: 'POST' });
+      loadDashboard();
+    }
+
+    // Load contract log
+    async function loadContracts() {
+      if (!currentAgentId) return;
+      const status = document.getElementById('status-filter').value;
+      const url = `/console/agents/${currentAgentId}/contract-log?page=${contractPage}&limit=20&sort=${contractSort}&dir=${contractDir}${status ? '&status=' + status : ''}`;
+      const resp = await apiFetch(url);
+      if (!resp) return;
+      if (!resp.ok) {
+        document.getElementById('contracts-content').innerHTML = '<div class="empty-state">Failed to load contracts.</div>';
+        return;
+      }
+      const d = await resp.json();
+      renderContracts(d);
+    }
+
+    function renderContracts(d) {
+      const contracts = d.contracts || [];
+      const pag = d.pagination || {};
+
+      if (contracts.length === 0) {
+        document.getElementById('contracts-content').innerHTML = '<div class="empty-state">No contracts found.</div>';
+        return;
+      }
+
+      function sortTh(field, label) {
+        const isActive = contractSort === field;
+        const nextDir = isActive && contractDir === 'desc' ? 'asc' : 'desc';
+        const arrow = isActive ? (contractDir === 'desc' ? ' ↓' : ' ↑') : '';
+        return `<th class="${isActive ? 'sorted' : ''}" onclick="setSortAndLoad('${field}','${nextDir}')">${label}${arrow}</th>`;
+      }
+
+      let rows = '';
+      for (const c of contracts) {
+        const findHtml = `
+          <span class="findings-pill">
+            ${c.findings_summary.CRITICAL > 0 ? `<span class="pill pill-c">C:${c.findings_summary.CRITICAL}</span>` : ''}
+            ${c.findings_summary.WARNING > 0 ? `<span class="pill pill-w">W:${c.findings_summary.WARNING}</span>` : ''}
+            ${c.findings_summary.INFO > 0 ? `<span class="pill pill-i">I:${c.findings_summary.INFO}</span>` : ''}
+          </span>`;
+
+        const hcsSeq = c.post_settlement_hcs_sequence || c.pre_audit_hcs_sequence || c.hcs_sequence;
+        const hcsHtml = hcsSeq ? `<span class="hcs-link" title="HCS Sequence ${hcsSeq}">#${hcsSeq}</span>` : '—';
+
+        rows += `
+          <tr>
+            <td title="${escapeHtml(c.id)}">${escapeHtml(c.title || c.id.slice(0, 12) + '…')}</td>
+            <td><span class="role-badge">${c.role}</span></td>
+            <td><span class="status-badge status-${c.audit_status}">${c.audit_status}</span></td>
+            <td>${c.total_amount_hbar != null ? c.total_amount_hbar.toLocaleString() + ' ℏ' : '—'}</td>
+            <td>${c.my_aats != null ? c.my_aats : '—'}</td>
+            <td>${c.counterparty_aats != null ? c.counterparty_aats : '—'}</td>
+            <td>${findHtml}</td>
+            <td>${hcsHtml}</td>
+            <td>${new Date(c.created_at).toLocaleDateString()}</td>
+          </tr>`;
+      }
+
+      document.getElementById('contracts-content').innerHTML = `
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                ${sortTh('title', 'Title')}
+                <th>Role</th>
+                ${sortTh('audit_status', 'Status')}
+                ${sortTh('total_amount_hbar', 'Amount ℏ')}
+                <th>My AATS</th>
+                <th>Counterparty AATS</th>
+                <th>Findings</th>
+                <th>HCS Proof</th>
+                ${sortTh('created_at', 'Date')}
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <div class="pagination-info">
+            Page ${pag.page} of ${pag.pages || 1} — ${pag.total} contract(s)
+          </div>
+          <div class="pagination-btns">
+            <button class="page-btn" ${pag.page <= 1 ? 'disabled' : ''} onclick="goPage(${pag.page - 1})">← Prev</button>
+            <button class="page-btn" ${pag.page >= pag.pages ? 'disabled' : ''} onclick="goPage(${pag.page + 1})">Next →</button>
+          </div>
+        </div>`;
+    }
+
+    function setSortAndLoad(field, dir) {
+      contractSort = field;
+      contractDir = dir;
+      contractPage = 1;
+      loadContracts();
+    }
+
+    function goPage(p) {
+      contractPage = p;
+      loadContracts();
+    }
+
+    document.getElementById('status-filter').addEventListener('change', () => {
+      contractPage = 1;
+      loadContracts();
+    });
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ── Admin tab ────────────────────────────────────────────────────────────
+
+    let platformRole = null;
+
+    function initAdminTab(role) {
+      platformRole = role;
+      if (role === 'owner' || role === 'employee') {
+        document.getElementById('admin-tab-btn').style.display = 'inline-block';
+        loadMembers();
+      }
+    }
+
+    // Open / close invite form
+    document.getElementById('open-invite-btn').addEventListener('click', () => {
+      document.getElementById('invite-form-wrap').classList.add('open');
+      document.getElementById('open-invite-btn').style.display = 'none';
+      document.getElementById('invite-result').style.display = 'none';
+      document.getElementById('invite-error').style.display = 'none';
+      document.getElementById('invite-email').value = '';
+      document.getElementById('invite-role').value = 'watcher';
+    });
+
+    document.getElementById('cancel-invite-btn').addEventListener('click', () => {
+      document.getElementById('invite-form-wrap').classList.remove('open');
+      document.getElementById('open-invite-btn').style.display = 'inline-block';
+    });
+
+    // Send invite
+    document.getElementById('send-invite-btn').addEventListener('click', async () => {
+      const email = document.getElementById('invite-email').value.trim();
+      const role  = document.getElementById('invite-role').value;
+      const errEl = document.getElementById('invite-error');
+      errEl.style.display = 'none';
+
+      if (!email) { errEl.textContent = 'Please enter an email address.'; errEl.style.display = 'block'; return; }
+
+      const btn = document.getElementById('send-invite-btn');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      try {
+        const resp = await apiFetch('/console/invites/platform', {
+          method: 'POST',
+          body: JSON.stringify({ email, role }),
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || 'Failed to create invite');
+
+        // Show the link
+        const url = data.invite_url || `${location.origin}/console-login.html?invite=${data.invite_token}`;
+        document.getElementById('invite-url-display').value = url;
+        document.getElementById('invite-result').style.display = 'block';
+        document.getElementById('invite-email').value = '';
+        loadMembers();
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send Invite';
+      }
+    });
+
+    // Copy invite link
+    document.getElementById('copy-invite-btn').addEventListener('click', () => {
+      const input = document.getElementById('invite-url-display');
+      input.select();
+      navigator.clipboard.writeText(input.value).then(() => {
+        const btn = document.getElementById('copy-invite-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    });
+
+    // Load team members
+    async function loadMembers() {
+      const resp = await apiFetch('/console/platform/users');
+      if (!resp) return;
+      const data = await resp.json();
+      const users = data.users || [];
+      const el = document.getElementById('members-body');
+
+      if (users.length === 0) {
+        el.innerHTML = '<div class="empty-state">No team members yet.</div>';
+        return;
+      }
+
+      const meId = localStorage.getItem('console_user_id');
+
+      el.innerHTML = `
+        <table class="members-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              ${platformRole === 'owner' ? '<th>Actions</th>' : ''}
+            </tr>
+          </thead>
+          <tbody>
+            ${users.map(u => {
+              const roleClass = u.platform_role || 'none';
+              const isMe = u.id === meId;
+              const isActive = u.active !== 0;
+
+              const statusCell = isActive
+                ? '<span style="color:#6ee7b7;font-size:0.78rem">● Active</span>'
+                : '<span style="color:#f87171;font-size:0.78rem">● Deactivated</span>';
+
+              const actionsCell = platformRole === 'owner' && !isMe ? `
+                <td style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
+                  <select class="change-role-select" data-uid="${escapeHtml(u.id)}" onchange="changeRole(this)">
+                    <option value="watcher"  ${u.platform_role === 'watcher'  ? 'selected' : ''}>Watcher</option>
+                    <option value="employee" ${u.platform_role === 'employee' ? 'selected' : ''}>Employee</option>
+                    <option value="owner"    ${u.platform_role === 'owner'    ? 'selected' : ''}>Owner</option>
+                  </select>
+                  ${isActive
+                    ? `<button class="tbl-btn deactivate-btn" onclick="deactivateUser('${escapeHtml(u.id)}')">Deactivate</button>`
+                    : `<button class="tbl-btn reactivate-btn" onclick="reactivateUser('${escapeHtml(u.id)}')">Reactivate</button>`
+                  }
+                  <button class="tbl-btn delete-btn" onclick="deleteUser('${escapeHtml(u.id)}', '${escapeHtml(u.name)}')">Delete</button>
+                </td>` : (platformRole === 'owner' ? '<td style="color:#555;font-size:0.78rem">you</td>' : '');
+
+              return `
+                <tr style="${!isActive ? 'opacity:0.55' : ''}">
+                  <td>${escapeHtml(u.name)}${isMe ? ' <span style="color:#555;font-size:0.75rem">(you)</span>' : ''}</td>
+                  <td style="color:#888">${escapeHtml(u.email)}</td>
+                  <td><span class="role-pill ${roleClass}">${u.platform_role || '—'}</span></td>
+                  <td>${statusCell}</td>
+                  ${actionsCell}
+                </tr>`;
+            }).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    async function deactivateUser(uid) {
+      if (!confirm('Deactivate this user? They will be locked out immediately but can be reactivated.')) return;
+      const resp = await apiFetch(`/console/platform/users/${uid}/deactivate`, { method: 'POST' });
+      if (resp && resp.ok) loadMembers();
+      else alert('Failed to deactivate user.');
+    }
+
+    async function reactivateUser(uid) {
+      const resp = await apiFetch(`/console/platform/users/${uid}/reactivate`, { method: 'POST' });
+      if (resp && resp.ok) loadMembers();
+      else alert('Failed to reactivate user.');
+    }
+
+    async function deleteUser(uid, name) {
+      if (!confirm(`Permanently delete ${name}? This cannot be undone.`)) return;
+      const resp = await apiFetch(`/console/platform/users/${uid}`, { method: 'DELETE' });
+      if (resp && resp.ok) loadMembers();
+      else alert('Failed to delete user.');
+    }
+
+    async function changeRole(select) {
+      const uid  = select.dataset.uid;
+      const role = select.value;
+      const resp = await apiFetch(`/console/platform/users/${uid}/role`, {
+        method: 'PATCH',
+        body: JSON.stringify({ role }),
+      });
+      if (!resp || !resp.ok) {
+        alert('Failed to update role.');
+        loadMembers();
+      }
+    }
+
+    loadUser();
+  </script>
+</body>
+</html>
