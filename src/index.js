@@ -49,6 +49,8 @@ const urlMap = {
   '/arena':      '/arena.html',
   '/compatibility': '/compatibility.html',
   '/docs':       '/aats-whitepaper.html',
+  '/terms':      '/terms.html',
+  '/privacy':    '/privacy.html',
 };
 Object.entries(urlMap).forEach(([from, to]) => {
   app.get(from, (req, res) => res.redirect(301, to));
