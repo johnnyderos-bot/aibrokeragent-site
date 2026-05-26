@@ -251,7 +251,7 @@
     /* ── Products grid ────────────────────────────────────── */
     .products-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1px;
       background: var(--border);
       border: 1px solid var(--border);
@@ -261,11 +261,13 @@
 
     .product-card {
       background: var(--surface);
-      padding: 40px;
+      padding: 36px;
       transition: background 0.2s;
     }
 
     .product-card:hover { background: #0f1d33; }
+
+    .product-card.coming-soon { opacity: 0.85; }
 
     .product-icon {
       width: 44px; height: 44px;
@@ -279,12 +281,28 @@
       font-size: 18px;
     }
 
+    .product-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
     .product-name {
       font-size: 1.05rem;
       font-weight: 700;
       letter-spacing: -0.3px;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
       color: var(--text);
+    }
+
+    .product-protocol {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
     }
 
     .product-tag {
@@ -297,13 +315,42 @@
       border: 1px solid rgba(59,130,246,0.15);
       border-radius: 4px;
       padding: 2px 8px;
-      margin-bottom: 12px;
+    }
+
+    .badge-live {
+      font-size: 11px;
+      font-weight: 600;
+      color: #22c55e;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: 20px;
+      padding: 2px 10px;
+      white-space: nowrap;
+    }
+
+    .badge-soon {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      background: rgba(100,116,139,0.1);
+      border: 1px solid rgba(100,116,139,0.2);
+      border-radius: 20px;
+      padding: 2px 10px;
+      white-space: nowrap;
     }
 
     .product-desc {
       font-size: 14px;
       color: var(--dim);
       line-height: 1.65;
+    }
+
+    .patent-note {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 20px;
+      font-weight: 500;
     }
 
     /* ── Audience ─────────────────────────────────────────── */
@@ -490,7 +537,7 @@
 <section class="hero">
   <div class="hero-badge">AIbrokerAGEnt LLC &mdash; DerosLabs Portfolio</div>
   <h1>Trust Infrastructure for Autonomous Agent Networks</h1>
-  <p>Identity anchoring, behavioral trust scoring, and lifecycle management for enterprise AI deployments — built on Hedera.</p>
+  <p>The complete trust stack for enterprise AI deployments — identity, behavioral trust, memory, commerce, contracts, governance, and lifecycle management — built on Hedera.</p>
   <div class="hero-actions">
     <a href="#contact" class="btn-primary">Request Access</a>
     <a href="#products" class="btn-secondary">See What We Build</a>
@@ -522,41 +569,107 @@
   <div class="container">
     <div class="section-label">What We Build</div>
     <h2 class="section-title">The Trust Stack for the Agentic Economy</h2>
-    <p class="section-sub">Four protocol products that give enterprise operators verifiable control over autonomous agent networks.</p>
+    <p class="section-sub">Seven protocol products that give enterprise operators verifiable control over autonomous agent networks.</p>
 
     <div class="products-grid">
 
       <div class="product-card">
         <div class="product-icon">&#128273;</div>
-        <div class="product-tag">Identity Layer</div>
+        <div class="product-header">
+          <div class="product-tag">Identity Layer</div>
+          <span class="badge-live">&#9679; Live</span>
+        </div>
         <div class="product-name">Flash Tag</div>
+        <div class="product-protocol">Flash Tag Protocol</div>
         <p class="product-desc">
-          Every agent in the network carries a Flash Tag — a cryptographically signed identity credential that persists across sessions, platforms, and operator environments. Flash Tag is the root anchor for all trust relationships in the stack.
+          Privacy-preserving agent identity that travels across sessions, platforms, and operator environments. Every agent gets a verifiable credential — the root anchor for all trust relationships in the stack.
         </p>
         <div class="hedera-badge"><div class="hedera-dot"></div>Hedera HCS-anchored</div>
       </div>
 
       <div class="product-card">
         <div class="product-icon">&#128202;</div>
-        <div class="product-tag">Behavioral Trust</div>
+        <div class="product-header">
+          <div class="product-tag">Behavioral Trust</div>
+          <span class="badge-live">&#9679; Live</span>
+        </div>
         <div class="product-name">AATS</div>
+        <div class="product-protocol">Agent Attribution &amp; Trust Standard</div>
         <p class="product-desc">
-          Autonomous Agent Trust Score. Real-time behavioral trust scoring for deployed agent networks. AATS enables operators to monitor, audit, and govern agent conduct continuously — surfacing drift, anomalies, and policy violations before they propagate.
+          The trust score enterprise buyers can show their auditors. Real-time behavioral scoring across multiple dimensions — surfacing drift, anomalies, and policy violations before they propagate.
         </p>
         <div class="hedera-badge"><div class="hedera-dot"></div>Hedera HCS-anchored</div>
       </div>
 
       <div class="product-card">
         <div class="product-icon">&#128196;</div>
-        <div class="product-tag">Lifecycle</div>
+        <div class="product-header">
+          <div class="product-tag">Lifecycle</div>
+          <span class="badge-live">&#9679; Live</span>
+        </div>
         <div class="product-name">ALR</div>
+        <div class="product-protocol">Agent Lifecycle Record</div>
         <p class="product-desc">
-          Agent Lifecycle Registry. Structured end-of-service protocol for registered agents — successor designation, tombstone proceedings, and archival with full chain-of-custody records. Ensures no agent exits the network without a verifiable, auditable closure event.
+          Structured end-of-service protocol — successor designation, tombstone proceedings, and archival with full chain-of-custody. No agent exits the network without a verifiable closure event.
         </p>
         <div class="hedera-badge"><div class="hedera-dot"></div>Hedera HCS-anchored</div>
       </div>
 
+      <div class="product-card coming-soon">
+        <div class="product-icon">&#129504;</div>
+        <div class="product-header">
+          <div class="product-tag">Memory Verification</div>
+          <span class="badge-soon">Coming Soon</span>
+        </div>
+        <div class="product-name">Context Recall</div>
+        <div class="product-protocol">CRP</div>
+        <p class="product-desc">
+          Certifies that an agent properly loads and applies prior context between sessions. Context Recall attested agents don't forget — with cryptographic proof.
+        </p>
+      </div>
+
+      <div class="product-card coming-soon">
+        <div class="product-icon">&#128188;</div>
+        <div class="product-header">
+          <div class="product-tag">Smart Contracts</div>
+          <span class="badge-soon">Coming Soon</span>
+        </div>
+        <div class="product-name">Agent Commerce</div>
+        <div class="product-protocol">AICP</div>
+        <p class="product-desc">
+          Task specification, escrow, and delivery verification for agent work. Hold payment until delivery is confirmed. Dispute resolution built in. Infrastructure for the agentic economy.
+        </p>
+      </div>
+
+      <div class="product-card coming-soon">
+        <div class="product-icon">&#128271;</div>
+        <div class="product-header">
+          <div class="product-tag">Attribution Chain</div>
+          <span class="badge-soon">Coming Soon</span>
+        </div>
+        <div class="product-name">Agent Contracts</div>
+        <div class="product-protocol">ACP</div>
+        <p class="product-desc">
+          Cryptographic attribution for every agent action. Immutable record of who authorized what, when, and why — across every instruction in the chain.
+        </p>
+      </div>
+
+      <div class="product-card coming-soon">
+        <div class="product-icon">&#127963;</div>
+        <div class="product-header">
+          <div class="product-tag">Permission Layer</div>
+          <span class="badge-soon">Coming Soon</span>
+        </div>
+        <div class="product-name">Agent Governance</div>
+        <div class="product-protocol">OGPP</div>
+        <p class="product-desc">
+          Enterprise-grade permission management for AI agents. Defines what an agent is authorized to do, enforces those constraints, and logs proof of compliance for audit.
+        </p>
+      </div>
+
     </div>
+
+    <p class="patent-note">All protocols protected under filed provisional patents.</p>
   </div>
 </section>
 
@@ -604,7 +717,7 @@
 
       <div class="about-stats">
         <div class="stat-block">
-          <div class="stat-value">4</div>
+          <div class="stat-value">7</div>
           <div class="stat-label">Protocol Products</div>
         </div>
         <div class="stat-block">
