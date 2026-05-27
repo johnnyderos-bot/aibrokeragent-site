@@ -772,6 +772,112 @@ function initDb() {
     CREATE INDEX IF NOT EXISTS idx_aicp_eval_agent    ON aicp_evaluations(delegating_agent);
   `);
 
+  // AICP — Agent Commerce v1
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS commerce_transactions (
+      id                   TEXT PRIMARY KEY,
+      tsr_hash             TEXT NOT NULL,
+      commissioning_agent  TEXT NOT NULL,
+      service_agent        TEXT NOT NULL,
+      tsr_json             TEXT NOT NULL,
+      escrow_amount        INTEGER NOT NULL,
+      status               TEXT NOT NULL,
+      hcs_topic            TEXT,
+      hcs_sequence_number  INTEGER,
+      created_at           DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at           DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_ct_commissioning ON commerce_transactions(commissioning_agent);
+    CREATE INDEX IF NOT EXISTS idx_ct_service       ON commerce_transactions(service_agent);
+    CREATE INDEX IF NOT EXISTS idx_ct_status        ON commerce_transactions(status);
+
+    CREATE TABLE IF NOT EXISTS commerce_attestations (
+      id                     TEXT PRIMARY KEY,
+      ctr_id                 TEXT NOT NULL REFERENCES commerce_transactions(id),
+      delivery_hash          TEXT NOT NULL,
+      compliance_declaration TEXT NOT NULL,
+      agent_signature        TEXT,
+      avg_result             TEXT,
+      avg_detail             TEXT,
+      created_at             DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_ca_ctr ON commerce_attestations(ctr_id);
+
+    CREATE TABLE IF NOT EXISTS commerce_disputes (
+      id          TEXT PRIMARY KEY,
+      ctr_id      TEXT NOT NULL REFERENCES commerce_transactions(id),
+      phase       INTEGER NOT NULL,
+      initiator   TEXT NOT NULL,
+      grounds     TEXT NOT NULL,
+      resolution  TEXT,
+      resolved_by TEXT,
+      created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_cd_ctr ON commerce_disputes(ctr_id);
+  `);
+
+  // OGPP — Agent Governance v1
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS governance_constraint_records (
+      id                        TEXT PRIMARY KEY,
+      operator_agent_id         TEXT NOT NULL,
+      constraints_json          TEXT NOT NULL,
+      mandatory_constraints_hash TEXT NOT NULL,
+      signature                 TEXT,
+      hcs_topic                 TEXT,
+      hcs_sequence_number       INTEGER,
+      created_at                DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_gcr_operator ON governance_constraint_records(operator_agent_id);
+
+    CREATE TABLE IF NOT EXISTS governance_inheritance_bindings (
+      id                         TEXT PRIMARY KEY,
+      gcr_id                     TEXT NOT NULL REFERENCES governance_constraint_records(id),
+      parent_gib_id              TEXT,
+      spawning_agent_id          TEXT NOT NULL,
+      spawned_agent_id           TEXT NOT NULL,
+      effective_constraints_json TEXT NOT NULL,
+      mandatory_constraints_hash TEXT NOT NULL,
+      relaxations_json           TEXT,
+      hcs_sequence_number        INTEGER,
+      drift_detected             INTEGER NOT NULL DEFAULT 0,
+      created_at                 DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_gib_gcr      ON governance_inheritance_bindings(gcr_id);
+    CREATE INDEX IF NOT EXISTS idx_gib_spawned  ON governance_inheritance_bindings(spawned_agent_id);
+    CREATE INDEX IF NOT EXISTS idx_gib_spawning ON governance_inheritance_bindings(spawning_agent_id);
+
+    CREATE TABLE IF NOT EXISTS governance_violation_events (
+      id                   TEXT PRIMARY KEY,
+      gib_id               TEXT NOT NULL REFERENCES governance_inheritance_bindings(id),
+      agent_id             TEXT NOT NULL,
+      action_type          TEXT NOT NULL,
+      action_proposal_json TEXT NOT NULL,
+      violated_constraints TEXT NOT NULL,
+      timestamp            DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_gve_gib   ON governance_violation_events(gib_id);
+    CREATE INDEX IF NOT EXISTS idx_gve_agent ON governance_violation_events(agent_id);
+
+    CREATE TABLE IF NOT EXISTS governance_attestations (
+      id                         TEXT PRIMARY KEY,
+      gib_id                     TEXT NOT NULL REFERENCES governance_inheritance_bindings(id),
+      agent_id                   TEXT NOT NULL,
+      window_start               DATETIME NOT NULL,
+      window_end                 DATETIME NOT NULL,
+      total_actions_evaluated    INTEGER NOT NULL,
+      violations_count           INTEGER NOT NULL,
+      compliance_rate            REAL NOT NULL,
+      mandatory_constraints_hash TEXT NOT NULL,
+      hash_verified              INTEGER NOT NULL,
+      aats_trust_score           REAL,
+      hcs_sequence_number        INTEGER,
+      created_at                 DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_ga_gib   ON governance_attestations(gib_id);
+    CREATE INDEX IF NOT EXISTS idx_ga_agent ON governance_attestations(agent_id);
+  `);
+
   console.log('DB initialized:', DB_PATH);
 }
 

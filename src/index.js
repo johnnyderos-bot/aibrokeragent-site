@@ -27,6 +27,8 @@ const consolePlatformRouter      = require('./console-platform-api');
 const consoleOperatorRouter      = require('./console-operator-api');
 const discoveryRouter            = require('./discovery-api');
 const betaRouter                 = require('./beta-api');
+const { router: commerceRouter, processCommerceTimeouts } = require('./commerce');
+const { router: governanceRouter } = require('./governance');
 
 const app = express();
 app.use(express.json({ limit: '1mb' }));
@@ -77,6 +79,8 @@ app.use('/billing',     billingRouter);
 app.use('/arena',       arenaRouter);
 app.use('/api',         idleMarketplaceRouter);
 app.use('/api',         aicpRouter);
+app.use('/commerce',    commerceRouter);
+app.use('/governance',  governanceRouter);
 
 // Public leaderboard at canonical API path
 app.get('/api/v1/arena/leaderboard', (req, res) => {
@@ -109,11 +113,17 @@ app.use('/console/agents/:agent_id',               consoleLimitsRouter);
 app.use('/console/agents/:agent_id',               consoleDashboardRouter);
 app.use('/console/operator',                       consoleOperatorRouter);
 
-app.get('/health', (req, res) => res.json({
-  status: 'ok',
-  service: 'BrokerAGEnt Context Vault',
-  ofac_screening: ofacCacheInfo(),
-}));
+app.get('/health', (req, res) => {
+  const db = require('./db').getDb();
+  const probe = (table) => { try { db.prepare(`SELECT 1 FROM ${table} LIMIT 1`).get(); return 'ok'; } catch { return 'error'; } };
+  res.json({
+    status: 'ok',
+    service: 'BrokerAGEnt Context Vault',
+    ofac_screening: ofacCacheInfo(),
+    commerce: probe('commerce_transactions'),
+    governance: probe('governance_constraint_records'),
+  });
+});
 
 // Public stats endpoint — powers the landing page dashboard
 app.get('/stats', (req, res) => {
@@ -149,6 +159,18 @@ app.get('/stats', (req, res) => {
       } catch { return 0; }
     })();
 
+    // Commerce stats
+    const commerce_transactions = (() => { try { return db.prepare('SELECT COUNT(*) as n FROM commerce_transactions').get().n; } catch { return 0; } })();
+    const commerce_settled      = (() => { try { return db.prepare("SELECT COUNT(*) as n FROM commerce_transactions WHERE status='settled'").get().n; } catch { return 0; } })();
+    const commerce_disputed     = (() => { try { return db.prepare("SELECT COUNT(*) as n FROM commerce_transactions WHERE status IN ('disputed','resolved')").get().n; } catch { return 0; } })();
+
+    // Governance stats
+    const governance_gcrs        = (() => { try { return db.prepare('SELECT COUNT(*) as n FROM governance_constraint_records').get().n; } catch { return 0; } })();
+    const governance_gibs        = (() => { try { return db.prepare('SELECT COUNT(*) as n FROM governance_inheritance_bindings').get().n; } catch { return 0; } })();
+    const governance_violations  = (() => { try { return db.prepare('SELECT COUNT(*) as n FROM governance_violation_events').get().n; } catch { return 0; } })();
+    const governance_attestations = (() => { try { return db.prepare('SELECT COUNT(*) as n FROM governance_attestations').get().n; } catch { return 0; } })();
+    const governance_drift_count  = (() => { try { return db.prepare('SELECT COUNT(*) as n FROM governance_inheritance_bindings WHERE drift_detected=1').get().n; } catch { return 0; } })();
+
     res.json({
       agents_registered:    agents,
       records_stored:       records,
@@ -163,6 +185,8 @@ app.get('/stats', (req, res) => {
       attested_agents,
       flash_events,
       aats_queries_today,
+      commerce: { total_transactions: commerce_transactions, settled: commerce_settled, disputed: commerce_disputed },
+      governance: { total_gcrs: governance_gcrs, total_gibs: governance_gibs, drift_detected: governance_drift_count, total_violations: governance_violations, total_attestations: governance_attestations },
       network: process.env.HEDERA_NETWORK || 'testnet',
     });
   } catch (err) {
@@ -195,6 +219,9 @@ try {
 
   // Hourly arbitration SLA sweep
   setInterval(() => processTimeouts(), 60 * 60 * 1000);
+
+  // Hourly ADRP phase-3 timeout sweep (refund escrow after 24h hold)
+  setInterval(() => { try { processCommerceTimeouts(); } catch (err) { console.error('[commerce-timeout]', err.message); } }, 60 * 60 * 1000);
 
   // HCS batch anchoring for audit log — 15-minute intervals
   startAnchorScheduler();
