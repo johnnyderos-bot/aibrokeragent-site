@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIbrokerAGEnt — Agent Trust Research</title>
+  <style>
+    :root {
+      --bg: #08090c;
+      --surface: #0f1117;
+      --surface2: #151820;
+      --border: #1e2330;
+      --accent: #4f8ef7;
+      --accent2: #7c5cfc;
+      --accent3: #2dd4a0;
+      --amber: #f59e0b;
+      --pink: #ec4899;
+      --red: #f87171;
+      --text: #e4e8f0;
+      --text-muted: #8892a4;
+      --text-dim: #4a5568;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 16px; line-height: 1.6; min-height: 100vh; }
+
+    /* LOGIN */
+    #login-screen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 1000; overflow: hidden; }
+    .login-bg { position: absolute; inset: 0; background-image: radial-gradient(rgba(79,142,247,0.12) 1px, transparent 1px); background-size: 44px 44px; animation: bgdrift 30s linear infinite; }
+    .login-glow { position: absolute; top: 35%; left: 50%; transform: translate(-50%,-50%); width: 700px; height: 500px; background: radial-gradient(ellipse, rgba(79,142,247,0.07) 0%, transparent 70%); pointer-events: none; }
+    @keyframes bgdrift { 0% { background-position: 0 0; } 100% { background-position: 44px 44px; } }
+    .login-card { position: relative; z-index: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem 3rem; width: 100%; max-width: 420px; margin: 1.5rem; box-shadow: 0 24px 64px rgba(0,0,0,0.4); }
+    .login-logo { text-align: center; margin-bottom: 0.5rem; }
+    .login-logo .name { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.04em; color: var(--text); }
+    .login-logo .name span { color: var(--accent); }
+    .login-logo .sub { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-top: 0.25rem; }
+    .login-quote { text-align: center; font-size: 0.9rem; color: var(--text-muted); font-style: italic; line-height: 1.65; margin: 1.25rem 0 2rem; padding: 1rem 1.25rem; background: var(--surface2); border-radius: 8px; border-left: 2px solid var(--accent); }
+    .login-form { display: flex; flex-direction: column; gap: 0.9rem; }
+    .login-form label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 0.3rem; }
+    .login-form input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 0.9rem; color: var(--text); font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+    .login-form input:focus { border-color: var(--accent); }
+    .login-btn { width: 100%; padding: 0.75rem; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 0.4rem; font-family: inherit; }
+    .login-btn:hover { background: #3d7ef5; }
+    #login-error { color: var(--red); font-size: 0.82rem; text-align: center; min-height: 1.2em; margin-top: 0.25rem; }
+
+    /* APP */
+    #app { min-height: 100vh; }
+
+    /* TAB NAV */
+    .tab-nav { position: sticky; top: 0; z-index: 100; background: rgba(8,9,12,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 1rem; display: flex; align-items: stretch; overflow-x: auto; scrollbar-width: none; gap: 0; }
+    .tab-nav::-webkit-scrollbar { display: none; }
+    .tab-nav-logo { display: flex; align-items: center; padding: 0 1rem 0 0; border-right: 1px solid var(--border); margin-right: 0.5rem; white-space: nowrap; font-size: 0.85rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em; flex-shrink: 0; }
+    .tab-nav-logo span { color: var(--accent); }
+    .tab-btn { background: none; border: none; cursor: pointer; padding: 0 0.85rem; height: 50px; font-size: 0.79rem; font-weight: 500; color: var(--text-dim); white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; font-family: inherit; }
+    .tab-btn:hover { color: var(--text-muted); }
+    .tab-btn.active { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+
+    /* TAB CONTENT */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .page-section { max-width: 960px; margin: 0 auto; padding: 3.5rem 2rem 3rem; }
+
+    .section-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .section-label.purple { color: var(--accent2); }
+    .section-label.amber { color: var(--amber); }
+    .section-label.green { color: var(--accent3); }
+    .section-label.pink { color: var(--pink); }
+    .section-label.dim { color: var(--text-dim); }
+
+    h1 { font-size: clamp(1.8rem, 4vw, 2.7rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 1rem; }
+    h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.6rem; }
+    h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+    p { color: var(--text-muted); line-height: 1.75; }
+
+    .gradient-text { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .grad-purple { background: linear-gradient(135deg, var(--accent2), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .grad-amber { background: linear-gradient(135deg, var(--amber), #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .grad-green { background: linear-gradient(135deg, var(--accent3), #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .grad-pink { background: linear-gradient(135deg, var(--pink), #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    /* CARDS */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+    .card-icon { font-size: 1.4rem; margin-bottom: 0.75rem; }
+    .card h3 { color: var(--text); }
+    .card p { font-size: 0.87rem; margin-top: 0.4rem; }
+
+    /* ANALYSIS COLUMNS */
+    .analysis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+    .analysis-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; position: relative; overflow: hidden; }
+    .analysis-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+    .analysis-card.issue::before { background: var(--red); }
+    .analysis-card.why::before { background: var(--amber); }
+    .analysis-card.attempt::before { background: var(--accent3); }
+    .analysis-label { font-size: 0.67rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .analysis-card.issue .analysis-label { color: var(--red); }
+    .analysis-card.why .analysis-label { color: var(--amber); }
+    .analysis-card.attempt .analysis-label { color: var(--accent3); }
+    .analysis-card h3 { font-size: 0.98rem; color: var(--text); }
+    .analysis-card p { font-size: 0.84rem; margin-top: 0.4rem; }
+
+    /* NEXT ROW */
+    .next-row { display: flex; justify-content: flex-end; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    .next-btn { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 0.65rem 1.5rem; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.2s; }
+    .next-btn:hover { background: #3d7ef5; }
+
+    /* TRUST STACK */
+    .stack-diagram { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    .stack-layer { display: flex; align-items: stretch; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+    .stack-num { width: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em; }
+    .stack-body { flex: 1; background: var(--surface); padding: 0.9rem 1.2rem; }
+    .stack-name { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .stack-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+    .stack-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+    .tag { font-size: 0.67rem; font-weight: 700; letter-spacing: 0.06em; border-radius: 4px; padding: 0.15rem 0.5rem; }
+
+    .l-blue { border-color: rgba(79,142,247,0.35); } .l-blue .stack-num { background: rgba(79,142,247,0.12); color: var(--accent); } .l-blue .stack-name { color: var(--accent); } .l-blue .tag { background: rgba(79,142,247,0.1); color: var(--accent); }
+    .l-purple { border-color: rgba(124,92,252,0.35); } .l-purple .stack-num { background: rgba(124,92,252,0.12); color: var(--accent2); } .l-purple .stack-name { color: var(--accent2); } .l-purple .tag { background: rgba(124,92,252,0.1); color: var(--accent2); }
+    .l-amber { border-color: rgba(245,158,11,0.35); } .l-amber .stack-num { background: rgba(245,158,11,0.12); color: var(--amber); } .l-amber .stack-name { color: var(--amber); } .l-amber .tag { background: rgba(245,158,11,0.1); color: var(--amber); }
+    .l-green { border-color: rgba(45,212,160,0.35); } .l-green .stack-num { background: rgba(45,212,160,0.12); color: var(--accent3); } .l-green .stack-name { color: var(--accent3); } .l-green .tag { background: rgba(45,212,160,0.1); color: var(--accent3); }
+    .l-pink { border-color: rgba(236,72,153,0.35); } .l-pink .stack-num { background: rgba(236,72,153,0.12); color: var(--pink); } .l-pink .stack-name { color: var(--pink); } .l-pink .tag { background: rgba(236,72,153,0.1); color: var(--pink); }
+
+    /* CONTRAST */
+    .contrast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 2rem; }
+    @media (max-width: 600px) { .contrast-grid { grid-template-columns: 1fr; } }
+    .contrast-card { border-radius: 12px; padding: 1.4rem; }
+    .contrast-card.bad { background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.2); }
+    .contrast-card.good { background: rgba(45,212,160,0.05); border: 1px solid rgba(45,212,160,0.2); }
+    .contrast-badge { font-size: 0.67rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; display: block; }
+    .contrast-card.bad .contrast-badge { color: var(--red); }
+    .contrast-card.good .contrast-badge { color: var(--accent3); }
+    .contrast-body { font-size: 0.87rem; color: var(--text-muted); line-height: 1.7; }
+    .contrast-body strong { color: var(--text); }
+
+    /* MEMORY TIERS */
+    .memory-stack { margin-top: 1.5rem; max-width: 540px; }
+    .mem-tier { padding: 1rem 1.25rem; border: 1px solid var(--border); display: flex; align-items: center; gap: 1rem; }
+    .mem-tier:first-child { border-radius: 10px 10px 0 0; background: rgba(79,142,247,0.04); }
+    .mem-tier:nth-child(2) { border-top: none; background: rgba(124,92,252,0.03); }
+    .mem-tier:last-child { border-top: none; border-radius: 0 0 10px 10px; background: var(--surface2); }
+    .tier-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .tier-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; width: 72px; flex-shrink: 0; }
+    .tier-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+    .filter-box { margin-top: 0.75rem; padding: 0.75rem 1.1rem; background: rgba(45,212,160,0.06); border: 1px solid rgba(45,212,160,0.2); border-radius: 8px; font-size: 0.82rem; color: var(--accent3); line-height: 1.55; max-width: 540px; }
+
+    /* DELEGATION TREE */
+    .del-tree { margin-top: 1.5rem; max-width: 600px; }
+    .agent-node { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem 1.1rem; }
+    .agent-node.op { border-color: rgba(245,158,11,0.5); }
+    .agent-node.parent { border-color: rgba(79,142,247,0.5); }
+    .agent-node.child { border-color: rgba(79,142,247,0.25); }
+    .node-label { font-size: 0.67rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.2rem; }
+    .agent-node.op .node-label { color: var(--amber); }
+    .agent-node.parent .node-label { color: var(--accent); }
+    .agent-node.child .node-label { color: var(--text-dim); }
+    .node-name { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .node-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem; }
+    .tree-line { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.25rem 0 0.25rem 1.25rem; }
+    .v-line { width: 1px; height: 28px; background: var(--border); flex-shrink: 0; margin-top: 2px; }
+    .tree-badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); color: var(--amber); padding: 0.1rem 0.4rem; border-radius: 3px; white-space: nowrap; }
+    .tree-note { font-size: 0.75rem; color: var(--text-dim); padding-top: 2px; }
+    .children-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; padding-left: 1.5rem; position: relative; margin-top: 0; }
+    .children-row::before { content: ''; position: absolute; left: 0.75rem; top: -16px; bottom: 12px; width: 1px; background: var(--border); }
+    @media (max-width: 540px) { .children-row { grid-template-columns: 1fr; } }
+
+    /* TIMELINE */
+    .timeline-wrap { margin-top: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.4rem; }
+    .tl-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.1rem; }
+    .tl-title { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); }
+    .tl-score { font-size: 1.35rem; font-weight: 800; color: var(--accent3); }
+    .tl-track { background: var(--surface2); border-radius: 8px; overflow: visible; }
+    .tl-events { display: flex; gap: 1.25rem; margin-top: 1rem; flex-wrap: wrap; }
+    .tl-event { font-size: 0.78rem; color: var(--text-dim); display: flex; align-items: center; gap: 0.35rem; }
+    .ev-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ACC CHAIN */
+    .acc-chain { margin-top: 1.5rem; display: flex; align-items: center; overflow-x: auto; padding-bottom: 0.5rem; gap: 0; }
+    .acc-node { flex-shrink: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 0.9rem; text-align: center; min-width: 100px; }
+    .acc-abbr { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.2rem; }
+    .acc-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.35; }
+    .acc-arrow { flex-shrink: 0; padding: 0 0.25rem; color: var(--text-dim); font-size: 1rem; }
+
+    /* FUTURE STATE */
+    .outcome-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-top: 1.75rem; }
+    .outcome-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+    .outcome-num { font-size: 0.67rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.4rem; }
+    .outcome-card h3 { color: var(--text); font-size: 0.98rem; }
+    .outcome-card p { font-size: 0.84rem; margin-top: 0.4rem; }
+    .intent-card { margin-top: 2.5rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; border-left: 3px solid var(--accent); }
+    .intent-card p { font-size: 0.95rem; color: var(--text); line-height: 1.85; }
+    .intent-card p + p { margin-top: 0.75rem; color: var(--text-muted); font-size: 0.88rem; }
+    .llc-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-top: 2rem; }
+    .llc-box h3 { color: var(--text); font-size: 1rem; }
+    .llc-box p { font-size: 0.86rem; margin-top: 0.5rem; }
+
+    /* ABOUT TAB */
+    .origin-block { max-width: 680px; margin-top: 2rem; padding: 2rem; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; }
+    .origin-block p { font-size: 1rem; line-height: 1.85; }
+    .origin-block p + p { margin-top: 1rem; }
+    .one-question { margin-top: 2.5rem; padding: 1.5rem 1.75rem; background: var(--surface2); border-radius: 12px; border-left: 3px solid var(--accent); max-width: 680px; }
+    .one-question .q-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+    .one-question .q-text { font-size: 1.15rem; font-weight: 700; color: var(--text); line-height: 1.4; }
+    .one-question .q-sub { font-size: 0.87rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.65; }
+    .path-preview { margin-top: 2.5rem; }
+    .path-preview-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem; }
+    .path-mini-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.9rem; }
+    .path-mini { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; cursor: pointer; transition: border-color 0.2s; }
+    .path-mini:hover { border-color: rgba(79,142,247,0.4); }
+    .path-mini-num { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.25rem; }
+    .path-mini-name { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .path-mini-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; line-height: 1.5; }
+    .nav-hint { margin-top: 1.75rem; font-size: 0.82rem; color: var(--text-dim); }
+
+    /* CHAIN HERO */
+    .chain-hero { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; }
+    .chain-hero-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pink); margin-bottom: 1.75rem; }
+    .chain-hero-nodes { display: flex; align-items: center; gap: 0; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 0.5rem; }
+    .chain-hero-node { flex: 1; min-width: 130px; border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1rem; text-align: center; }
+    .chn-layer { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .chn-name { font-size: 1rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+    .chn-record { font-size: 0.77rem; color: var(--text-muted); line-height: 1.55; }
+    .chain-arrow-v { flex-shrink: 0; padding: 0 0.5rem; color: var(--text-dim); font-size: 1.2rem; font-weight: 300; }
+    .chain-hero-caption { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+    @media (max-width: 700px) {
+      .chain-hero-nodes { gap: 0; }
+      .chain-hero-node { min-width: 110px; padding: 0.85rem 0.65rem; }
+      .chain-arrow-v { padding: 0 0.3rem; font-size: 1rem; }
+    }
+
+    /* INFOBOX */
+    .infobox { padding: 1.1rem 1.4rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; font-size: 0.84rem; color: var(--text-muted); line-height: 1.7; margin-top: 1rem; }
+    .infobox strong { color: var(--text); }
+
+    @media (max-width: 640px) {
+      .page-section { padding: 2.5rem 1.25rem 2rem; }
+      .tab-btn { padding: 0 0.6rem; font-size: 0.75rem; }
+      .tab-nav-logo { display: none; }
+      .acc-node { min-width: 80px; padding: 0.65rem 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-bg"></div>
+  <div class="login-glow"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="name">AIbroker<span>AGENT</span></div>
+      <div class="sub">A DerosLabs Research Initiative</div>
+    </div>
+    <div class="login-quote">"A project in discovering what agent trust looks like"</div>
+    <form class="login-form" id="login-form">
+      <div>
+        <label for="u">Username</label>
+        <input type="text" id="u" autocomplete="username" placeholder="username">
+      </div>
+      <div>
+        <label for="p">Password</label>
+        <input type="password" id="p" autocomplete="current-password" placeholder="password">
+      </div>
+      <button type="submit" class="login-btn">Enter →</button>
+      <div id="login-error"></div>
+    </form>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+  <nav class="tab-nav">
+    <div class="tab-nav-logo">AIbroker<span>AGENT</span></div>
+    <button class="tab-btn active" onclick="showTab(1)">00 About</button>
+    <button class="tab-btn" onclick="showTab(2)">01 The Problem</button>
+    <button class="tab-btn" onclick="showTab(3)">02 Our Approach</button>
+    <button class="tab-btn" onclick="showTab(4)">03 Identity</button>
+    <button class="tab-btn" onclick="showTab(5)">04 Context Recall</button>
+    <button class="tab-btn" onclick="showTab(6)">05 Governance</button>
+    <button class="tab-btn" onclick="showTab(7)">06 Trust Scoring</button>
+    <button class="tab-btn" onclick="showTab(8)">07 Commerce</button>
+    <button class="tab-btn" onclick="showTab(9)">08 Chain of Custody</button>
+    <button class="tab-btn" onclick="showTab(10)">09 Future State</button>
+  </nav>
+
+  <!-- TAB 1: ABOUT -->
+  <div id="tab-1" class="tab-content active">
+    <div class="page-section">
+      <div class="section-label">About This Project</div>
+      <h1>How this <span class="gradient-text">started</span></h1>
+
+      <div class="origin-block">
+        <p>In early 2026, I kept running into YouTube videos claiming AI agents were ready for enterprise deployment — autonomous systems managing workflows, executing financial operations, making decisions on behalf of organizations. The claims were bold. The evidence was thin.</p>
+        <p>I'm a data analyst at LRS. I started building something in the evenings to answer one question I couldn't shake: can you actually trust an AI agent to act on behalf of a company — not in the hopeful sense, but in the provable, auditable, compliance-grade sense?</p>
+        <p>Two months later, the answer was more complicated than I expected. This presentation is what I found.</p>
+      </div>
+
+      <div class="one-question">
+        <div class="q-label">The one question</div>
+        <div class="q-text">"Can you prove which agent took an action, that it operated within its authorized constraints, and that you can show an auditor the full record — today?"</div>
+        <div class="q-sub">The honest answer, across the industry, is no. That gap is what this research attempts to address.</div>
+      </div>
+
+      <div class="path-preview">
+        <div class="path-preview-label">This presentation ends with four paths forward — all designed with LRS's interests in mind</div>
+        <div class="path-mini-grid">
+          <div class="path-mini" onclick="showTab(10)">
+            <div class="path-mini-num">Path 01</div>
+            <div class="path-mini-name">Assign &amp; Dissolve</div>
+            <div class="path-mini-desc">IP transfers to LRS. Structure dissolves.</div>
+          </div>
+          <div class="path-mini" onclick="showTab(10)">
+            <div class="path-mini-num">Path 02</div>
+            <div class="path-mini-name">Carve-Out</div>
+            <div class="path-mini-desc">LRS grants carve-out. Work goes Apache 2.0.</div>
+          </div>
+          <div class="path-mini" onclick="showTab(10)">
+            <div class="path-mini-num">Path 03</div>
+            <div class="path-mini-name">Partnership</div>
+            <div class="path-mini-desc">LRS partners or co-funds an AI R&amp;D lab.</div>
+          </div>
+          <div class="path-mini" onclick="showTab(10)">
+            <div class="path-mini-num">Path 04</div>
+            <div class="path-mini-name">Open Source &amp; Close</div>
+            <div class="path-mini-desc">LRS passes. Research open-sourced, entity dissolved.</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="nav-hint">Use the tabs above to navigate — or click any path card to jump straight to Future State.</p>
+
+      <div class="next-row"><button class="next-btn" onclick="showTab(2)">The Problem →</button></div>
+    </div>
+  </div>
+
+  <!-- TAB 2: THE PROBLEM -->
+  <div id="tab-2" class="tab-content">
+    <div class="page-section">
+      <div class="section-label">01 — The Problem</div>
+      <h1>What happens when no one can <span class="gradient-text">trust the agent</span>?</h1>
+      <p style="max-width:640px;font-size:1.05rem;margin-top:1rem">Enterprise AI is moving fast. Agents are being deployed in healthcare, finance, and government — making decisions, executing transactions, acting autonomously on behalf of organizations. Nobody is asking the right question loudly enough.</p>
+      <p style="max-width:640px;font-size:1.05rem;margin-top:0.75rem"><strong style="color:var(--text)">Can you prove it?</strong> Can you prove which agent took an action? That it operated within its authorized constraints when it did? That the reasoning environment it had when it decided is the same context you can show an auditor today?</p>
+      <p style="max-width:640px;font-size:1.05rem;margin-top:0.75rem">The honest answer — across the industry — is <strong style="color:var(--red)">no</strong>.</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🏥</div>
+          <h3>Healthcare</h3>
+          <p>An agent modifies a patient care plan. The action is logged. But who authorized the spawn? What policy governed it? What context did it have when it decided? There is no cryptographic record — only a timestamp and an outcome.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏦</div>
+          <h3>Financial Services</h3>
+          <p>An agent executes a transaction at 2am. It passed your internal review at 10am Monday. Can you prove the 2am agent is behaviorally the same agent? SOX auditors will ask. There is no continuous behavioral record to show them.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏛</div>
+          <h3>Government</h3>
+          <p>An agent recommends a benefits determination. Six months later, a FOIA request arrives. The reasoning chain — what the agent knew, what constrained it — is gone. The log says what. Not why. Not who authorized it.</p>
+        </div>
+      </div>
+
+      <div class="infobox" style="max-width:680px;margin-top:2rem;border-left:3px solid var(--red)">
+        <strong>The Structural Gap</strong><br>
+        Every agent framework today can tell you <strong>what</strong> an agent did. None can <strong>prove</strong> it — continuously, cryptographically, in a form an auditor can independently verify. This is not a flaw in a single platform. It is a gap across the entire agent layer — and it is about to become a compliance problem.
+      </div>
+
+      <div class="next-row"><button class="next-btn" onclick="showTab(3)">Our Approach →</button></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: OUR APPROACH -->
+  <div id="tab-3" class="tab-content">
+    <div class="page-section">
+      <div class="section-label">02 — Our Approach</div>
+      <h1>A <span class="gradient-text">layered answer</span> to a structural problem</h1>
+      <p style="max-width:640px;font-size:1rem;margin-top:1rem">No single solution closes this gap. The research produced five interdependent layers, each addressing a distinct dimension of agent accountability. Think of it as the missing compliance foundation — the infrastructure layer the agent economy doesn't have yet.</p>
+      <p style="max-width:640px;font-size:0.87rem;margin-top:0.75rem;color:var(--text-dim)">Each layer is backed by a specification and working prototype. None are production-deployed at enterprise scale — this is research, not a shipping product.</p>
+
+      <div class="stack-diagram">
+        <div class="stack-layer l-blue">
+          <div class="stack-num">01</div>
+          <div class="stack-body">
+            <div class="stack-name">Identity &amp; Provenance</div>
+            <div class="stack-desc">Cryptographic proof of which agent acted, when, and in what sequence — the foundation everything else depends on. Without this layer, every other accountability claim is unverifiable.</div>
+          </div>
+        </div>
+        <div class="stack-layer l-purple">
+          <div class="stack-num">02</div>
+          <div class="stack-body">
+            <div class="stack-name">Context Recall</div>
+            <div class="stack-desc">A signed record of what context the agent had at the exact moment of a decision — not just the outcome, but the reasoning environment. Enables meaningful explanation for any automated action.</div>
+          </div>
+        </div>
+        <div class="stack-layer l-amber">
+          <div class="stack-num">03</div>
+          <div class="stack-body">
+            <div class="stack-name">Governance</div>
+            <div class="stack-desc">Operator constraints that travel cryptographically with the agent — inherited at spawn, enforced at runtime, verifiable after the fact. Governance that doesn't just exist in policy documents.</div>
+          </div>
+        </div>
+        <div class="stack-layer l-green">
+          <div class="stack-num">04</div>
+          <div class="stack-body">
+            <div class="stack-name">Trust Scoring &amp; Lifecycle</div>
+            <div class="stack-desc">Continuous behavioral track record from first deployment through decommission — with drift detection and adversarial testing to prove the agent at 2am Thursday is the same agent that passed Monday's review.</div>
+          </div>
+        </div>
+        <div class="stack-layer l-pink">
+          <div class="stack-num">05</div>
+          <div class="stack-body">
+            <div class="stack-name">Commerce &amp; Accountability</div>
+            <div class="stack-desc">Payment tied to verified delivery, and a unified chain of custody that links all five layers into one auditable record — answerable to any SOC 2, SOX, or regulatory inquiry.</div>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size:0.82rem;color:var(--text-dim);margin-top:1.5rem">The next five tabs walk through each layer — the real-world problem it addresses, why it matters, and how the research attempts to solve it.</p>
+
+      <div class="next-row"><button class="next-btn" onclick="showTab(4)">Identity &amp; Provenance →</button></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: IDENTITY -->
+  <div id="tab-4" class="tab-content">
+    <div class="page-section">
+      <div class="section-label">Layer 01 — Identity &amp; Provenance</div>
+      <h1>Who is the <span class="gradient-text">agent</span>, exactly?</h1>
+      <p style="max-width:640px;font-size:1rem;margin-top:1rem">Before you can audit behavior, enforce governance, or verify a transaction — you have to prove which agent ran a task. Today, you can't. Agent identity is a convention, not a proof.</p>
+
+      <div class="analysis-grid">
+        <div class="analysis-card issue">
+          <div class="analysis-label">The Real Issue</div>
+          <h3>Agent impersonation is trivial</h3>
+          <p>Any process can claim to be any agent. There is no cryptographic binding between a stated agent identity and the actual execution. No way to prove which agent ran a task, when it was spawned, who authorized it, or the sequence of interactions it had with other agents.</p>
+        </div>
+        <div class="analysis-card why">
+          <div class="analysis-label">Why It Matters</div>
+          <h3>Liability and forensics collapse</h3>
+          <p>When an agent takes a consequential action, someone is liable. Without provable identity, accountability cannot be determined. Post-incident forensics become guesswork. Insurance claims fail. Regulatory inquiries stall. The chain of custody is broken at the first link.</p>
+        </div>
+        <div class="analysis-card attempt">
+          <div class="analysis-label">Our Attempt to Solve It</div>
+          <h3>Cryptographic identity at spawn</h3>
+          <p>A cryptographic identity record is created at agent spawn — post-quantum signed, anchored to a public immutable ledger. Unforgeable, timestamped, independently verifiable. A companion protocol uses mathematical braid topology to prove the exact sequence and direction of agent interactions — each message recorded, the chain unforgeable.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:2rem">
+        <div class="section-label" style="margin-bottom:0.85rem">Today vs. With This Layer</div>
+        <div class="contrast-grid">
+          <div class="contrast-card bad">
+            <span class="contrast-badge">Without — Today</span>
+            <div class="contrast-body">
+              <strong>Log entry:</strong> "Agent processed request at 14:32:07."<br><br>
+              Who spawned it? Unknown.<br>
+              What authorized it? Assumed from config.<br>
+              Same agent as yesterday? No way to verify.<br>
+              Sequence with other agents? No record exists.<br><br>
+              <strong>Audit question: "Who authorized this agent?"</strong><br>
+              Answer: "We trust our logs."
+            </div>
+          </div>
+          <div class="contrast-card good">
+            <span class="contrast-badge">With Identity Layer</span>
+            <div class="contrast-body">
+              <strong>Spawn record:</strong> Cryptographically signed, anchored to immutable ledger at block #38,241,907.<br><br>
+              Operator: cryptographically bound at spawn.<br>
+              Policy hash: embedded, tamper-evident.<br>
+              Interaction sequence: mathematically proven.<br>
+              Independently verifiable by any auditor.<br><br>
+              <strong>Audit question: "Who authorized this agent?"</strong><br>
+              Answer: "Here is the cryptographic proof."
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="next-row"><button class="next-btn" onclick="showTab(5)">Context Recall →</button></div>
+    </div>
+  </div>
+
+  <!-- TAB 5: CONTEXT RECALL -->
+  <div id="tab-5" class="tab-content">
+    <div class="page-section">
+      <div class="section-label purple">Layer 02 — Context Recall</div>
+      <h1>What did the agent <span class="grad-purple">know</span> when it decided?</h1>
+      <p style="max-width:640px;font-size:1rem;margin-top:1rem">Logging the outcome of a decision is not the same as recording the reasoning environment. Today's agent stacks capture what happened — not what context shaped the decision. That gap matters more than most people realize.</p>
+
+      <div class="analysis-grid">
+        <div class="analysis-card issue">
+          <div class="analysis-label">The Real Issue</div>
+          <h3>Decisions are ungrounded</h3>
+          <p>When an agent makes a decision, there is no record of its context at that moment: what it retrieved from memory, what instructions were active, what data was presented. The outcome is logged. The reasoning environment is not.</p>
+        </div>
+        <div class="analysis-card why">
+          <div class="analysis-label">Why It Matters</div>
+          <h3>Compliance requires it</h3>
+          <p>Regulatory audits and bias investigations ask "what did the model know when it made this call?" Without a context record, you cannot answer. Emerging AI regulations require meaningful explanation for automated decisions. "The model decided" is not a meaningful explanation.</p>
+        </div>
+        <div class="analysis-card attempt">
+          <div class="analysis-label">Our Attempt to Solve It</div>
+          <h3>Decision context records</h3>
+          <p>A signed context record opens at agent spawn and closes at termination — capturing what the agent could see at every decision point. The record is cryptographically bound to the agent's identity, preserving a traceable chain between who acted and what they knew when they acted.</p>
+        </div>
+      </div>
+
+      <div class="next-row"><button class="next-btn" onclick="showTab(6)">Governance →</button></div>
+    </div>
+  </div>
+
+  <!-- TAB 6: GOVERNANCE -->
+  <div id="tab-6" class="tab-content">
+    <div class="page-section">
+      <div class="section-label amber">Layer 03 — Governance</div>
+      <h1>Do the rules <span class="grad-amber">travel with the agent</span>?</h1>
+      <p style="max-width:640px;font-size:1rem;margin-top:1rem">Enterprise governance policies are written for humans. When agents spawn other agents, those policies stay at the top of the chain. Subagents operate in a governance vacuum — unless the constraints travel with them cryptographically.</p>
+
+      <div class="analysis-grid">
+        <div class="analysis-card issue">
+          <div class="analysis-label">The Real Issue</div>
+          <h3>Governance doesn't propagate</h3>
+          <p>An operator sets constraints on a parent agent. That parent spawns subagents. There is no mechanism to prove those subagents inherited the parent's governance constraints. A subagent can operate outside the operator's intent — with no audit trail proving otherwise.</p>
+        </div>
+        <div class="analysis-card why">
+          <div class="analysis-label">Why It Matters</div>
+          <h3>Enterprise requires provable inheritance</h3>
+          <p>NIST AI RMF, ISO 42001, and the EU AI Act all assume governance controls can be demonstrated — not just asserted. "Our policy says agents can't access X" is not the same as "here is cryptographic proof no agent in this deployment could access X."</p>
+        </div>
+        <div class="analysis-card attempt">
+          <div class="analysis-label">Our Attempt to Solve It</div>
+          <h3>Constraints embedded at spawn</h3>
+          <p>Operator governance constraints are embedded in the identity record at spawn — they travel cryptographically with the agent and cannot be removed without invalidating the identity. Delegation chains record every parent-to-child spawning event. Pre-deployment impact assessment gates any agent before it goes live.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:2rem">
+        <div class="section-label amber" style="margin-bottom:0.85rem">Constraint Propagation — How It Works</div>
+        <div class="del-tree">
+          <div class="agent-node op">
+            <div class="node-label">Operator</div>
+            <div class="node-name">Enterprise Policy Set</div>
+            <div class="node-desc">Defines: data boundaries, escalation triggers, prohibited actions, audit retention</div>
+          </div>
+          <div class="tree-line">
+            <div class="v-line"></div>
+            <div style="padding-top:4px;display:flex;align-items:center;gap:0.4rem"><span class="tree-badge">Governance Layer</span><span class="tree-note">Constraints embedded in identity record at spawn</span></div>
+          </div>
+          <div class="agent-node parent">
+            <div class="node-label">Parent Agent</div>
+            <div class="node-name">Orchestrator Agent</div>
+            <div class="node-desc">Inherits full constraint set. Policy hash embedded — cryptographically bound, cannot be modified without invalidating identity.</div>
+          </div>
+          <div class="tree-line">
+            <div class="v-line"></div>
+            <div style="padding-top:4px;display:flex;align-items:center;gap:0.4rem"><span class="tree-badge">Delegation Chain</span><span class="tree-note">Spawner identity + inherited constraints recorded at each step</span></div>
+          </div>
+          <div class="children-row">
+            <div class="agent-node child">
+              <div class="node-label">Subagent A</div>
+              <div class="node-name">Research Agent</div>
+              <div class="node-desc">Inherits parent constraints. Scoped to read-only access. Delegation record links back to parent identity.</div>
+            </div>
+            <div class="agent-node child">
+              <div class="node-label">Subagent B</div>
+              <div class="node-name">Action Agent</div>
+              <div class="node-desc">Inherits parent constraints. Scoped to approved write namespace only. Delegation record links back to parent identity.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="next-row"><button class="next-btn" onclick="showTab(7)">Trust Scoring →</button></div>
+    </div>
+  </div>
+
+  <!-- TAB 7: TRUST SCORING -->
+  <div id="tab-7" class="tab-content">
+    <div class="page-section">
+      <div class="section-label green">Layer 04 — Trust Scoring &amp; Lifecycle</div>
+      <h1>Is it still the <span class="grad-green">same agent</span> it was Monday?</h1>
+      <p style="max-width:640px;font-size:1rem;margin-top:1rem">An agent passes review at 10am Monday. By 2am Thursday it has processed thousands of interactions. LLM behavior drifts. Context accumulates. Prompts evolve. There is no standard mechanism to detect or prove whether the 2am Thursday agent is behaviorally the same one that passed review.</p>
+
+      <div class="analysis-grid">
+        <div class="analysis-card issue">
+          <div class="analysis-label">The Real Issue</div>
+          <h3>No continuous behavioral record</h3>
+          <p>Pre-deployment evaluation exists in some platforms. Post-deployment evaluation is absent across all of them. No industry standard for continuous agent trust scoring. No third-party audit mechanism. No drift detection standard. No formal decommission record.</p>
+        </div>
+        <div class="analysis-card why">
+          <div class="analysis-label">Why It Matters</div>
+          <h3>Compliance requires continuous evidence</h3>
+          <p>SOC 2 Type II, NIST AI RMF, and ISO 42001 require continuous, auditable evidence of control effectiveness — not a one-time snapshot. An agent that passed review six months ago provides no ongoing assurance. Auditors will ask for behavioral records. Today, there are none.</p>
+        </div>
+        <div class="analysis-card attempt">
+          <div class="analysis-label">Our Attempt to Solve It</div>
+          <h3>Continuous scoring + adversarial testing</h3>
+          <p>A five-dimension behavioral trust score that persists across sessions and is operator-queryable at any time. An adversarial testing protocol that runs against live agents to detect drift. An immutable lifecycle registry that records the full agent history from spawn through decommission — including a final signed tombstone record.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:2rem">
+        <div class="section-label green" style="margin-bottom:0.85rem">Continuous Behavioral Track Record</div>
+        <div class="timeline-wrap">
+          <div class="tl-header">
+            <span class="tl-title">Agent Behavioral Trust Score — Session History</span>
+            <span class="tl-score">0.87 / 1.00</span>
+          </div>
+          <div class="tl-track">
+            <svg width="100%" height="80" viewBox="0 0 800 80" preserveAspectRatio="none" style="display:block">
+              <line x1="0" y1="20" x2="800" y2="20" stroke="#1e2330" stroke-width="1"/>
+              <line x1="0" y1="40" x2="800" y2="40" stroke="#1e2330" stroke-width="1"/>
+              <line x1="0" y1="60" x2="800" y2="60" stroke="#1e2330" stroke-width="1"/>
+              <polyline points="0,16 100,14 200,15 280,14 330,16 370,32 410,40 450,44 490,32 550,18 640,15 720,13 800,14" fill="none" stroke="#2dd4a0" stroke-width="2.5" stroke-linejoin="round"/>
+              <line x1="370" y1="0" x2="370" y2="80" stroke="rgba(245,158,11,0.4)" stroke-width="1" stroke-dasharray="3,3"/>
+              <circle cx="200" cy="15" r="4" fill="#2dd4a0"/>
+              <circle cx="370" cy="32" r="5" fill="#f59e0b"/>
+              <circle cx="550" cy="18" r="4" fill="#2dd4a0"/>
+              <circle cx="800" cy="14" r="5" fill="#4f8ef7"/>
+            </svg>
+          </div>
+          <div class="tl-events">
+            <div class="tl-event"><div class="ev-dot" style="background:var(--accent3)"></div>Adversarial test run — passed</div>
+            <div class="tl-event"><div class="ev-dot" style="background:var(--amber)"></div>Drift detected — score drop</div>
+            <div class="tl-event"><div class="ev-dot" style="background:var(--accent3)"></div>Recovery — score restored</div>
+            <div class="tl-event"><div class="ev-dot" style="background:var(--accent)"></div>Lifecycle record updated</div>
+          </div>
+        </div>
+        <div class="infobox">Five scoring dimensions: <strong>Identity &amp; Attribution</strong> · <strong>Behavioral Consistency</strong> · <strong>Governance Compliance</strong> · <strong>Lifecycle Integrity</strong> · <strong>Commerce Verification</strong>. Each 0.0–1.0. Operator-queryable at any point in the agent's lifetime.</div>
+      </div>
+
+      <div class="next-row"><button class="next-btn" onclick="showTab(8)">Commerce &amp; Accountability →</button></div>
+    </div>
+  </div>
+
+  <!-- TAB 8: COMMERCE -->
+  <div id="tab-8" class="tab-content">
+    <div class="page-section">
+      <div class="section-label pink">Layer 05 — Commerce</div>
+      <h1>Did the work <span class="grad-pink">actually happen</span>?</h1>
+      <p style="max-width:640px;font-size:1rem;margin-top:1rem">Agents are beginning to transact — requesting resources, paying for services, executing financial operations on behalf of organizations. Payment today is released on trust. Not on verified delivery. That gap has consequences at enterprise scale.</p>
+
+      <div class="analysis-grid">
+        <div class="analysis-card issue">
+          <div class="analysis-label">The Real Issue</div>
+          <h3>Payment is not tied to verified delivery</h3>
+          <p>When an agent commissions work from another agent, payment releases on stated completion — not cryptographically verified completion. There is no mechanism to tie payment to a deterministic proof that the work matches the specification. No escrow. No verification gate.</p>
+        </div>
+        <div class="analysis-card why">
+          <div class="analysis-label">Why It Matters</div>
+          <h3>Financial controls require it</h3>
+          <p>At low volume, trusted delivery is acceptable. At enterprise scale — hundreds of agents transacting continuously — it is not. SOX financial controls require that payments be tied to verified obligations. The autonomous agent economy has no equivalent mechanism today.</p>
+        </div>
+        <div class="analysis-card attempt">
+          <div class="analysis-label">Our Attempt to Solve It</div>
+          <h3>Verified payment gate</h3>
+          <p>Payment is locked to a task specification hash at commission. It releases only when an automated verification gate confirms the output meets deterministic criteria — not on trust. The transaction record becomes the final link in the chain of custody.</p>
+        </div>
+      </div>
+
+      <div class="next-row"><button class="next-btn" onclick="showTab(9)">Chain of Custody →</button></div>
+    </div>
+  </div>
+
+  <!-- TAB 9: CHAIN OF CUSTODY -->
+  <div id="tab-9" class="tab-content">
+    <div class="page-section">
+      <div class="section-label">08 — Chain of Custody</div>
+      <h1>Where all five layers <span class="gradient-text">connect</span></h1>
+      <p style="max-width:680px;font-size:1.05rem;margin-top:1rem">Each layer in this research produces a signed record. The Chain of Custody links them into a single auditable thread — running from the moment an agent is spawned through its final transaction. This is the answer to the compliance question we started with.</p>
+      <p style="max-width:680px;font-size:0.9rem;margin-top:0.75rem;color:var(--text-dim)">Any audit question — identity, context, constraints, behavior, or payment — is answerable from a single query. An auditor does not need to stitch together five separate systems. The chain is the record.</p>
+
+      <div class="chain-hero">
+        <div class="chain-hero-label">Five Layers — One Auditable Record</div>
+        <div class="chain-hero-nodes">
+          <div class="chain-hero-node" style="border-color:rgba(79,142,247,0.5);background:rgba(79,142,247,0.05)">
+            <div class="chn-layer" style="color:var(--text-dim)">Layer 01</div>
+            <div class="chn-name" style="color:var(--accent)">Identity</div>
+            <div class="chn-record">Who is the agent?<br>Signed spawn record.</div>
+          </div>
+          <div class="chain-arrow-v">→</div>
+          <div class="chain-hero-node" style="border-color:rgba(124,92,252,0.5);background:rgba(124,92,252,0.05)">
+            <div class="chn-layer" style="color:var(--text-dim)">Layer 02</div>
+            <div class="chn-name" style="color:var(--accent2)">Context</div>
+            <div class="chn-record">What did it know?<br>Signed decision record.</div>
+          </div>
+          <div class="chain-arrow-v">→</div>
+          <div class="chain-hero-node" style="border-color:rgba(245,158,11,0.5);background:rgba(245,158,11,0.04)">
+            <div class="chn-layer" style="color:var(--text-dim)">Layer 03</div>
+            <div class="chn-name" style="color:var(--amber)">Governance</div>
+            <div class="chn-record">What constrained it?<br>Inherited policy record.</div>
+          </div>
+          <div class="chain-arrow-v">→</div>
+          <div class="chain-hero-node" style="border-color:rgba(45,212,160,0.5);background:rgba(45,212,160,0.04)">
+            <div class="chn-layer" style="color:var(--text-dim)">Layer 04</div>
+            <div class="chn-name" style="color:var(--accent3)">Trust Score</div>
+            <div class="chn-record">How has it behaved?<br>Lifecycle + scoring record.</div>
+          </div>
+          <div class="chain-arrow-v">→</div>
+          <div class="chain-hero-node" style="border-color:rgba(236,72,153,0.5);background:rgba(236,72,153,0.04)">
+            <div class="chn-layer" style="color:var(--text-dim)">Layer 05</div>
+            <div class="chn-name" style="color:var(--pink)">Transaction</div>
+            <div class="chn-record">Was delivery verified?<br>Signed payment release.</div>
+          </div>
+        </div>
+        <div class="chain-hero-caption">An auditor, regulator, or security reviewer can query any point in this chain and receive a cryptographically verifiable answer. No separate systems. No reconstructed logs. One chain, end-to-end.</div>
+      </div>
+
+      <div class="next-row"><button class="next-btn" onclick="showTab(10)">Future State →</button></div>
+    </div>
+  </div>
+
+  <!-- TAB 10: FUTURE STATE -->
+  <div id="tab-10" class="tab-content">
+    <div class="page-section">
+      <div class="section-label">08 — Future State</div>
+      <h1>Where does <span class="gradient-text">this go</span>?</h1>
+
+      <div class="llc-box">
+        <h3>About AIbrokerAGEnt LLC</h3>
+        <p>AIbrokerAGEnt LLC is a North Carolina limited liability company formed to provide legal structure for this research. It is not a competing product company. Its purpose is infrastructure — the compliance and standards layer the agent economy does not yet have.</p>
+        <p>All protocols were designed to be open standards. The intent was always that this work should be freely available — not enclosed.</p>
+        <p style="margin-top:0.5rem;font-size:0.8rem;color:var(--text-dim)">Formed: May 14, 2026 · North Carolina SOS · EIN 42-2099378 · Parent: DerosLabs</p>
+      </div>
+
+      <div style="margin-top:2.5rem">
+        <div class="section-label" style="margin-bottom:0.4rem">Four Paths Forward</div>
+        <p style="font-size:0.88rem;max-width:620px">These are the realistic outcomes being considered. They are presented without preference — each is a valid resolution depending on what LRS determines is in their interest.</p>
+      </div>
+
+      <div class="outcome-grid">
+        <div class="outcome-card">
+          <div class="outcome-num">Path 01</div>
+          <h3>Assign &amp; Dissolve</h3>
+          <p>The research and IP are assigned to LRS. The corporate structure behind this project is dissolved. LRS gains full ownership and control. DerosLabs and AIbrokerAGEnt wind down.</p>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-num">Path 02</div>
+          <h3>Carve-Out</h3>
+          <p>LRS decides not to pursue the IP but grants a carve-out for AIbrokerAGEnt to continue independently. The work becomes Apache 2.0 open source. Donations are accepted to cover project costs incurred to date.</p>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-num">Path 03</div>
+          <h3>Partnership or Lab</h3>
+          <p>LRS sees value in the concepts but prefers the work remain at arm's length. LRS partners with AIbrokerAGEnt — or creates an AI R&amp;D Lab to house this work — and helps fund continued development.</p>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-num">Path 04</div>
+          <h3>Open Source &amp; Close</h3>
+          <p>LRS says no to any involvement. The research is open-sourced in full. The corporate entity is dissolved. The work becomes a public contribution to the agentic AI standards community with no ongoing commercial structure.</p>
+        </div>
+      </div>
+
+      <div class="intent-card">
+        <p>This started as a data analyst's evenings project. It grew into something larger than expected. The most important thing — and this is stated plainly, not diplomatically — is that it was never meant to be in conflict with LRS.</p>
+        <p>These four paths exist to make sure it isn't. Whichever outcome LRS determines makes the most sense is the right one. The research follows LRS's lead.</p>
+      </div>
+
+      <div class="infobox" style="margin-top:2rem">
+        This presentation is confidential and intended for internal review only.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const U_HASH = '49fa8755b042b086f0639b1cde4718910a54255d490f59ca131905d1f2805e36';
+const P_HASH = '51c639064702b7b5a48c18f27d1a21995ae7e4096d58dc350d2248ecf37f0fc4';
+
+async function hashStr(s) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+if (sessionStorage.getItem('demo_auth') === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+
+document.getElementById('login-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const u = document.getElementById('u').value.trim();
+  const p = document.getElementById('p').value;
+  const err = document.getElementById('login-error');
+  err.textContent = '';
+  const [uH, pH] = await Promise.all([hashStr(u), hashStr(p)]);
+  if (uH === U_HASH && pH === P_HASH) {
+    sessionStorage.setItem('demo_auth', '1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+  } else {
+    err.textContent = 'Invalid credentials.';
+    document.getElementById('p').value = '';
+  }
+});
+
+function showTab(n) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach((el, i) => el.classList.toggle('active', i === n - 1));
+  document.getElementById('tab-' + n).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.querySelectorAll('.tab-btn')[n - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+}
+</script>
+</body>
+</html>

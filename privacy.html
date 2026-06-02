@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Privacy Policy — AIbrokerAGEnt LLC" />
+  <title>Privacy Policy — AIbrokerAGEnt</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #08090c;
+      --surface:   #0f1117;
+      --border:    #1c1f27;
+      --accent:    #4f8ef7;
+      --accent-dim:#2a4d8f;
+      --text:      #e4e8f0;
+      --text-dim:  #8891a4;
+      --text-mute: #555e70;
+      --radius:    10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+      background: rgba(8, 9, 12, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #fff !important;
+      padding: 0.45rem 1.1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: opacity 0.15s !important;
+    }
+
+    .nav-cta:hover { opacity: 0.88; }
+
+    /* ── Legal page layout ── */
+    .legal-header {
+      padding: 8rem 2rem 3rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .legal-header h1 {
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .legal-meta {
+      color: var(--text-mute);
+      font-size: 0.875rem;
+    }
+
+    .legal-doc {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+
+    .legal-doc h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 2.5rem 0 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .legal-doc p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      margin-bottom: 0.9rem;
+    }
+
+    .legal-doc ul {
+      list-style: none;
+      margin: 0.5rem 0 1rem;
+      padding: 0;
+    }
+
+    .legal-doc ul li {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      padding-left: 1.25rem;
+      position: relative;
+      margin-bottom: 0.35rem;
+    }
+
+    .legal-doc ul li::before {
+      content: "·";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .legal-doc a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .legal-doc a:hover { text-decoration: underline; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-mute);
+      font-size: 0.82rem;
+    }
+
+    footer a { color: var(--text-mute); text-decoration: none; }
+    footer a:hover { color: var(--text-dim); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      .legal-header { padding: 6rem 1.25rem 2rem; }
+      .legal-doc { padding: 0 1.25rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <a href="/" class="nav-logo">AIbroker<span>AGEnt</span></a>
+    <ul class="nav-links">
+      <li><a href="/#platform">Platform</a></li>
+      <li><a href="/#who">Who It's For</a></li>
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#contact" class="nav-cta">Request Access</a></li>
+    </ul>
+  </nav>
+
+  <!-- Header -->
+  <div class="legal-header">
+    <div class="section-label">Legal</div>
+    <h1>Privacy Policy</h1>
+    <p class="legal-meta">Effective date: May 25, 2026 &nbsp;·&nbsp; AIbrokerAGEnt LLC</p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- Content -->
+  <div class="legal-doc">
+
+    <h2>1. Introduction</h2>
+    <p>
+      AIbrokerAGEnt LLC ("AIbrokerAGEnt," "we," "our," or "us") operates the trust infrastructure platform
+      at ai-broker-agent.com. This Privacy Policy explains what information we collect, how we use it,
+      and your rights regarding that information.
+    </p>
+    <p>
+      This is a business-to-business (B2B) platform. The primary data subjects are operators and developers
+      who register accounts and deploy agents through our API. We do not collect data from consumers or
+      end users of operator-built applications.
+    </p>
+
+    <h2>2. Information We Collect</h2>
+    <p>We collect the following categories of information:</p>
+    <ul>
+      <li><strong>Account information</strong> — operator name, company name, and email address provided during registration</li>
+      <li><strong>Agent registration data</strong> — agent identifiers, agent type, registration metadata, and configuration submitted through the API</li>
+      <li><strong>Behavioral scores</strong> — AATS trust scores and attestation records generated by the platform based on agent behavior data you submit</li>
+      <li><strong>API usage logs</strong> — request timestamps, endpoints accessed, response codes, and associated agent identifiers; used for platform operation, security monitoring, and billing</li>
+      <li><strong>ALR records</strong> — lifecycle events (deployment, updates, end-of-service) associated with registered agents</li>
+      <li><strong>Communications</strong> — emails or messages you send to us</li>
+    </ul>
+    <p>
+      We do not collect payment card numbers or banking information directly. Payment processing is
+      handled by third-party processors (Stripe, Coinbase Commerce) who maintain their own privacy practices.
+    </p>
+    <p>
+      We do not collect personal data from consumers or end users of applications built by our operators.
+      Operators are responsible for their own privacy obligations with respect to their users.
+    </p>
+
+    <h2>3. How We Use Your Information</h2>
+    <p>We use the information we collect to:</p>
+    <ul>
+      <li>Operate and maintain the Platform, including processing API requests and generating trust attestations</li>
+      <li>Compute and store AATS behavioral scores and issue BVAP certificates</li>
+      <li>Maintain Agent Lifecycle Records (ALR) for audit and compliance purposes</li>
+      <li>Communicate with you about your account, platform updates, and support requests</li>
+      <li>Monitor for security incidents, abuse, and AATS compliance violations</li>
+      <li>Process payments when billing is active</li>
+      <li>Comply with legal obligations</li>
+    </ul>
+
+    <h2>4. Information Sharing and Disclosure</h2>
+    <p>
+      We do not sell your personal information. We do not share your information with advertising networks
+      or data brokers.
+    </p>
+    <p>We may share information with:</p>
+    <ul>
+      <li><strong>Cloudflare</strong> — hosting, CDN, and DDoS protection for the Platform</li>
+      <li><strong>Stripe</strong> — payment processing (when billing is active)</li>
+      <li><strong>Coinbase Commerce</strong> — cryptocurrency payment processing (when active)</li>
+      <li><strong>Legal authorities</strong> — when required by law, court order, or to protect our legal rights</li>
+    </ul>
+    <p>
+      Each third-party service provider is contractually bound to use your information only as necessary
+      to provide their services to us.
+    </p>
+
+    <h2>5. Data Retention</h2>
+    <p>
+      We retain account information and associated data for as long as your account is active.
+    </p>
+    <p>
+      ALR records may be retained after account closure to preserve the integrity of audit trails for
+      agents that were registered on the Platform. This retention supports legitimate audit and compliance
+      purposes for operators, enterprises, and regulated industries that interacted with your registered agents.
+    </p>
+    <p>
+      API usage logs are retained for up to 90 days for security and operational purposes.
+    </p>
+    <p>
+      You may request deletion of your account and associated data at any time (see Section 6). We will
+      honor deletion requests subject to our ALR retention obligations described above.
+    </p>
+
+    <h2>6. Your Rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+      <li><strong>Access</strong> — request a copy of the personal information we hold about you</li>
+      <li><strong>Correction</strong> — request correction of inaccurate or incomplete information</li>
+      <li><strong>Deletion</strong> — request deletion of your account and personal data, subject to ALR retention obligations</li>
+      <li><strong>Portability</strong> — request your data in a structured, machine-readable format where technically feasible</li>
+    </ul>
+    <p>
+      To exercise any of these rights, contact us at
+      <a href="mailto:johnnyderos@gmail.com">johnnyderos@gmail.com</a>.
+      We will respond within 30 days.
+    </p>
+
+    <h2>7. GDPR Rights (EU / EEA)</h2>
+    <p>
+      If you are located in the European Union or European Economic Area, you have additional rights under
+      the General Data Protection Regulation (GDPR):
+    </p>
+    <ul>
+      <li><strong>Right to object</strong> — object to processing of your personal data in certain circumstances</li>
+      <li><strong>Right to restriction</strong> — request that we restrict processing of your data in certain circumstances</li>
+      <li><strong>Right to lodge a complaint</strong> — file a complaint with your local data protection authority</li>
+    </ul>
+    <p>
+      Our legal basis for processing operator account data is the performance of a contract (providing
+      the Platform services). Our legal basis for retaining ALR records after account closure is
+      legitimate interests (audit integrity for regulated industries).
+    </p>
+
+    <h2>8. CCPA Rights (California)</h2>
+    <p>
+      If you are a California resident, you have the following rights under the California Consumer Privacy
+      Act (CCPA):
+    </p>
+    <ul>
+      <li><strong>Right to know</strong> — request disclosure of the categories and specific pieces of personal information we have collected about you</li>
+      <li><strong>Right to delete</strong> — request deletion of your personal information, subject to certain exceptions</li>
+      <li><strong>Right to opt out of sale</strong> — we do not sell personal information, so this right is not applicable</li>
+      <li><strong>Right to non-discrimination</strong> — we will not discriminate against you for exercising your CCPA rights</li>
+    </ul>
+
+    <h2>9. Cookies and Tracking</h2>
+    <p>
+      The Platform uses minimal cookies. We use session cookies that are strictly necessary for the
+      Platform to function (for example, to maintain your authenticated session). We do not use
+      advertising cookies, tracking pixels, or third-party analytics tools.
+    </p>
+    <p>
+      Cloudflare, our hosting provider, may set cookies for security and performance purposes as part of
+      their standard infrastructure services.
+    </p>
+
+    <h2>10. Security</h2>
+    <p>
+      We implement reasonable technical and organizational measures to protect your information, including
+      API key authentication, encrypted transmission (HTTPS/TLS), and access controls. No system is
+      completely secure, and we cannot guarantee absolute security.
+    </p>
+    <p>
+      If you believe there has been a security incident affecting your account or data, contact us
+      immediately at <a href="mailto:johnnyderos@gmail.com">johnnyderos@gmail.com</a>.
+    </p>
+
+    <h2>11. Changes to This Policy</h2>
+    <p>
+      We may update this Privacy Policy from time to time. When we do, we will update the effective date
+      above and notify active account holders by email. Continued use of the Platform after notice
+      constitutes acceptance of the updated policy.
+    </p>
+
+    <h2>12. Contact</h2>
+    <p>
+      Privacy questions, requests, or concerns should be directed to:<br />
+      <a href="mailto:johnnyderos@gmail.com">johnnyderos@gmail.com</a><br />
+      AIbrokerAGEnt LLC &nbsp;·&nbsp; North Carolina, USA
+    </p>
+    <p>
+      We will respond to all privacy requests within 30 days.
+    </p>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 AIbrokerAGEnt LLC — a DerosLabs company &nbsp;·&nbsp; North Carolina, USA</p>
+    <p style="margin-top:0.5rem;"><a href="/terms">Terms of Service</a> &nbsp;·&nbsp; <a href="/privacy">Privacy Policy</a></p>
+  </footer>
+
+</body>
+</html>

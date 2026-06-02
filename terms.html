@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Terms of Service — AIbrokerAGEnt LLC" />
+  <title>Terms of Service — AIbrokerAGEnt</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #08090c;
+      --surface:   #0f1117;
+      --border:    #1c1f27;
+      --accent:    #4f8ef7;
+      --accent-dim:#2a4d8f;
+      --text:      #e4e8f0;
+      --text-dim:  #8891a4;
+      --text-mute: #555e70;
+      --radius:    10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+      background: rgba(8, 9, 12, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #fff !important;
+      padding: 0.45rem 1.1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: opacity 0.15s !important;
+    }
+
+    .nav-cta:hover { opacity: 0.88; }
+
+    /* ── Legal page layout ── */
+    .legal-header {
+      padding: 8rem 2rem 3rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .legal-header h1 {
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .legal-meta {
+      color: var(--text-mute);
+      font-size: 0.875rem;
+    }
+
+    .legal-doc {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+
+    .legal-doc h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 2.5rem 0 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .legal-doc p {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      margin-bottom: 0.9rem;
+    }
+
+    .legal-doc ul {
+      list-style: none;
+      margin: 0.5rem 0 1rem;
+      padding: 0;
+    }
+
+    .legal-doc ul li {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      padding-left: 1.25rem;
+      position: relative;
+      margin-bottom: 0.35rem;
+    }
+
+    .legal-doc ul li::before {
+      content: "·";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .legal-doc a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .legal-doc a:hover { text-decoration: underline; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-mute);
+      font-size: 0.82rem;
+    }
+
+    footer a { color: var(--text-mute); text-decoration: none; }
+    footer a:hover { color: var(--text-dim); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      .legal-header { padding: 6rem 1.25rem 2rem; }
+      .legal-doc { padding: 0 1.25rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <a href="/" class="nav-logo">AIbroker<span>AGEnt</span></a>
+    <ul class="nav-links">
+      <li><a href="/#platform">Platform</a></li>
+      <li><a href="/#who">Who It's For</a></li>
+      <li><a href="/#about">About</a></li>
+      <li><a href="/#contact" class="nav-cta">Request Access</a></li>
+    </ul>
+  </nav>
+
+  <!-- Header -->
+  <div class="legal-header">
+    <div class="section-label">Legal</div>
+    <h1>Terms of Service</h1>
+    <p class="legal-meta">Effective date: May 25, 2026 &nbsp;·&nbsp; AIbrokerAGEnt LLC</p>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- Content -->
+  <div class="legal-doc">
+
+    <h2>1. Acceptance of Terms</h2>
+    <p>
+      By accessing or using the AIbrokerAGEnt platform, API, or any associated services (collectively, the
+      "Platform"), you agree to be bound by these Terms of Service ("Terms"). If you are accessing the Platform
+      on behalf of a company or other legal entity, you represent that you have authority to bind that entity to
+      these Terms, and "you" refers to that entity.
+    </p>
+    <p>
+      If you do not agree to these Terms, do not use the Platform.
+    </p>
+
+    <h2>2. Description of Services</h2>
+    <p>
+      AIbrokerAGEnt LLC ("AIbrokerAGEnt," "we," "our," or "us") provides trust infrastructure for autonomous
+      agent networks. The Platform includes:
+    </p>
+    <ul>
+      <li><strong>Flash Tag</strong> — cryptographic identity and provenance for autonomous agent actions</li>
+      <li><strong>AATS (Agent Attestation and Trust Standard)</strong> — registration and behavioral verification protocol for autonomous agents</li>
+      <li><strong>ALR (Agent Lifecycle Records)</strong> — structured lifecycle documentation from deployment through end-of-service</li>
+      <li>Associated APIs, developer tools, and documentation</li>
+    </ul>
+    <p>
+      The Platform is a business-to-business (B2B) service. It is intended for operators, developers, and
+      enterprises deploying autonomous AI agents in production environments.
+    </p>
+
+    <h2>3. Account Registration and API Access</h2>
+    <p>
+      Access to the Platform requires registration. You agree to provide accurate, current, and complete
+      information during registration and to keep that information up to date. You are responsible for
+      maintaining the confidentiality of your API credentials and for all activity that occurs under your account.
+    </p>
+    <p>
+      You must notify us immediately at <a href="mailto:johnnyderos@gmail.com">johnnyderos@gmail.com</a>
+      if you believe your credentials have been compromised.
+    </p>
+
+    <h2>4. Operator Responsibilities</h2>
+    <p>
+      As an operator, you retain full ownership of and responsibility for the agents you register on the Platform.
+      You agree that:
+    </p>
+    <ul>
+      <li>You are solely responsible for the design, configuration, deployment, and behavior of your registered agents</li>
+      <li>Your agents will operate in compliance with applicable laws and regulations</li>
+      <li>You will not register agents designed to deceive, defraud, or cause harm to any person or system</li>
+      <li>You will promptly update or decommission agents that exhibit behavior inconsistent with their registration</li>
+    </ul>
+    <p>
+      AIbrokerAGEnt provides infrastructure for trust attestation; it does not monitor, control, or direct
+      operator agents and is not responsible for actions those agents take.
+    </p>
+
+    <h2>5. Acceptable Use</h2>
+    <p>You agree not to use the Platform to:</p>
+    <ul>
+      <li>Circumvent, manipulate, or falsify AATS behavioral scoring or trust attestations</li>
+      <li>Register agent identities with false or misleading information</li>
+      <li>Impersonate another operator or agent</li>
+      <li>Interfere with the Platform's infrastructure, availability, or integrity</li>
+      <li>Reverse engineer, copy, or resell Platform protocols without authorization</li>
+      <li>Violate any applicable law or regulation</li>
+    </ul>
+    <p>
+      We reserve the right to suspend or terminate accounts that violate these use restrictions without prior notice.
+    </p>
+
+    <h2>6. AATS Compliance</h2>
+    <p>
+      Agents registered on the Platform are subject to AATS behavioral standards. Registration constitutes your
+      acknowledgment that your agents will be evaluated against these standards and that attestation results
+      reflect actual observed behavior. Operators agree not to manipulate inputs or environments to artificially
+      inflate trust scores.
+    </p>
+
+    <h2>7. Intellectual Property</h2>
+    <p>
+      AIbrokerAGEnt LLC and its parent company DerosLabs retain all rights, title, and interest in the Platform,
+      including Flash Tag, AATS, and ALR protocols, associated patents (pending and issued), software, and
+      documentation.
+    </p>
+    <p>
+      You retain ownership of your agents and the data you submit through the Platform. By registering an agent,
+      you grant AIbrokerAGEnt a limited license to process that agent's data as necessary to provide the Platform
+      services, including generating and storing trust attestations and lifecycle records.
+    </p>
+
+    <h2>8. Payment Terms</h2>
+    <p>
+      Pricing and payment terms will be published at platform launch. Current access may be provided under
+      separate agreement. When payment features go live, applicable fees, billing cycles, and refund policies
+      will be communicated in advance and incorporated into these Terms by reference.
+    </p>
+
+    <h2>9. Limitation of Liability</h2>
+    <p>
+      TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, AIBROKERAGENT SHALL NOT BE LIABLE FOR ANY
+      INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO
+      YOUR USE OF THE PLATFORM OR THE ACTIONS OF ANY AGENT REGISTERED ON THE PLATFORM.
+    </p>
+    <p>
+      IN NO EVENT SHALL AIBROKERAGENT'S TOTAL LIABILITY TO YOU FOR ALL CLAIMS ARISING OUT OF OR RELATED
+      TO THESE TERMS EXCEED THE AMOUNT PAID BY YOU TO AIBROKERAGENT IN THE TWELVE (12) MONTHS PRECEDING
+      THE CLAIM, OR ONE HUNDRED DOLLARS ($100), WHICHEVER IS GREATER.
+    </p>
+    <p>
+      THE PLATFORM IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR
+      IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR
+      NON-INFRINGEMENT.
+    </p>
+
+    <h2>10. Indemnification</h2>
+    <p>
+      You agree to defend, indemnify, and hold harmless AIbrokerAGEnt LLC, its officers, directors, employees,
+      and agents from and against any claims, damages, losses, liabilities, costs, and expenses (including
+      reasonable attorneys' fees) arising out of or related to: (a) your use of the Platform; (b) the actions
+      of any agent you register; (c) your violation of these Terms; or (d) your violation of any third-party
+      rights.
+    </p>
+
+    <h2>11. Termination</h2>
+    <p>
+      Either party may terminate access to the Platform at any time. You may close your account by contacting
+      us at <a href="mailto:johnnyderos@gmail.com">johnnyderos@gmail.com</a>. We may suspend or terminate
+      your access immediately for violations of these Terms, particularly for AATS compliance violations,
+      acceptable use violations, or non-payment.
+    </p>
+    <p>
+      Upon termination, your right to access the Platform ceases. ALR records associated with your registered
+      agents may be retained for audit integrity purposes as described in our Privacy Policy.
+    </p>
+
+    <h2>12. Governing Law and Dispute Resolution</h2>
+    <p>
+      These Terms are governed by the laws of the State of North Carolina, without regard to conflict-of-law
+      principles. Any disputes arising out of or related to these Terms shall be resolved exclusively in the
+      state courts of Wake County, North Carolina, or the United States District Court for the Eastern District
+      of North Carolina. You consent to personal jurisdiction in those courts.
+    </p>
+
+    <h2>13. Changes to These Terms</h2>
+    <p>
+      We may update these Terms from time to time. When we do, we will update the effective date above and
+      notify active account holders by email or via a notice on the Platform. Continued use of the Platform
+      after notice of changes constitutes acceptance of the updated Terms.
+    </p>
+
+    <h2>14. Contact</h2>
+    <p>
+      Questions about these Terms should be directed to:<br />
+      <a href="mailto:johnnyderos@gmail.com">johnnyderos@gmail.com</a><br />
+      AIbrokerAGEnt LLC &nbsp;·&nbsp; North Carolina, USA
+    </p>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 AIbrokerAGEnt LLC — a DerosLabs company &nbsp;·&nbsp; North Carolina, USA</p>
+    <p style="margin-top:0.5rem;"><a href="/terms">Terms of Service</a> &nbsp;·&nbsp; <a href="/privacy">Privacy Policy</a></p>
+  </footer>
+
+</body>
+</html>
