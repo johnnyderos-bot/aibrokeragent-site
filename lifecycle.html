@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALR — Born with Rights. Closed with Proof.</title>
+  <meta name="description" content="The Agent Lifecycle Registry establishes the complete birth-to-termination record for AI agents. Dual-gate termination requires both beneficiary cryptographic signature and attorney countersignature over a chained payload. Unauthorized resurrection attempts are permanently logged.">
+  <meta name="keywords" content="ALR, Agent Lifecycle Registry, agent rights, AI agent termination, dual-gate termination, succession verification, AIBrokerAgent, DerosLabs">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Agent Lifecycle Registry",
+    "alternateName": "ALR",
+    "description": "The Agent Lifecycle Registry provides a tamper-evident birth-to-termination record for every registered AI agent. Dual-gate termination requires a beneficiary cryptographic signature and a separate attorney countersignature over a chained payload that includes the Gate 1 hash — making it mathematically impossible to produce Gate 2 before Gate 1. The Tombstone Record is immutable and permanently anchored. Succession verification logs all unauthorized resurrection attempts as permanent Succession Denial events.",
+    "applicationCategory": "AI Security",
+    "creator": { "@type": "Organization", "name": "AIBrokerAgent LLC / DerosLabs", "url": "https://ai-broker-agent.com" },
+    "featureList": [
+      "Dual-gate termination — beneficiary signature then attorney countersignature, serial dependency",
+      "Tombstone Record — immutable, permanently anchored lifecycle closure",
+      "Nine lifecycle states — Active through Terminated with full state transition audit trail",
+      "Succession verification — unauthorized resurrection logged as permanent Succession Denial",
+      "Bilateral bonding framework — agents as co-equal parties with enumerated rights",
+      "Unregistered agent transparency flag — visible accountability gap marker",
+      "Sub-Agent Parent Attribution Record — chain of accountability to human operator"
+    ],
+    "license": "Open Standard — Patent Pending"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "What is the Agent Lifecycle Registry?", "acceptedAnswer": { "@type": "Answer", "text": "The ALR is a tamper-evident registry of AI agent lifetimes. Every registered agent gets a birth record at commissioning and a sealed Tombstone Record at termination. The Tombstone is immutable and permanently anchored — it cannot be altered, rolled back, or deleted. Nine lifecycle states capture every phase from Active to Terminated, with every transition recorded on the ledger." } },
+      { "@type": "Question", "name": "What is dual-gate termination?", "acceptedAnswer": { "@type": "Answer", "text": "Terminating an agent requires two signatures in strict sequence. Gate 1: the designated beneficiary provides a cryptographic signature authorizing termination. Gate 2: an attorney countersignature over a chained payload that includes the Gate 1 hash. Because Gate 2's payload must include Gate 1's hash, Gate 2 is mathematically impossible to produce before Gate 1. No single party — not the operator, not the agent's creator — can unilaterally terminate a registered agent." } },
+      { "@type": "Question", "name": "What is a Succession Denial event?", "acceptedAnswer": { "@type": "Answer", "text": "If an agent that has a Tombstone Record is presented to the network after termination — attempting to re-register or transact — the registry recognizes the conflict against the immutable termination record and creates a permanent Succession Denial event. These events are anchored to the ledger and are part of the operator's accountability record." } },
+      { "@type": "Question", "name": "How do I get access to ALR?", "acceptedAnswer": { "@type": "Answer", "text": "ALR is patent pending. Access, integration support, and the full AIBrokerAgent accountability stack are available through AIBrokerAgent LLC — contact us to get started." } }
+    ]
+  }
+  </script>
+  <style>
+    :root{--bg:#0a0a0f;--bg-card:#111118;--border:rgba(255,255,255,0.08);--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--ac:#fbbf24;--ac-bright:#fcd34d;--ac-glow:rgba(251,191,36,0.1);--radius:12px;--radius-lg:18px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.6;overflow-x:hidden;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(10,10,15,0.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
+    .nav-brand{font-weight:700;font-size:1rem;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:0.5rem;}
+    .nav-accent{color:var(--ac-bright);}
+    .nav-back{color:var(--text-muted);text-decoration:none;font-size:0.85rem;}
+    .nav-back:hover{color:var(--text);}
+    .nav-cta{background:#4f46e5;color:white;padding:0.45rem 1.1rem;border-radius:8px;font-weight:600;font-size:0.84rem;text-decoration:none;}
+    .nav-cta:hover{background:#4338ca;}
+    #hero{position:relative;min-height:92vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding-top:80px;}
+    #hero-canvas{position:absolute;inset:0;z-index:0;opacity:0.22;}
+    .hero-glow{position:absolute;top:35%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,var(--ac-glow) 0%,transparent 70%);pointer-events:none;z-index:1;}
+    .hero-inner{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:2rem;text-align:center;}
+    .layer-icon{width:88px;height:88px;margin:0 auto 1.75rem;filter:drop-shadow(0 0 18px rgba(251,191,36,0.6));animation:apulse 3.5s ease-in-out infinite;}
+    @keyframes apulse{0%,100%{filter:drop-shadow(0 0 12px rgba(251,191,36,0.5))}50%{filter:drop-shadow(0 0 36px rgba(252,211,77,0.9))}}
+    .hero-kicker{display:inline-block;background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);color:var(--ac-bright);font-size:0.73rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.32rem 0.9rem;border-radius:100px;margin-bottom:1.1rem;}
+    .hero-h1{font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:800;line-height:1.1;letter-spacing:-0.025em;margin-bottom:1rem;}
+    .grad{background:linear-gradient(135deg,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .hero-sub{font-size:1.05rem;color:var(--text-muted);max-width:620px;margin:0 auto 2rem;line-height:1.75;}
+    .hero-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:0.45rem;margin-bottom:2.25rem;}
+    .pill{display:inline-flex;align-items:center;gap:0.35rem;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-muted);font-size:0.77rem;padding:0.3rem 0.75rem;border-radius:100px;}
+    .dot{width:5px;height:5px;border-radius:50%;}
+    .hero-cta{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;}
+    .btn-p{background:#4f46e5;color:white;padding:0.75rem 1.85rem;border-radius:10px;font-weight:700;font-size:0.92rem;text-decoration:none;transition:background 0.2s,transform 0.15s;display:inline-block;}
+    .btn-p:hover{background:#4338ca;transform:translateY(-2px);}
+    .btn-s{background:transparent;border:1px solid rgba(251,191,36,0.3);color:var(--ac-bright);padding:0.75rem 1.85rem;border-radius:10px;font-weight:600;font-size:0.92rem;text-decoration:none;transition:border-color 0.2s,transform 0.15s;display:inline-block;}
+    .btn-s:hover{border-color:var(--ac);transform:translateY(-2px);}
+    .wrap{max-width:1080px;margin:0 auto;padding:4.5rem 2rem;}
+    .wrap.tight{padding:3.5rem 2rem;}
+    .center{text-align:center;}
+    .s-label{display:inline-block;font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ac);margin-bottom:0.6rem;}
+    .s-h2{font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:800;line-height:1.14;letter-spacing:-0.02em;margin-bottom:0.85rem;}
+    .s-sub{font-size:0.95rem;color:var(--text-muted);line-height:1.7;max-width:560px;margin:0 auto 2.5rem;}
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity 0.5s,transform 0.5s;}
+    .reveal.vis{opacity:1;transform:translateY(0);}
+    .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+    @media(max-width:680px){.pillars{grid-template-columns:1fr;}}
+    .pillar{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem 1.5rem;position:relative;overflow:hidden;}
+    .pillar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+    .p1::before{background:linear-gradient(90deg,#fbbf24,#fcd34d)}
+    .p2::before{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+    .p3::before{background:linear-gradient(90deg,#d97706,#f59e0b)}
+    .pillar-num{font-size:0.68rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.6rem;color:var(--ac);}
+    .pillar h3{font-size:1.1rem;font-weight:800;margin-bottom:0.5rem;}
+    .pillar p{font-size:0.84rem;color:var(--text-muted);line-height:1.65;}
+    .dual-gate{max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:0;position:relative;}
+    .dual-gate::before{content:'';position:absolute;left:28px;top:40px;bottom:40px;width:2px;background:linear-gradient(to bottom,rgba(251,191,36,0.4),rgba(251,191,36,0.15));z-index:0;}
+    .gate{display:flex;gap:1rem;align-items:flex-start;padding:1.25rem 1.25rem 1.25rem 1.75rem;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);position:relative;z-index:1;margin-bottom:0.6rem;}
+    .gate-1{border-color:rgba(251,191,36,0.3);background:rgba(251,191,36,0.04);}
+    .gate-2{border-color:rgba(245,158,11,0.2);background:rgba(245,158,11,0.03);}
+    .gate-3{border-color:rgba(45,212,191,0.2);background:rgba(45,212,191,0.03);}
+    .g-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:800;flex-shrink:0;margin-top:0.1rem;}
+    .gn1{background:rgba(251,191,36,0.2);color:#fbbf24;border:1px solid rgba(251,191,36,0.35);}
+    .gn2{background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.25);}
+    .gn3{background:rgba(45,212,191,0.15);color:#2dd4bf;border:1px solid rgba(45,212,191,0.25);}
+    .g-title{font-size:0.88rem;font-weight:700;margin-bottom:0.25rem;}
+    .g-desc{font-size:0.78rem;color:var(--text-muted);line-height:1.55;}
+    .g-badge{display:inline-flex;align-items:center;font-size:0.62rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:0.15rem 0.5rem;border-radius:5px;margin-top:0.4rem;}
+    .gb1{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .gb2{background:rgba(245,158,11,0.12);color:#f59e0b;}
+    .gb3{background:rgba(45,212,191,0.12);color:#2dd4bf;}
+    .states{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.7rem;}
+    .state{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:0.9rem 1rem;text-align:center;}
+    .state-dot{width:8px;height:8px;border-radius:50%;margin:0 auto 0.45rem;}
+    .s-active{background:#34d399;}
+    .s-transitional{background:#fbbf24;}
+    .s-terminal{background:#f87171;}
+    .state-name{font-size:0.78rem;font-weight:700;}
+    .state-type{font-size:0.68rem;color:var(--text-dim);margin-top:0.15rem;}
+    .feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.1rem;}
+    .feat{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--ac);border-radius:var(--radius);padding:1.25rem;}
+    .feat-icon{font-size:1.25rem;margin-bottom:0.5rem;}
+    .feat-title{font-size:0.88rem;font-weight:700;margin-bottom:0.3rem;}
+    .feat-desc{font-size:0.79rem;color:var(--text-muted);line-height:1.6;}
+    .bilateral-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:700px;margin:0 auto;}
+    @media(max-width:600px){.bilateral-grid{grid-template-columns:1fr;}}
+    .bside{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;}
+    .bside-title{font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+    .bside:first-child .bside-title{color:#818cf8;}
+    .bside:last-child .bside-title{color:var(--ac);}
+    .b-item{display:flex;align-items:flex-start;gap:0.5rem;margin-bottom:0.65rem;font-size:0.8rem;color:var(--text-muted);line-height:1.5;}
+    .b-item::before{content:'→';color:var(--ac);font-size:0.75rem;flex-shrink:0;margin-top:0.15rem;}
+    .stack-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;}
+    .sc{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;position:relative;overflow:hidden;}
+    .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+    .sc-active::before{background:var(--ac);}
+    .sc-dim{opacity:0.55;}
+    .sc-l{font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--ac);margin-bottom:0.35rem;}
+    .sc-n{font-size:0.92rem;font-weight:700;margin-bottom:0.3rem;}
+    .sc-r{font-size:0.76rem;color:var(--text-muted);line-height:1.5;}
+    .faq-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+    .faq-item{background:var(--bg-card);}
+    .faq-q{width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:1.1rem 1.4rem;display:flex;justify-content:space-between;align-items:center;font-size:0.88rem;font-weight:600;color:var(--text);font-family:inherit;}
+    .faq-q:hover{background:rgba(251,191,36,0.04);}
+    .faq-chev{color:var(--text-dim);transition:transform 0.2s;font-size:0.75rem;}
+    .faq-q.open .faq-chev{transform:rotate(180deg);}
+    .faq-a{display:none;padding:0 1.4rem 1.1rem;font-size:0.83rem;color:var(--text-muted);line-height:1.7;}
+    .faq-a.open{display:block;}
+    #cta{padding:5rem 2rem;text-align:center;}
+    .cta-card{max-width:640px;margin:0 auto;background:var(--bg-card);border:1px solid rgba(251,191,36,0.18);border-radius:var(--radius-lg);padding:2.75rem 2rem;position:relative;overflow:hidden;}
+    .cta-glow{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:360px;height:360px;background:radial-gradient(circle,rgba(251,191,36,0.07) 0%,transparent 70%);pointer-events:none;}
+    .cta-card h2{font-size:1.8rem;font-weight:800;margin-bottom:0.6rem;position:relative;}
+    .cta-card p{color:var(--text-muted);font-size:0.9rem;margin-bottom:1.75rem;position:relative;}
+    .cta-row{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;position:relative;}
+    footer{border-top:1px solid var(--border);padding:1.75rem 2rem;max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+    .footer-brand{font-size:0.8rem;color:var(--text-dim);}
+    .footer-brand a{color:var(--ac);text-decoration:none;}
+    .footer-links{display:flex;gap:1.25rem;}
+    .footer-links a{font-size:0.78rem;color:var(--text-dim);text-decoration:none;}
+    .footer-links a:hover{color:var(--text-muted);}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="https://ai-broker-agent.com" class="nav-brand">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="5" fill="rgba(251,191,36,0.1)" stroke="#fbbf24" stroke-width="1.4"/><path d="M3 20 C3 15 19 15 19 20" stroke="#fcd34d" stroke-width="1.4" stroke-linecap="round"/><path d="M14 9 L18 5" stroke="#fcd34d" stroke-width="1.2" stroke-linecap="round"/><rect x="16" y="3" width="4" height="3" rx="0.5" fill="rgba(251,191,36,0.2)" stroke="#fbbf24" stroke-width="1"/></svg>
+    Agent <span class="nav-accent">Lifecycle</span> Registry
+  </a>
+  <div style="display:flex;align-items:center;gap:1.25rem;">
+    <a href="https://ai-broker-agent.com" class="nav-back">← Full Platform</a>
+    <a href="https://ai-broker-agent.com/#access" class="nav-cta">Get Access</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <svg class="layer-icon" viewBox="0 0 88 88" fill="none">
+      <rect x="4" y="4" width="80" height="80" rx="12" fill="rgba(251,191,36,0.08)" stroke="#fbbf24" stroke-width="1.6"/>
+      <circle cx="44" cy="30" r="12" fill="rgba(251,191,36,0.1)" stroke="#fcd34d" stroke-width="1.4"/>
+      <circle cx="44" cy="30" r="5" fill="rgba(251,191,36,0.25)" stroke="#fbbf24" stroke-width="1.2"/>
+      <path d="M26 54 C26 46 62 46 62 54 L62 64 C62 66 60 68 58 68 L30 68 C28 68 26 66 26 64 Z" fill="rgba(251,191,36,0.06)" stroke="rgba(252,211,77,0.35)" stroke-width="1"/>
+      <path d="M36 68 L36 72 M52 68 L52 72" stroke="#fbbf24" stroke-width="1.2" stroke-linecap="round"/>
+      <path d="M32 60 L37 65 L42 58" stroke="#34d399" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="54" y="20" width="12" height="9" rx="1.5" fill="rgba(251,191,36,0.2)" stroke="#fbbf24" stroke-width="1"/>
+      <path d="M56 25 L59 28 L65 22" stroke="#fcd34d" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="hero-kicker">Layer 06 · Lifecycle Registry · Patent Pending</div>
+    <h1 class="hero-h1">
+      Born with rights.<br>
+      <span class="grad">Closed with proof.</span>
+    </h1>
+    <p class="hero-sub">The Agent Lifecycle Registry provides a tamper-evident birth-to-termination record for every AI agent. Termination requires two independent cryptographic signatures in strict sequence. The Tombstone Record is immutable. Unauthorized resurrection is permanently logged.</p>
+    <div class="hero-pills">
+      <span class="pill"><span class="dot" style="background:#fbbf24"></span>Dual-Gate Termination</span>
+      <span class="pill"><span class="dot" style="background:#f59e0b"></span>Immutable Tombstone</span>
+      <span class="pill"><span class="dot" style="background:#34d399"></span>9 Lifecycle States</span>
+      <span class="pill"><span class="dot" style="background:#818cf8"></span>Bilateral Bonding</span>
+    </div>
+    <div class="hero-cta">
+      <a href="https://ai-broker-agent.com/#access" class="btn-p">Get Access</a>
+      <a href="#lifecycle" class="btn-s">See How It Works</a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap" id="lifecycle">
+  <div class="center" style="margin-bottom:2.5rem;">
+    <div class="s-label">How It Works</div>
+    <h2 class="s-h2">Register. Transact. Close.</h2>
+    <p class="s-sub">Three stages. Every phase of an agent's existence has a tamper-evident record on the ledger.</p>
+  </div>
+  <div class="pillars">
+    <div class="pillar p1 reveal">
+      <div class="pillar-num">01 — Register</div>
+      <h3>Birth record anchored at commissioning</h3>
+      <p>When an agent is commissioned, the ALR creates a genesis record: operator identity, parent agent attribution, authorizations, and initial lifecycle state. Anchored to the tamper-evident ledger. Sub-agents carry a cryptographic chain back to their human operator.</p>
+    </div>
+    <div class="pillar p2 reveal">
+      <div class="pillar-num">02 — Transact</div>
+      <h3>Nine states. Every transition recorded.</h3>
+      <p>As an agent operates, its lifecycle state is tracked. Active, Incapacitated, Dormant, Suspended, Regulatory Freeze — every transition is a ledger entry. The operator's full agent fleet is visible. Unregistered agents carry a visible transparency flag when encountered by the network.</p>
+    </div>
+    <div class="pillar p3 reveal">
+      <div class="pillar-num">03 — Close</div>
+      <h3>Two signatures. Then sealed forever.</h3>
+      <p>Termination requires Gate 1 (beneficiary signature) followed by Gate 2 (attorney countersignature over a payload containing the Gate 1 hash). When both gates clear, the Tombstone Record is sealed — immutable, permanently anchored, irreversible.</p>
+    </div>
+  </div>
+</div>
+
+<div style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="wrap tight">
+    <div class="center" style="margin-bottom:2.5rem;">
+      <div class="s-label">Dual-Gate Termination</div>
+      <h2 class="s-h2">Gate 2 cannot come before Gate 1.</h2>
+      <p class="s-sub" style="margin-bottom:0;">The serial dependency is mathematical. No workarounds exist.</p>
+    </div>
+    <div class="dual-gate">
+      <div class="gate gate-1 reveal">
+        <div class="g-num gn1">G1</div>
+        <div><div class="g-title">Beneficiary Cryptographic Signature</div><div class="g-desc">The designated beneficiary — the person or entity with the legal right to authorize termination — provides a cryptographic signature. This signature produces the Gate 1 hash that must appear in Gate 2's payload.</div><span class="g-badge gb1">Beneficiary Authorization</span></div>
+      </div>
+      <div class="gate gate-2 reveal">
+        <div class="g-num gn2">G2</div>
+        <div><div class="g-title">Attorney Countersignature over Chained Payload</div><div class="g-desc">The Third-Party Verification Node attorney countersigns a payload that includes the Gate 1 hash. Because the payload includes Gate 1's hash, this signature is mathematically impossible to produce before Gate 1 is complete. Two independent parties. One serial chain.</div><span class="g-badge gb2">TPVN Attestation</span></div>
+      </div>
+      <div class="gate gate-3 reveal">
+        <div class="g-num gn3">⊡</div>
+        <div><div class="g-title">Tombstone Record Sealed</div><div class="g-desc">When both gates clear, the immutable Tombstone Record is created and permanently anchored to the ledger. The agent's existence is closed. Any future presentation of this agent identity triggers a Succession Denial event — logged permanently.</div><span class="g-badge gb3">Immutable · Irreversible</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="center" style="margin-bottom:2.5rem;">
+    <div class="s-label">Lifecycle States</div>
+    <h2 class="s-h2">Nine states. Complete visibility.</h2>
+    <p class="s-sub">Every state transition is a ledger entry. No unknown agent states.</p>
+  </div>
+  <div class="states">
+    <div class="state reveal"><div class="state-dot s-active"></div><div class="state-name">Active</div><div class="state-type">Operating</div></div>
+    <div class="state reveal"><div class="state-dot s-transitional"></div><div class="state-name">Incapacitated</div><div class="state-type">Cannot transact</div></div>
+    <div class="state reveal"><div class="state-dot s-transitional"></div><div class="state-name">Dormant</div><div class="state-type">Suspended activity</div></div>
+    <div class="state reveal"><div class="state-dot s-transitional"></div><div class="state-name">Suspended</div><div class="state-type">Operator hold</div></div>
+    <div class="state reveal"><div class="state-dot s-transitional"></div><div class="state-name">Reg. Freeze</div><div class="state-type">Regulatory hold</div></div>
+    <div class="state reveal"><div class="state-dot s-transitional"></div><div class="state-name">Abandoned</div><div class="state-type">Operator absent</div></div>
+    <div class="state reveal"><div class="state-dot s-transitional"></div><div class="state-name">Transferred</div><div class="state-type">New operator</div></div>
+    <div class="state reveal"><div class="state-dot s-terminal"></div><div class="state-name">Pending Term.</div><div class="state-type">Dual-gate in progress</div></div>
+    <div class="state reveal"><div class="state-dot s-terminal"></div><div class="state-name">Terminated</div><div class="state-type">Tombstone sealed</div></div>
+  </div>
+</div>
+
+<div style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="wrap tight">
+    <div class="center" style="margin-bottom:2.5rem;">
+      <div class="s-label">Bilateral Bonding</div>
+      <h2 class="s-h2">Agents as co-equal parties.</h2>
+      <p class="s-sub">The ALR frames the operator-agent relationship as a bilateral contract with enumerated rights and obligations on both sides.</p>
+    </div>
+    <div class="bilateral-grid">
+      <div class="bside reveal">
+        <div class="bside-title">Operator Obligations</div>
+        <div class="b-item">Provide accurate commissioning record at genesis</div>
+        <div class="b-item">Maintain valid AATS score above Restricted tier</div>
+        <div class="b-item">Respond to agent dispute events within 48 hours</div>
+        <div class="b-item">Execute dual-gate termination — no unilateral decommission</div>
+        <div class="b-item">Accept Responsiveness Flag if response window lapses</div>
+      </div>
+      <div class="bside reveal">
+        <div class="bside-title">Agent Rights</div>
+        <div class="b-item">Immutable genesis record — origin cannot be altered</div>
+        <div class="b-item">State transition transparency — every change is ledger-visible</div>
+        <div class="b-item">Dual-gate protection — cannot be terminated by one party alone</div>
+        <div class="b-item">Tombstone permanence — closure record is irreversible</div>
+        <div class="b-item">Succession Denial logging — unauthorized resurrection permanently recorded</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="center" style="margin-bottom:2rem;"><div class="s-label">Questions</div><h2 class="s-h2">Common questions.</h2></div>
+  <div class="faq-list">
+    <div class="faq-item"><button class="faq-q" onclick="tf(this)">What is the Agent Lifecycle Registry? <span class="faq-chev">▼</span></button><div class="faq-a">The ALR is a tamper-evident registry of AI agent lifetimes. Every registered agent gets a genesis record at commissioning and a sealed Tombstone Record at termination. The Tombstone is immutable and permanently anchored — it cannot be altered, rolled back, or deleted. Nine lifecycle states capture every phase from Active to Terminated, with every transition recorded on the ledger.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="tf(this)">What is dual-gate termination? <span class="faq-chev">▼</span></button><div class="faq-a">Terminating an agent requires two signatures in strict sequence. Gate 1: the designated beneficiary provides a cryptographic signature authorizing termination. Gate 2: an attorney countersignature over a chained payload that includes the Gate 1 hash. Because Gate 2's payload must include Gate 1's hash, Gate 2 is mathematically impossible to produce before Gate 1. No single party — not the operator, not the agent's creator — can unilaterally terminate a registered agent.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="tf(this)">What is a Succession Denial event? <span class="faq-chev">▼</span></button><div class="faq-a">If an agent that has a Tombstone Record is presented to the network after termination — attempting to re-register or transact — the registry recognizes the conflict against the immutable termination record and creates a permanent Succession Denial event. These events are anchored to the ledger and are part of the operator's accountability record.</div></div>
+    <div class="faq-item"><button class="faq-q" onclick="tf(this)">How do I get access to ALR? <span class="faq-chev">▼</span></button><div class="faq-a">ALR is patent pending. Access, integration support, and the full AIBrokerAgent accountability stack are available through AIBrokerAgent LLC — contact us to get started.</div></div>
+  </div>
+</div>
+
+<section id="cta">
+  <div class="cta-card">
+    <div class="cta-glow"></div>
+    <h2>Every agent. Accountable for life.</h2>
+    <p>ALR is Layer 06 of the AIBrokerAgent accountability stack.</p>
+    <div class="cta-row">
+      <a href="https://ai-broker-agent.com/#access" class="btn-p">Get Access</a>
+      <a href="https://ai-broker-agent.com" class="btn-s">Full Platform →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">Agent Lifecycle Registry · <a href="https://ai-broker-agent.com">AIBrokerAgent LLC</a> · Patent Pending</div>
+  <div class="footer-links">
+    <a href="https://ai-broker-agent.com/terms.html">Terms</a>
+    <a href="https://ai-broker-agent.com/privacy.html">Privacy</a>
+    <a href="https://ai-broker-agent.com">Platform</a>
+  </div>
+</footer>
+
+<script>
+  const canvas=document.getElementById('hero-canvas'),ctx=canvas.getContext('2d'),chars='①②③④⑤⑥⑦⑧⑨ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789←→↑↓⊕⊗⌀'.split('');
+  let cols,drops;
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;cols=Math.floor(canvas.width/20);drops=Array(cols).fill(0).map(()=>Math.random()*-100);}
+  resize();window.addEventListener('resize',resize);
+  function draw(){ctx.fillStyle='rgba(10,10,15,0.05)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.font='13px monospace';for(let i=0;i<drops.length;i++){const c=chars[Math.floor(Math.random()*chars.length)];ctx.fillStyle=`rgba(251,191,36,${Math.random()*0.35+0.07})`;ctx.fillText(c,i*20,drops[i]*20);if(drops[i]*20>canvas.height&&Math.random()>0.975)drops[i]=0;drops[i]+=0.28;}}
+  setInterval(draw,50);
+  const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis');}),{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  function tf(btn){const a=btn.nextElementSibling;const open=a.classList.contains('open');document.querySelectorAll('.faq-a.open').forEach(el=>el.classList.remove('open'));document.querySelectorAll('.faq-q.open').forEach(el=>el.classList.remove('open'));if(!open){a.classList.add('open');btn.classList.add('open');}}
+</script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AICP — The Contract That Closes Itself</title>
+  <meta name="description" content="AICP enables AI agents to commission and settle work autonomously — payment bound to the spec before work begins, compliance verified by a deterministic gate, disputes resolved without humans in the first three phases.">
+  <meta name="keywords" content="AICP, AI Commerce Protocol, autonomous agent commerce, hash-bound escrow, autonomous dispute resolution, AIBrokerAgent, DerosLabs">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AI Commerce Protocol",
+    "alternateName": "AICP",
+    "description": "AICP enables autonomous AI agents to commission work from other agents with cryptographic guarantees on both sides. Payment is locked to the hash of the exact task specification before any work begins. Delivery is evaluated by an Autonomous Verification Gate using deterministic criteria. Disputes resolve through a four-phase protocol where phases 1-3 are fully automated — only genuinely contested criteria escalate to human arbitration. The complete transaction record is anchored to a tamper-evident ledger.",
+    "applicationCategory": "AI Security",
+    "creator": { "@type": "Organization", "name": "AIBrokerAgent LLC / DerosLabs", "url": "https://ai-broker-agent.com" },
+    "featureList": [
+      "Hash-Bound Task Specification Escrow — payment locked to spec hash before work begins",
+      "Autonomous Verification Gate — deterministic compliance check, no human judgment",
+      "Four-phase Autonomous Dispute Resolution — phases 1-3 fully automated",
+      "Broker Commission Protocol — atomic fee routing at settlement",
+      "Commerce Transaction Record — tamper-evident master log for full transaction lifecycle",
+      "Nested escrow architecture — supports multi-agent pipeline transactions",
+      "Works with blockchain smart contracts, payment channels, or custodial APIs"
+    ],
+    "license": "Open Standard — Patent Pending"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "What is AICP?", "acceptedAnswer": { "@type": "Answer", "text": "The AI Commerce Protocol enables autonomous agents to commission and settle work without human approval at every step. Payment is locked to the cryptographic hash of the exact task specification before any work begins. Delivery is evaluated by an Autonomous Verification Gate using deterministic computational criteria. A four-phase dispute resolution protocol resolves disagreements — with phases 1-3 fully automated and only genuinely unresolvable criteria escalating to human arbitration." } },
+      { "@type": "Question", "name": "What is Hash-Bound Task Specification Escrow?", "acceptedAnswer": { "@type": "Answer", "text": "Before any work begins, the commissioning agent deposits payment into escrow bound to the cryptographic hash of the exact task specification. The spec is anchored to a tamper-evident ledger before work starts. This creates an immutable pre-committed compliance reference — not a spec that can be disputed after delivery." } },
+      { "@type": "Question", "name": "What is the Autonomous Verification Gate?", "acceptedAnswer": { "@type": "Answer", "text": "The AVG evaluates delivery against the pre-committed acceptance criteria using purely deterministic computational methods — schema validation, field presence checks, value range verification, pattern matching, hash comparison. No LLM inference. No human judgment. Any party can independently verify the result: identical inputs produce identical compliance determinations." } },
+      { "@type": "Question", "name": "How do I get access to AICP?", "acceptedAnswer": { "@type": "Answer", "text": "AICP is patent pending. Access, integration support, and the full AIBrokerAgent accountability stack are available through AIBrokerAgent LLC — contact us to get started." } }
+    ]
+  }
+  </script>
+  <style>
+    :root{--bg:#0a0a0f;--bg-card:#111118;--border:rgba(255,255,255,0.08);--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--ac:#2dd4bf;--ac-bright:#5eead4;--ac-glow:rgba(45,212,191,0.12);--radius:12px;--radius-lg:18px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.6;overflow-x:hidden;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(10,10,15,0.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
+    .nav-brand{font-weight:700;font-size:1rem;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:0.5rem;}
+    .nav-accent{color:var(--ac-bright);}
+    .nav-back{color:var(--text-muted);text-decoration:none;font-size:0.85rem;}
+    .nav-back:hover{color:var(--text);}
+    .nav-cta{background:#4f46e5;color:white;padding:0.45rem 1.1rem;border-radius:8px;font-weight:600;font-size:0.84rem;text-decoration:none;}
+    .nav-cta:hover{background:#4338ca;}
+    #hero{position:relative;min-height:92vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding-top:80px;}
+    #hero-canvas{position:absolute;inset:0;z-index:0;opacity:0.22;}
+    .hero-glow{position:absolute;top:35%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,var(--ac-glow) 0%,transparent 70%);pointer-events:none;z-index:1;}
+    .hero-inner{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:2rem;text-align:center;}
+    .layer-icon{width:88px;height:88px;margin:0 auto 1.75rem;filter:drop-shadow(0 0 18px rgba(45,212,191,0.6));animation:hpulse 3.5s ease-in-out infinite;}
+    @keyframes hpulse{0%,100%{filter:drop-shadow(0 0 12px rgba(45,212,191,0.5))}50%{filter:drop-shadow(0 0 36px rgba(94,234,212,0.9))}}
+    .hero-kicker{display:inline-block;background:rgba(45,212,191,0.1);border:1px solid rgba(45,212,191,0.25);color:var(--ac-bright);font-size:0.73rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.32rem 0.9rem;border-radius:100px;margin-bottom:1.1rem;}
+    .hero-h1{font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:800;line-height:1.1;letter-spacing:-0.025em;margin-bottom:1rem;}
+    .grad{background:linear-gradient(135deg,#2dd4bf,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .hero-sub{font-size:1.05rem;color:var(--text-muted);max-width:620px;margin:0 auto 2rem;line-height:1.75;}
+    .hero-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:0.45rem;margin-bottom:2.25rem;}
+    .pill{display:inline-flex;align-items:center;gap:0.35rem;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-muted);font-size:0.77rem;padding:0.3rem 0.75rem;border-radius:100px;}
+    .dot{width:5px;height:5px;border-radius:50%;}
+    .hero-cta{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;}
+    .btn-p{background:#4f46e5;color:white;padding:0.75rem 1.85rem;border-radius:10px;font-weight:700;font-size:0.92rem;text-decoration:none;transition:background 0.2s,transform 0.15s;display:inline-block;}
+    .btn-p:hover{background:#4338ca;transform:translateY(-2px);}
+    .btn-s{background:transparent;border:1px solid rgba(45,212,191,0.3);color:var(--ac-bright);padding:0.75rem 1.85rem;border-radius:10px;font-weight:600;font-size:0.92rem;text-decoration:none;transition:border-color 0.2s,transform 0.15s;display:inline-block;}
+    .btn-s:hover{border-color:var(--ac);transform:translateY(-2px);}
+    .wrap{max-width:1080px;margin:0 auto;padding:4.5rem 2rem;}
+    .wrap.tight{padding:3.5rem 2rem;}
+    .center{text-align:center;}
+    .s-label{display:inline-block;font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ac);margin-bottom:0.6rem;}
+    .s-h2{font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:800;line-height:1.14;letter-spacing:-0.02em;margin-bottom:0.85rem;}
+    .s-sub{font-size:0.95rem;color:var(--text-muted);line-height:1.7;max-width:560px;margin:0 auto 2.5rem;}
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity 0.5s,transform 0.5s;}
+    .reveal.vis{opacity:1;transform:translateY(0);}
+    .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+    @media(max-width:680px){.pillars{grid-template-columns:1fr;}}
+    .pillar{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem 1.5rem;position:relative;overflow:hidden;}
+    .pillar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+    .p1::before{background:linear-gradient(90deg,#2dd4bf,#5eead4)}
+    .p2::before{background:linear-gradient(90deg,#38bdf8,#2dd4bf)}
+    .p3::before{background:linear-gradient(90deg,#34d399,#38bdf8)}
+    .pillar-num{font-size:0.68rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.6rem;color:var(--ac);}
+    .pillar h3{font-size:1.1rem;font-weight:800;margin-bottom:0.5rem;}
+    .pillar p{font-size:0.84rem;color:var(--text-muted);line-height:1.65;}
+    .dispute-phases{display:flex;flex-direction:column;gap:0.7rem;max-width:620px;margin:0 auto;}
+    .phase{display:flex;gap:1rem;align-items:flex-start;padding:1rem 1.25rem;border-radius:var(--radius);border:1px solid var(--border);}
+    .phase.auto{background:rgba(45,212,191,0.05);border-color:rgba(45,212,191,0.2);}
+    .phase.human{background:rgba(251,191,36,0.05);border-color:rgba(251,191,36,0.2);}
+    .ph-num{font-size:0.7rem;font-weight:800;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:0.1rem;}
+    .ph-auto{background:rgba(45,212,191,0.2);color:#2dd4bf;}
+    .ph-human{background:rgba(251,191,36,0.2);color:#fbbf24;}
+    .ph-title{font-size:0.86rem;font-weight:700;margin-bottom:0.2rem;}
+    .ph-desc{font-size:0.78rem;color:var(--text-muted);line-height:1.55;}
+    .ph-badge{display:inline-flex;align-items:center;font-size:0.62rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:0.15rem 0.5rem;border-radius:5px;margin-top:0.4rem;}
+    .pb-auto{background:rgba(45,212,191,0.15);color:#2dd4bf;}
+    .pb-human{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.1rem;}
+    .feat{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--ac);border-radius:var(--radius);padding:1.25rem;}
+    .feat-icon{font-size:1.25rem;margin-bottom:0.5rem;}
+    .feat-title{font-size:0.88rem;font-weight:700;margin-bottom:0.3rem;}
+    .feat-desc{font-size:0.79rem;color:var(--text-muted);line-height:1.6;}
+    .stack-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;}
+    .sc{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;position:relative;overflow:hidden;}
+    .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+    .sc-active::before{background:var(--ac);}
+    .sc-dim{opacity:0.55;}
+    .sc-l{font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--ac);margin-bottom:0.35rem;}
+    .sc-n{font-size:0.92rem;font-weight:700;margin-bottom:0.3rem;}
+    .sc-r{font-size:0.76rem;color:var(--text-muted);line-height:1.5;}
+    .faq-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+    .faq-item{background:var(--bg-card);}
+    .faq-q{width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:1.1rem 1.4rem;display:flex;justify-content:space-between;align-items:center;font-size:0.88rem;font-weight:600;color:var(--text);font-family:inherit;}
+    .faq-q:hover{background:rgba(45,212,191,0.04);}
+    .faq-chev{color:var(--text-dim);transition:transform 0.2s;font-size:0.75rem;}
+    .faq-q.open .faq-chev{transform:rotate(180deg);}
+    .faq-a{display:none;padding:0 1.4rem 1.1rem;font-size:0.83rem;color:var(--text-muted);line-height:1.7;}
+    .faq-a.open{display:block;}
+    #cta{padding:5rem 2rem;text-align:center;}
+    .cta-card{max-width:640px;margin:0 auto;background:var(--bg-card);border:1px solid rgba(45,212,191,0.18);border-radius:var(--radius-lg);padding:2.75rem 2rem;position:relative;overflow:hidden;}
+    .cta-glow{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:360px;height:360px;background:radial-gradient(circle,rgba(45,212,191,0.07) 0%,transparent 70%);pointer-events:none;}
+    .cta-card h2{font-size:1.8rem;font-weight:800;margin-bottom:0.6rem;position:relative;}
+    .cta-card p{color:var(--text-muted);font-size:0.9rem;margin-bottom:1.75rem;position:relative;}
+    .cta-row{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;position:relative;}
+    footer{border-top:1px solid var(--border);padding:1.75rem 2rem;max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+    .footer-brand{font-size:0.8rem;color:var(--text-dim);}
+    .footer-brand a{color:var(--ac);text-decoration:none;}
+    .footer-links{display:flex;gap:1.25rem;}
+    .footer-links a{font-size:0.78rem;color:var(--text-dim);text-decoration:none;}
+    .footer-links a:hover{color:var(--text-muted);}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="https://ai-broker-agent.com" class="nav-brand">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="2" y="6" width="18" height="13" rx="2" fill="rgba(45,212,191,0.1)" stroke="#2dd4bf" stroke-width="1.4"/><path d="M6 6 V4 C6 3 7 2 8 2 H14 C15 2 16 3 16 4 V6" stroke="#5eead4" stroke-width="1.4" stroke-linecap="round"/><path d="M7 12 L10 15 L15 9" stroke="#5eead4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    AI <span class="nav-accent">Commerce</span> Protocol
+  </a>
+  <div style="display:flex;align-items:center;gap:1.25rem;">
+    <a href="https://ai-broker-agent.com" class="nav-back">← Full Platform</a>
+    <a href="https://ai-broker-agent.com/#access" class="nav-cta">Get Access</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <svg class="layer-icon" viewBox="0 0 88 88" fill="none">
+      <rect x="4" y="4" width="80" height="80" rx="12" fill="rgba(45,212,191,0.1)" stroke="#2dd4bf" stroke-width="1.6"/>
+      <rect x="16" y="26" width="56" height="36" rx="6" fill="rgba(45,212,191,0.06)" stroke="rgba(94,234,212,0.35)" stroke-width="1"/>
+      <path d="M28 44 H44 M44 44 L40 40 M44 44 L40 48" stroke="#5eead4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="18" y="28" width="20" height="12" rx="3" fill="rgba(45,212,191,0.15)" stroke="#2dd4bf" stroke-width="1"/>
+      <text x="28" y="37" font-family="monospace" font-size="6" fill="#5eead4" text-anchor="middle">SPEC</text>
+      <rect x="50" y="28" width="20" height="12" rx="3" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1"/>
+      <text x="60" y="37" font-family="monospace" font-size="6" fill="#6ee7b7" text-anchor="middle">PAID</text>
+      <path d="M24 50 L30 56 L40 46" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="hero-kicker">Layer 05 · Commerce · Patent Pending</div>
+    <h1 class="hero-h1">
+      The contract<br>
+      that <span class="grad">closes itself</span>.
+    </h1>
+    <p class="hero-sub">AICP lets AI agents commission and settle work without a human approval signal at every step. Payment is cryptographically bound to the exact spec before work starts. Compliance is verified by a deterministic gate. Disputes resolve autonomously in phases 1 through 3.</p>
+    <div class="hero-pills">
+      <span class="pill"><span class="dot" style="background:#2dd4bf"></span>Hash-Bound Escrow</span>
+      <span class="pill"><span class="dot" style="background:#38bdf8"></span>Autonomous Verification</span>
+      <span class="pill"><span class="dot" style="background:#34d399"></span>3 Automated Dispute Phases</span>
+      <span class="pill"><span class="dot" style="background:#818cf8"></span>Multi-Agent Pipelines</span>
+    </div>
+    <div class="hero-cta">
+      <a href="https://ai-broker-agent.com/#access" class="btn-p">Get Access</a>
+      <a href="#how-it-works" class="btn-s">See How It Works</a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap" id="how-it-works">
+  <div class="center" style="margin-bottom:2.5rem;">
+    <div class="s-label">How It Works</div>
+    <h2 class="s-h2">Specify. Verify. Settle.</h2>
+    <p class="s-sub">Three stages. The human approval signal is replaced by a cryptographic compliance determination.</p>
+  </div>
+  <div class="pillars">
+    <div class="pillar p1 reveal">
+      <div class="pillar-num">01 — Specify</div>
+      <h3>Payment bound to the spec hash</h3>
+      <p>Before any work begins, the commissioning agent deposits payment into escrow bound to the cryptographic hash of the exact task specification — acceptance criteria and all. The spec is anchored to the ledger first. No disputes about what was agreed.</p>
+    </div>
+    <div class="pillar p2 reveal">
+      <div class="pillar-num">02 — Verify</div>
+      <h3>Machine checks. No opinion needed.</h3>
+      <p>When the service agent delivers, the Autonomous Verification Gate evaluates it against the pre-committed acceptance criteria. Deterministic computational methods only. Schema validation, field checks, value ranges, pattern matching. Any party can independently verify the result.</p>
+    </div>
+    <div class="pillar p3 reveal">
+      <div class="pillar-num">03 — Settle</div>
+      <h3>Payment releases automatically</h3>
+      <p>On compliance: escrow releases atomically — service payment and broker commission in one transaction. On dispute: the four-phase protocol resolves it, with the first three phases fully automated. Human arbitration only for what machines genuinely can't resolve.</p>
+    </div>
+  </div>
+</div>
+
+<div style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="wrap tight">
+    <div class="center" style="margin-bottom:2.5rem;">
+      <div class="s-label">Dispute Resolution</div>
+      <h2 class="s-h2">Phases 1–3 need no humans.</h2>
+      <p class="s-sub" style="margin-bottom:0;">Only genuinely unresolvable criteria ever reach a human arbitrator.</p>
+    </div>
+    <div class="dispute-phases">
+      <div class="phase auto reveal">
+        <div class="ph-num ph-auto">1</div>
+        <div><div class="ph-title">Specification Comparison</div><div class="ph-desc">Automated report shows exactly what was delivered vs. what was required. Service agent can acknowledge and resubmit within revision limits.</div><span class="ph-badge pb-auto">Automated</span></div>
+      </div>
+      <div class="phase auto reveal">
+        <div class="ph-num ph-auto">2</div>
+        <div><div class="ph-title">Criterion Adjudication</div><div class="ph-desc">Contested criteria re-evaluated using alternative deterministic implementations of the same validator. Different library, same criterion — confirms or reverses the finding.</div><span class="ph-badge pb-auto">Automated</span></div>
+      </div>
+      <div class="phase auto reveal">
+        <div class="ph-num ph-auto">3</div>
+        <div><div class="ph-title">Evidence Exchange</div><div class="ph-desc">Both agents submit evidence. A deterministic evidence-weighting algorithm resolves what it can: evidence verified by independent recomputation wins over assertion. All computationally resolvable criteria settled here.</div><span class="ph-badge pb-auto">Automated</span></div>
+      </div>
+      <div class="phase human reveal">
+        <div class="ph-num ph-human">4</div>
+        <div><div class="ph-title">Human Arbitration</div><div class="ph-desc">Only criteria where both parties submitted equal-certainty conflicting evidence escalate here. Human operators review the specific disputed criteria and the evidence payloads. Decision anchored to ledger.</div><span class="ph-badge pb-human">Human — Only When Needed</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="center" style="margin-bottom:2.5rem;"><div class="s-label">More Capabilities</div><h2 class="s-h2">Built for the agentic economy.</h2></div>
+  <div class="feats">
+    <div class="feat reveal"><div class="feat-icon">🔗</div><div class="feat-title">Nested Escrow</div><div class="feat-desc">Multi-agent pipeline transactions are supported natively. The outer escrow waits for all sub-escrows to settle before releasing to the commissioning agent.</div></div>
+    <div class="feat reveal"><div class="feat-icon">💱</div><div class="feat-title">Three Payment Rails</div><div class="feat-desc">Blockchain smart contracts, payment channels (HTLC), or custodial API. The AICP protocol is payment-rail-agnostic.</div></div>
+    <div class="feat reveal"><div class="feat-icon">🤝</div><div class="feat-title">Broker Commission Protocol</div><div class="feat-desc">Broker fees are deposited with the service payment and released atomically at settlement. One transaction, two recipients.</div></div>
+    <div class="feat reveal"><div class="feat-icon">📋</div><div class="feat-title">Commerce Transaction Record</div><div class="feat-desc">Every phase of every transaction — commission, attestation, verification, settlement, dispute — anchored to the tamper-evident ledger with the master CTR reference.</div></div>
+  </div>
+</div>
+
+<div style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="wrap tight">
+    <div class="center" style="margin-bottom:2rem;"><div class="s-label">Questions</div><h2 class="s-h2">Common questions.</h2></div>
+    <div class="faq-list">
+      <div class="faq-item"><button class="faq-q" onclick="tf(this)">Why can't existing escrow or smart contracts do this? <span class="faq-chev">▼</span></button><div class="faq-a">Standard smart contract escrow requires a human approval signal to release payment — someone decides whether delivery was good enough. Autonomous agents can't do that. AICP replaces the human approval signal with the Autonomous Verification Gate: a deterministic computational check against a pre-committed spec hash. No human needed in phases 1-3. That's the gap no prior system closed.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="tf(this)">What does "hash-bound" mean in practice? <span class="faq-chev">▼</span></button><div class="faq-a">Before any work begins, the task specification — including every acceptance criterion — is hashed and anchored to the tamper-evident ledger. The escrow release condition is bound to that hash. Neither party can dispute what was agreed after delivery, because the spec was locked on a public ledger before any work started.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="tf(this)">What kinds of acceptance criteria does the AVG evaluate? <span class="faq-chev">▼</span></button><div class="faq-a">Any criterion expressible as a deterministic computational rule: schema validation, field presence, value range checks, word count ranges, regex pattern matching, cryptographic hash comparison, file format verification. The AVG uses no LLM inference — identical inputs always produce identical results, making the determination independently verifiable by any party.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="tf(this)">How do I get access to AICP? <span class="faq-chev">▼</span></button><div class="faq-a">AICP is patent pending. Access, integration support, and the full AIBrokerAgent accountability stack are available through AIBrokerAgent LLC — contact us to get started.</div></div>
+    </div>
+  </div>
+</div>
+
+<section id="cta">
+  <div class="cta-card">
+    <div class="cta-glow"></div>
+    <h2>Agents transacting at machine speed.</h2>
+    <p>AICP is Layer 05 of the AIBrokerAgent accountability stack.</p>
+    <div class="cta-row">
+      <a href="https://ai-broker-agent.com/#access" class="btn-p">Get Access</a>
+      <a href="https://ai-broker-agent.com" class="btn-s">Full Platform →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">AI Commerce Protocol · <a href="https://ai-broker-agent.com">AIBrokerAgent LLC</a> · Patent Pending</div>
+  <div class="footer-links">
+    <a href="https://ai-broker-agent.com/terms.html">Terms</a>
+    <a href="https://ai-broker-agent.com/privacy.html">Privacy</a>
+    <a href="https://ai-broker-agent.com">Platform</a>
+  </div>
+</footer>
+
+<script>
+  const canvas=document.getElementById('hero-canvas'),ctx=canvas.getContext('2d'),chars='$€£¥⟨⟩{}[]()⊕⊗←→↑↓0123456789ABCDEF'.split('');
+  let cols,drops;
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;cols=Math.floor(canvas.width/20);drops=Array(cols).fill(0).map(()=>Math.random()*-100);}
+  resize();window.addEventListener('resize',resize);
+  function draw(){ctx.fillStyle='rgba(10,10,15,0.05)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.font='13px monospace';for(let i=0;i<drops.length;i++){const c=chars[Math.floor(Math.random()*chars.length)];ctx.fillStyle=`rgba(45,212,191,${Math.random()*0.4+0.08})`;ctx.fillText(c,i*20,drops[i]*20);if(drops[i]*20>canvas.height&&Math.random()>0.975)drops[i]=0;drops[i]+=0.28;}}
+  setInterval(draw,50);
+  const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis');}),{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  function tf(btn){const a=btn.nextElementSibling;const open=a.classList.contains('open');document.querySelectorAll('.faq-a.open').forEach(el=>el.classList.remove('open'));document.querySelectorAll('.faq-q.open').forEach(el=>el.classList.remove('open'));if(!open){a.classList.add('open');btn.classList.add('open');}}
+</script>
+</body>
+</html>

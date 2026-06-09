@@ -175,6 +175,13 @@
     .proto-tag.pink { background: rgba(236,72,153,0.12); color: #ec4899; }
     .proto-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
     .proto-desc strong { color: var(--text); font-weight: 600; }
+    .layer-status {
+      display: inline-block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.09em;
+      text-transform: uppercase; border-radius: 4px; padding: 0.15rem 0.55rem;
+      margin-bottom: 0.6rem;
+    }
+    .layer-status.available { background: rgba(79,142,247,0.12); color: #4f8ef7; }
+    .layer-status.coming { background: rgba(124,92,252,0.12); color: #7c5cfc; }
 
     /* ── COVENANT ── */
     #covenant {
@@ -393,6 +400,7 @@
       <!-- Identity -->
       <div class="pillar identity">
         <div class="pillar-num">Layer 01 — Identity</div>
+        <div class="layer-status available">Closed Alpha</div>
         <h3>Who is this agent?</h3>
         <p class="tagline">Cryptographic identity that follows an agent across every platform, interaction, and deployment.</p>
         <ul class="protocol-list">
@@ -410,6 +418,7 @@
       <!-- Audit -->
       <div class="pillar audit">
         <div class="pillar-num">Layer 02 — Audit Trail</div>
+        <div class="layer-status available">Closed Alpha</div>
         <h3>What did it do, and when?</h3>
         <p class="tagline">Immutable records of agent decisions, actions, and lifecycle events — from deployment to end-of-service.</p>
         <ul class="protocol-list">
@@ -435,6 +444,7 @@
       <!-- Governance -->
       <div class="pillar governance">
         <div class="pillar-num">Layer 03 — Governance</div>
+        <div class="layer-status available">Closed Alpha</div>
         <h3>Is it authorized to act?</h3>
         <p class="tagline">Policy enforcement, scope controls, and pre-deployment impact assessment for regulated and enterprise environments.</p>
         <ul class="protocol-list">
@@ -456,6 +466,7 @@
       <!-- Commerce -->
       <div class="pillar commerce">
         <div class="pillar-num">Layer 04 — Commerce</div>
+        <div class="layer-status available">Closed Alpha</div>
         <h3>Can agents transact safely?</h3>
         <p class="tagline">Trust primitives for agent-to-agent commerce — payments, contracts, and dispute resolution without human intermediation.</p>
         <ul class="protocol-list">
@@ -472,9 +483,10 @@
 
       <!-- Emergence -->
       <div class="pillar emergence">
-        <div class="pillar-num">Layer 05 — Emergent Trust</div>
-        <h3>How does trust build over time?</h3>
-        <p class="tagline">Physics-informed protocols for how trust accumulates, propagates, and self-organizes across agent networks.</p>
+        <div class="pillar-num">Layer 05 — Physics Substrate</div>
+        <div class="layer-status coming">Coming 2026 — .brad Stack</div>
+        <h3>How does trust emerge from physics?</h3>
+        <p class="tagline">Identity, governance, and access control that emerge from physical dynamics — not programmed rules. Hardware-bound, authority-free, holographically distributed.</p>
         <ul class="protocol-list">
           <li>
             <span class="proto-tag pink">SOC</span>
@@ -487,10 +499,6 @@
           <li>
             <span class="proto-tag pink">MPR</span>
             <span class="proto-desc"><strong>Memory-Predictive Reduction.</strong> Agent memory as possibility-space reduction — models why what an agent remembers directly shapes what it can be trusted to do.</span>
-          </li>
-          <li>
-            <span class="proto-tag pink">LNM</span>
-            <span class="proto-desc"><strong>Living Network Memory.</strong> Data-as-relationship storage — sovereign, permission-gated memory with cryptographic audit trail. The memory substrate for the trust layer.</span>
           </li>
         </ul>
       </div>
@@ -684,7 +692,7 @@
     <div class="community-ways">
       <div class="community-way">
         <h4>📂 Implement a Protocol</h4>
-        <p>Pick any spec from GitHub and ship an implementation. Open source contributions welcome across all 13 protocols.</p>
+        <p>Pick any protocol and build with the AIBrokerAgent platform. Integration support and early access available.</p>
       </div>
       <div class="community-way">
         <h4>🔎 Audit the Specs</h4>

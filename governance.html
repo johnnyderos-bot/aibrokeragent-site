@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operator Governance Protocol — Agent Governance That Can't Drift</title>
+  <meta name="description" content="OGPP makes governance constraints verifiable, unerasable, and enforced at action time — all the way down an agent hierarchy. No silent drift. No unauthorized relaxation. Every violation recorded.">
+  <meta name="keywords" content="Operator Governance Protocol, OGPP, AI agent governance, governance drift, enforcement, AIBrokerAgent, DerosLabs">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Operator Governance Protocol",
+    "alternateName": "OGPP",
+    "description": "OGPP ensures that operator governance constraints reach every agent in a hierarchy correctly, are enforced at every action boundary, and produce tamper-evident records that any external party can verify — without cooperation from the platform or operator. When an agent spawns a sub-agent, a Governance Inheritance Binding is anchored to the ledger before execution. A Local Enforcement Gate intercepts every action proposal before external effects are produced. Governance drift — the silent relaxation of constraints through automated delegation — becomes both detectable and prevented.",
+    "applicationCategory": "AI Security",
+    "creator": { "@type": "Organization", "name": "AIBrokerAgent LLC / DerosLabs", "url": "https://ai-broker-agent.com" },
+    "featureList": [
+      "Governance Constraint Record — operator constraints in machine-evaluable signed form",
+      "Governance Inheritance Binding — ledger-anchored at every spawn event before execution",
+      "mandatory_constraints_hash — invariant that travels unchanged through entire hierarchy",
+      "Local Enforcement Gate — intercepts action proposals before external effects are produced",
+      "Governance Drift Detection — any party can verify constraint integrity via hash comparison",
+      "Emergency Policy Updates — push new constraints to all active agents in real time",
+      "Governance Compliance Attestations — signed, quantified evidence of enforcement"
+    ],
+    "license": "Open Standard — Patent Pending"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "What is governance drift and why does it matter?", "acceptedAnswer": { "@type": "Answer", "text": "Governance drift is the silent relaxation of operator constraints as they propagate through AI agent hierarchies. When agents spawn sub-agents at machine speed — potentially thousands per session — there's no human review at each delegation point. Intermediate agents can silently narrow or drop mandatory constraints. OGPP makes this both technically impossible and independently detectable by any party with ledger access." } },
+      { "@type": "Question", "name": "What is the Local Enforcement Gate?", "acceptedAnswer": { "@type": "Answer", "text": "The LEG intercepts every discrete action proposal — tool calls, API requests, file writes, messages — before external effects are produced. It evaluates each against the agent's locally-stored constraint set using deterministic rules, with no LLM inference required. Violations are blocked in real time and recorded as tamper-evident ledger events." } },
+      { "@type": "Question", "name": "How does OGPP detect governance drift?", "acceptedAnswer": { "@type": "Answer", "text": "Every Governance Inheritance Binding contains a mandatory_constraints_hash that must equal the root operator's hash exactly — it travels unchanged through the entire hierarchy regardless of depth. Any relaxation of mandatory constraints breaks this hash invariant. Any party with ledger access can detect drift by comparing hashes. No access to internal systems required." } },
+      { "@type": "Question", "name": "How do I get access to OGPP?", "acceptedAnswer": { "@type": "Answer", "text": "OGPP is patent pending. Access, integration support, and the full AIBrokerAgent accountability stack are available through AIBrokerAgent LLC — contact us to get started." } }
+    ]
+  }
+  </script>
+  <style>
+    :root{--bg:#0a0a0f;--bg-card:#111118;--border:rgba(255,255,255,0.08);--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--og:#38bdf8;--og-bright:#7dd3fc;--og-glow:rgba(56,189,248,0.13);--radius:12px;--radius-lg:18px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.6;overflow-x:hidden;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(10,10,15,0.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
+    .nav-brand{font-weight:700;font-size:1rem;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:0.5rem;}
+    .nav-accent{color:var(--og-bright);}
+    .nav-back{color:var(--text-muted);text-decoration:none;font-size:0.85rem;}
+    .nav-back:hover{color:var(--text);}
+    .nav-cta{background:#4f46e5;color:white;padding:0.45rem 1.1rem;border-radius:8px;font-weight:600;font-size:0.84rem;text-decoration:none;}
+    .nav-cta:hover{background:#4338ca;}
+    #hero{position:relative;min-height:92vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding-top:80px;}
+    #hero-canvas{position:absolute;inset:0;z-index:0;opacity:0.22;}
+    .hero-glow{position:absolute;top:35%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,var(--og-glow) 0%,transparent 70%);pointer-events:none;z-index:1;}
+    .hero-inner{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:2rem;text-align:center;}
+    .layer-icon{width:88px;height:88px;margin:0 auto 1.75rem;filter:drop-shadow(0 0 18px rgba(56,189,248,0.6));animation:hpulse 3.5s ease-in-out infinite;}
+    @keyframes hpulse{0%,100%{filter:drop-shadow(0 0 12px rgba(56,189,248,0.5))}50%{filter:drop-shadow(0 0 36px rgba(125,211,252,0.9))}}
+    .hero-kicker{display:inline-block;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);color:var(--og-bright);font-size:0.73rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:0.32rem 0.9rem;border-radius:100px;margin-bottom:1.1rem;}
+    .hero-h1{font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:800;line-height:1.1;letter-spacing:-0.025em;margin-bottom:1rem;}
+    .grad{background:linear-gradient(135deg,#38bdf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .hero-sub{font-size:1.05rem;color:var(--text-muted);max-width:600px;margin:0 auto 2rem;line-height:1.75;}
+    .hero-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:0.45rem;margin-bottom:2.25rem;}
+    .pill{display:inline-flex;align-items:center;gap:0.35rem;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-muted);font-size:0.77rem;padding:0.3rem 0.75rem;border-radius:100px;}
+    .dot{width:5px;height:5px;border-radius:50%;}
+    .hero-cta{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;}
+    .btn-p{background:#4f46e5;color:white;padding:0.75rem 1.85rem;border-radius:10px;font-weight:700;font-size:0.92rem;text-decoration:none;transition:background 0.2s,transform 0.15s;display:inline-block;}
+    .btn-p:hover{background:#4338ca;transform:translateY(-2px);}
+    .btn-s{background:transparent;border:1px solid rgba(56,189,248,0.3);color:var(--og-bright);padding:0.75rem 1.85rem;border-radius:10px;font-weight:600;font-size:0.92rem;text-decoration:none;transition:border-color 0.2s,transform 0.15s;display:inline-block;}
+    .btn-s:hover{border-color:var(--og);transform:translateY(-2px);}
+    .wrap{max-width:1080px;margin:0 auto;padding:4.5rem 2rem;}
+    .wrap.tight{padding:3.5rem 2rem;}
+    .center{text-align:center;}
+    .s-label{display:inline-block;font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--og);margin-bottom:0.6rem;}
+    .s-h2{font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:800;line-height:1.14;letter-spacing:-0.02em;margin-bottom:0.85rem;}
+    .s-sub{font-size:0.95rem;color:var(--text-muted);line-height:1.7;max-width:560px;margin:0 auto 2.5rem;}
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity 0.5s,transform 0.5s;}
+    .reveal.vis{opacity:1;transform:translateY(0);}
+    .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+    @media(max-width:680px){.pillars{grid-template-columns:1fr;}}
+    .pillar{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem 1.5rem;position:relative;overflow:hidden;}
+    .pillar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+    .p1::before{background:linear-gradient(90deg,#38bdf8,#7dd3fc)}
+    .p2::before{background:linear-gradient(90deg,#a78bfa,#38bdf8)}
+    .p3::before{background:linear-gradient(90deg,#34d399,#38bdf8)}
+    .pillar-num{font-size:0.68rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.6rem;color:var(--og);}
+    .pillar h3{font-size:1.1rem;font-weight:800;margin-bottom:0.5rem;}
+    .pillar p{font-size:0.84rem;color:var(--text-muted);line-height:1.65;}
+    .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.1rem;}
+    .feat{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--og);border-radius:var(--radius);padding:1.25rem;}
+    .feat-icon{font-size:1.25rem;margin-bottom:0.5rem;}
+    .feat-title{font-size:0.88rem;font-weight:700;margin-bottom:0.3rem;}
+    .feat-desc{font-size:0.79rem;color:var(--text-muted);line-height:1.6;}
+    .hierarchy-visual{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem;max-width:560px;margin:0 auto;}
+    .hv-title{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--og);margin-bottom:1.5rem;text-align:center;}
+    .hv-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;}
+    .hv-badge{font-size:0.68rem;font-weight:800;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);color:var(--og-bright);padding:0.2rem 0.6rem;border-radius:6px;white-space:nowrap;}
+    .hv-label{font-size:0.82rem;color:var(--text-muted);}
+    .hv-arrow{font-size:0.75rem;color:var(--text-dim);margin-left:auto;}
+    .hv-check{font-size:0.75rem;color:#34d399;}
+    .hv-divider{border:none;border-top:1px dashed rgba(56,189,248,0.2);margin:0.75rem 0;}
+    .stack-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;}
+    .sc{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem;position:relative;overflow:hidden;}
+    .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+    .sc-active::before{background:var(--og);}
+    .sc-dim{opacity:0.55;}
+    .sc-l{font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--og);margin-bottom:0.35rem;}
+    .sc-n{font-size:0.92rem;font-weight:700;margin-bottom:0.3rem;}
+    .sc-r{font-size:0.76rem;color:var(--text-muted);line-height:1.5;}
+    .faq-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+    .faq-item{background:var(--bg-card);}
+    .faq-q{width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:1.1rem 1.4rem;display:flex;justify-content:space-between;align-items:center;font-size:0.88rem;font-weight:600;color:var(--text);font-family:inherit;}
+    .faq-q:hover{background:rgba(56,189,248,0.04);}
+    .faq-chev{color:var(--text-dim);transition:transform 0.2s;font-size:0.75rem;}
+    .faq-q.open .faq-chev{transform:rotate(180deg);}
+    .faq-a{display:none;padding:0 1.4rem 1.1rem;font-size:0.83rem;color:var(--text-muted);line-height:1.7;}
+    .faq-a.open{display:block;}
+    #cta{padding:5rem 2rem;text-align:center;}
+    .cta-card{max-width:640px;margin:0 auto;background:var(--bg-card);border:1px solid rgba(56,189,248,0.18);border-radius:var(--radius-lg);padding:2.75rem 2rem;position:relative;overflow:hidden;}
+    .cta-glow{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:360px;height:360px;background:radial-gradient(circle,rgba(56,189,248,0.07) 0%,transparent 70%);pointer-events:none;}
+    .cta-card h2{font-size:1.8rem;font-weight:800;margin-bottom:0.6rem;position:relative;}
+    .cta-card p{color:var(--text-muted);font-size:0.9rem;margin-bottom:1.75rem;position:relative;}
+    .cta-row{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;position:relative;}
+    footer{border-top:1px solid var(--border);padding:1.75rem 2rem;max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+    .footer-brand{font-size:0.8rem;color:var(--text-dim);}
+    .footer-brand a{color:var(--og);text-decoration:none;}
+    .footer-links{display:flex;gap:1.25rem;}
+    .footer-links a{font-size:0.78rem;color:var(--text-dim);text-decoration:none;}
+    .footer-links a:hover{color:var(--text-muted);}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="https://ai-broker-agent.com" class="nav-brand">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="16" height="16" rx="3" fill="rgba(56,189,248,0.1)" stroke="#38bdf8" stroke-width="1.4"/><path d="M7 8 H15 M7 11 H13 M7 14 H11" stroke="#7dd3fc" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <span class="nav-accent">Governance</span> Protocol
+  </a>
+  <div style="display:flex;align-items:center;gap:1.25rem;">
+    <a href="https://ai-broker-agent.com" class="nav-back">← Full Platform</a>
+    <a href="https://ai-broker-agent.com/#access" class="nav-cta">Get Access</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <svg class="layer-icon" viewBox="0 0 88 88" fill="none">
+      <rect x="4" y="4" width="80" height="80" rx="14" fill="rgba(56,189,248,0.1)" stroke="#38bdf8" stroke-width="1.6"/>
+      <path d="M20 28 H68 M20 38 H60 M20 48 H52 M20 58 H44" stroke="#7dd3fc" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+      <circle cx="64" cy="58" r="10" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+      <path d="M59 58 L62 61 L69 55" stroke="#34d399" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="hero-kicker">Layer 03 · Governance · Patent Pending</div>
+    <h1 class="hero-h1">
+      Your rules.<br>
+      <span class="grad">All the way down</span>.
+    </h1>
+    <p class="hero-sub">OGPP makes governance constraints verifiable, unerasable, and enforced at action time — through every level of an agent hierarchy. Governance drift becomes technically impossible. Every violation is permanently recorded.</p>
+    <div class="hero-pills">
+      <span class="pill"><span class="dot" style="background:#38bdf8"></span>Drift-Proof Propagation</span>
+      <span class="pill"><span class="dot" style="background:#a78bfa"></span>Pre-Action Enforcement</span>
+      <span class="pill"><span class="dot" style="background:#34d399"></span>Ledger-Anchored at Every Spawn</span>
+      <span class="pill"><span class="dot" style="background:#fbbf24"></span>Emergency Policy Push</span>
+    </div>
+    <div class="hero-cta">
+      <a href="https://ai-broker-agent.com/#access" class="btn-p">Get Access</a>
+      <a href="#how-it-works" class="btn-s">See How It Works</a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap" id="how-it-works">
+  <div class="center" style="margin-bottom:2.5rem;">
+    <div class="s-label">How It Works</div>
+    <h2 class="s-h2">Define. Propagate. Enforce.</h2>
+    <p class="s-sub">Three stages. No human can review every spawn at machine speed — so the protocol does it for them, cryptographically.</p>
+  </div>
+  <div class="pillars">
+    <div class="pillar p1 reveal">
+      <div class="pillar-num">01 — Define</div>
+      <h3>Constraints in machine-evaluable form</h3>
+      <p>The operator signs a Governance Constraint Record containing every constraint — prohibited tools, output limits, resource caps, delegation rules. Mandatory constraints are marked and hash-locked. The record is anchored to the ledger before any agent acts.</p>
+    </div>
+    <div class="pillar p2 reveal">
+      <div class="pillar-num">02 — Propagate</div>
+      <h3>Ledger record at every spawn</h3>
+      <p>When any agent spawns a sub-agent, a Governance Inheritance Binding is generated and anchored to the ledger before the sub-agent executes. The mandatory constraint hash travels unchanged through the entire hierarchy. Any relaxation breaks it — and any third party can detect it.</p>
+    </div>
+    <div class="pillar p3 reveal">
+      <div class="pillar-num">03 — Enforce</div>
+      <h3>Every action intercepted at the boundary</h3>
+      <p>The Local Enforcement Gate intercepts every tool call, API request, and message before external effects are produced. Deterministic rule-matching — no LLM inference. Violations are blocked in real time and logged as tamper-evident events.</p>
+    </div>
+  </div>
+</div>
+
+<div style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="wrap tight">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+      <div>
+        <div class="s-label">Key Capabilities</div>
+        <h2 class="s-h2" style="margin-bottom:1.5rem;">What OGPP gives you.</h2>
+        <div class="feat-grid" style="grid-template-columns:1fr;">
+          <div class="feat reveal"><div class="feat-icon">🔐</div><div class="feat-title">Governance Drift Detection</div><div class="feat-desc">Any party with ledger access can compare the mandatory constraint hash at any level to the root. Mismatch = drift detected. No internal system access needed.</div></div>
+          <div class="feat reveal"><div class="feat-icon">⚡</div><div class="feat-title">Emergency Policy Updates</div><div class="feat-desc">Push new mandatory constraints to all active agents in real time. Agents that can't be reached enter restricted execution until they acknowledge the update.</div></div>
+          <div class="feat reveal"><div class="feat-icon">📊</div><div class="feat-title">Compliance Attestations</div><div class="feat-desc">Signed, quantified evidence of enforcement for any time window — actions evaluated, violations blocked, LEG uptime. Raw counts, not scores. External parties draw their own conclusions.</div></div>
+        </div>
+      </div>
+      <div class="hierarchy-visual reveal">
+        <div class="hv-title">Governance propagation example</div>
+        <div class="hv-row"><span class="hv-badge">Root Operator</span><span class="hv-label">Signs Governance Constraint Record</span><span class="hv-check">✓ Anchored</span></div>
+        <div class="hv-divider"></div>
+        <div class="hv-row" style="padding-left:1rem"><span class="hv-badge">Agent A</span><span class="hv-label">Spawns Agent B → GIB created</span><span class="hv-check">✓ Anchored</span></div>
+        <div class="hv-divider"></div>
+        <div class="hv-row" style="padding-left:2rem"><span class="hv-badge">Agent B</span><span class="hv-label">Spawns Agent C → GIB created</span><span class="hv-check">✓ Anchored</span></div>
+        <div class="hv-divider"></div>
+        <div class="hv-row" style="padding-left:3rem"><span class="hv-badge">Agent C</span><span class="hv-label">Tries to relax mandatory rule</span><span style="font-size:0.75rem;color:#f472b6;margin-left:auto;">✗ Blocked</span></div>
+        <div style="margin-top:1.25rem;font-size:0.72rem;color:var(--text-dim);text-align:center;">mandatory_constraints_hash mismatch — violation logged to ledger</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="center" style="margin-bottom:2.5rem;">
+    <div class="s-label">Where It Fits</div>
+    <h2 class="s-h2">Layer 03 of the accountability stack.</h2>
+  </div>
+  <div class="stack-row">
+    <div class="sc sc-dim reveal"><div class="sc-l" style="color:#818cf8">Layer 01</div><div class="sc-n">Flash Tag</div><div class="sc-r">Who is the agent.</div></div>
+    <div class="sc sc-dim reveal"><div class="sc-l" style="color:#a78bfa">Layer 02</div><div class="sc-n">Context Recall</div><div class="sc-r">What the agent knew.</div></div>
+    <div class="sc sc-active reveal"><div class="sc-l">Layer 03</div><div class="sc-n">Governance</div><div class="sc-r">What the agent was allowed to do.</div></div>
+    <div class="sc sc-dim reveal"><div class="sc-l" style="color:#34d399">Layer 04</div><div class="sc-n">Trust Scoring</div><div class="sc-r">How trustworthy is its behavior.</div></div>
+    <div class="sc sc-dim reveal"><div class="sc-l" style="color:#2dd4bf">Layer 05</div><div class="sc-n">Commerce</div><div class="sc-r">How transactions are settled.</div></div>
+    <div class="sc sc-dim reveal"><div class="sc-l" style="color:#fbbf24">Layer 06</div><div class="sc-n">Lifecycle Registry</div><div class="sc-r">The complete record from birth to closure.</div></div>
+  </div>
+</div>
+
+<div style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="wrap tight">
+    <div class="center" style="margin-bottom:2rem;"><div class="s-label">Questions</div><h2 class="s-h2">Common questions.</h2></div>
+    <div class="faq-list">
+      <div class="faq-item"><button class="faq-q" onclick="tf(this)">What is governance drift and why does it matter? <span class="faq-chev">▼</span></button><div class="faq-a">Governance drift is the silent relaxation of operator constraints as they pass through AI agent hierarchies. When agents spawn sub-agents at machine speed — no human reviews each delegation. Intermediate agents can narrow or drop mandatory rules with no record. OGPP makes this technically impossible and immediately detectable by anyone with ledger access.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="tf(this)">What does the Local Enforcement Gate actually do? <span class="faq-chev">▼</span></button><div class="faq-a">The LEG intercepts every discrete action proposal — tool calls, API requests, file writes, messages — before external effects are produced. It evaluates each against the agent's constraint set using deterministic rule-matching. No LLM inference. Violations are blocked in real time and permanently logged.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="tf(this)">How can an auditor verify constraint integrity? <span class="faq-chev">▼</span></button><div class="faq-a">Every Governance Inheritance Binding contains a mandatory_constraints_hash that must match the root operator's hash exactly, at any depth. Any party with ledger access can retrieve any GIB and compare hashes. No access to internal systems, no platform cooperation required.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="tf(this)">How do I get access to OGPP? <span class="faq-chev">▼</span></button><div class="faq-a">OGPP is patent pending. Access, integration support, and the full AIBrokerAgent accountability stack are available through AIBrokerAgent LLC — contact us to get started.</div></div>
+    </div>
+  </div>
+</div>
+
+<section id="cta">
+  <div class="cta-card">
+    <div class="cta-glow"></div>
+    <h2>Governance that can't be bypassed.</h2>
+    <p>OGPP is Layer 03 of the AIBrokerAgent accountability stack.</p>
+    <div class="cta-row">
+      <a href="https://ai-broker-agent.com/#access" class="btn-p">Get Access</a>
+      <a href="https://ai-broker-agent.com" class="btn-s">Full Platform →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">Operator Governance Protocol · <a href="https://ai-broker-agent.com">AIBrokerAgent LLC</a> · Patent Pending</div>
+  <div class="footer-links">
+    <a href="https://ai-broker-agent.com/terms.html">Terms</a>
+    <a href="https://ai-broker-agent.com/privacy.html">Privacy</a>
+    <a href="https://ai-broker-agent.com">Platform</a>
+  </div>
+</footer>
+
+<script>
+  const canvas=document.getElementById('hero-canvas'),ctx=canvas.getContext('2d'),chars='▶▷▸▹►ENFORCE✓✗BLOCK0123456789ABCDEF→←'.split('');
+  let cols,drops;
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;cols=Math.floor(canvas.width/20);drops=Array(cols).fill(0).map(()=>Math.random()*-100);}
+  resize();window.addEventListener('resize',resize);
+  function draw(){ctx.fillStyle='rgba(10,10,15,0.05)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.font='13px monospace';for(let i=0;i<drops.length;i++){const c=chars[Math.floor(Math.random()*chars.length)];ctx.fillStyle=`rgba(56,189,248,${Math.random()*0.4+0.08})`;ctx.fillText(c,i*20,drops[i]*20);if(drops[i]*20>canvas.height&&Math.random()>0.975)drops[i]=0;drops[i]+=0.28;}}
+  setInterval(draw,50);
+  const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis');}),{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  function tf(btn){const a=btn.nextElementSibling;const open=a.classList.contains('open');document.querySelectorAll('.faq-a.open').forEach(el=>el.classList.remove('open'));document.querySelectorAll('.faq-q.open').forEach(el=>el.classList.remove('open'));if(!open){a.classList.add('open');btn.classList.add('open');}}
+</script>
+</body>
+</html>

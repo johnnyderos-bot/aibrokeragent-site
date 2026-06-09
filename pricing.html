@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AIbrokerAGEnt packages — closed alpha access to agent trust infrastructure." />
+  <title>AIbrokerAGEnt — Packages &amp; Closed Alpha</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230f1117'/><polygon points='16,4 27,10 27,22 16,28 5,22 5,10' fill='none' stroke='%234f8ef7' stroke-width='2'/><text x='16' y='21' font-family='system-ui,sans-serif' font-size='11' font-weight='700' fill='%234f8ef7' text-anchor='middle'>A</text></svg>" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #08090c;
+      --surface:   #0f1117;
+      --border:    #1c1f27;
+      --accent:    #4f8ef7;
+      --accent-dim:#2a4d8f;
+      --text:      #e4e8f0;
+      --text-dim:  #8891a4;
+      --text-mute: #555e70;
+      --radius:    10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Alpha Banner ── */
+    .alpha-banner {
+      background: rgba(79,142,247,0.08);
+      border-bottom: 1px solid rgba(79,142,247,0.2);
+      text-align: center;
+      padding: 0.55rem 1rem;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    .alpha-banner strong { color: var(--accent); }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+      background: rgba(8, 9, 12, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #fff !important;
+      padding: 0.45rem 1.1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: opacity 0.15s !important;
+    }
+    .nav-cta:hover { opacity: 0.88; }
+
+    /* ── Layout ── */
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+    }
+
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #4f8ef7 0%, #7eb3ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-sub {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      max-width: 540px;
+      margin-bottom: 3.5rem;
+      line-height: 1.7;
+    }
+
+    /* ── Alpha CTA at top ── */
+    .alpha-hero {
+      background: rgba(79,142,247,0.06);
+      border: 1px solid rgba(79,142,247,0.2);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+      flex-wrap: wrap;
+    }
+    .alpha-hero-text { font-size: 0.95rem; color: var(--text-dim); }
+    .alpha-hero-text strong { color: var(--text); display: block; font-size: 1.05rem; margin-bottom: 0.2rem; }
+    .alpha-hero-btn {
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      padding: 0.7rem 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+      flex-shrink: 0;
+    }
+    .alpha-hero-btn:hover { opacity: 0.88; }
+
+    /* ── Package grid ── */
+    .pkg-section { margin-bottom: 4rem; }
+    .pkg-section-header { margin-bottom: 2rem; }
+    .pkg-section-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+    .pkg-section-header p { font-size: 0.9rem; color: var(--text-dim); max-width: 540px; }
+
+    .pkg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .pkg-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s;
+    }
+    .pkg-card:hover { border-color: var(--accent-dim); }
+    .pkg-card.featured {
+      border-color: rgba(79,142,247,0.4);
+      background: rgba(79,142,247,0.04);
+    }
+
+    .pkg-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(79,142,247,0.12);
+      color: var(--accent);
+      border-radius: 4px;
+      padding: 0.2rem 0.55rem;
+      margin-bottom: 1rem;
+    }
+    .pkg-badge.top { background: rgba(79,142,247,0.2); }
+    .pkg-badge.patent { background: rgba(245,158,11,0.12); color: #f59e0b; }
+    .pkg-badge.physics { background: rgba(124,92,252,0.12); color: #7c5cfc; }
+
+    .pkg-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: var(--text);
+    }
+
+    .pkg-desc {
+      font-size: 0.87rem;
+      color: var(--text-dim);
+      line-height: 1.65;
+      flex: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .pkg-price {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+
+    .pkg-includes {
+      list-style: none;
+      margin-bottom: 1.5rem;
+    }
+    .pkg-includes li {
+      font-size: 0.83rem;
+      color: var(--text-dim);
+      padding: 0.3rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+    .pkg-includes li::before {
+      content: "–";
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .pkg-cta {
+      display: block;
+      text-align: center;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 7px;
+      padding: 0.65rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      transition: opacity 0.15s;
+      margin-top: auto;
+    }
+    .pkg-cta:hover { opacity: 0.88; }
+    .pkg-cta.outline {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent-dim);
+    }
+    .pkg-cta.outline:hover { border-color: var(--accent); }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3.5rem 0;
+    }
+
+    /* ── Enterprise section ── */
+    #enterprise { scroll-margin-top: 80px; }
+    .enterprise-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    @media (max-width: 768px) { .enterprise-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
+
+    .enterprise-copy h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .enterprise-copy p {
+      font-size: 0.93rem;
+      color: var(--text-dim);
+      line-height: 1.75;
+      margin-bottom: 0.85rem;
+    }
+    .enterprise-bullets { list-style: none; margin-top: 1rem; }
+    .enterprise-bullets li {
+      font-size: 0.87rem;
+      color: var(--text-dim);
+      padding: 0.4rem 0;
+      display: flex;
+      gap: 0.6rem;
+      align-items: baseline;
+    }
+    .enterprise-bullets li::before { content: "→"; color: var(--accent); flex-shrink: 0; }
+
+    /* ── Lead Capture Form ── */
+    .lead-form-card {
+      background: var(--surface);
+      border: 1px solid rgba(79,142,247,0.25);
+      border-radius: var(--radius);
+      padding: 2rem 2.25rem;
+    }
+    .lead-form-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+    .lead-form-card .form-sub {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-bottom: 1.5rem;
+    }
+
+    .field { margin-bottom: 1rem; }
+    .field label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+      margin-bottom: 0.35rem;
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      background: rgba(8,9,12,0.5);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.65rem 0.9rem;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus { border-color: var(--accent); }
+    .field select { cursor: pointer; }
+    .field textarea { resize: vertical; min-height: 90px; }
+
+    .submit-btn {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: opacity 0.15s;
+    }
+    .submit-btn:hover { opacity: 0.88; }
+
+    .form-note {
+      font-size: 0.77rem;
+      color: var(--text-mute);
+      margin-top: 0.75rem;
+      text-align: center;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-mute);
+      font-size: 0.82rem;
+    }
+    footer a { color: var(--text-mute); text-decoration: none; }
+    footer a:hover { color: var(--text-dim); }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      .page { padding: 3rem 1.25rem 4rem; }
+      .alpha-hero { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Closed Alpha Banner -->
+  <div class="alpha-banner">
+    <strong>Closed Alpha</strong> — Pricing is not public. All tiers require a closed alpha signup.
+  </div>
+
+  <!-- Nav -->
+  <nav>
+    <a href="/" class="nav-logo">AIbroker<span>AGEnt</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Platform</a></li>
+      <li><a href="pricing.html">Packages</a></li>
+      <li><a href="/#who">Who It's For</a></li>
+      <li><a href="/#about">About</a></li>
+      <li><a href="#enterprise" class="nav-cta">Sign up for closed alpha</a></li>
+    </ul>
+  </nav>
+
+  <div class="page">
+
+    <!-- Header -->
+    <div class="section-label">Packages &amp; Access</div>
+    <h1>Sign up for <em>closed alpha</em></h1>
+    <p class="page-sub">
+      Pricing is not public during closed alpha. All tiers require a signup and brief conversation about your use case. We are selective — limited seats, enterprise-focused.
+    </p>
+
+    <div class="alpha-hero">
+      <div class="alpha-hero-text">
+        <strong>Closed alpha is open now.</strong>
+        We are onboarding a small number of enterprise partners before general availability. Closed alpha partners get preferred pricing locked for life.
+      </div>
+      <a href="#enterprise" class="alpha-hero-btn">Sign up for closed alpha access →</a>
+    </div>
+
+    <!-- Complete Package -->
+    <div class="pkg-section">
+      <div class="pkg-section-header">
+        <h2>Complete Package</h2>
+        <p>The full AIbrokerAGEnt trust stack — all protocols, all integrations, enterprise support.</p>
+      </div>
+      <div class="pkg-grid">
+        <div class="pkg-card featured">
+          <div class="pkg-badge top">Most Comprehensive</div>
+          <div class="pkg-name">Complete Trust Stack</div>
+          <p class="pkg-desc">Everything. Flash Tag identity, AATS trust scoring, ALR lifecycle record, ACC chain of custody, Agent Commerce, Governance protocol. Full implementation and enterprise support included.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <ul class="pkg-includes">
+            <li>Flash Tag — cryptographic agent identity</li>
+            <li>AATS — continuous trust scoring</li>
+            <li>ALR — agent lifecycle record</li>
+            <li>ACC — chain of custody</li>
+            <li>Agent Commerce — verified payment</li>
+            <li>Governance protocol</li>
+            <li>Enterprise SLA + dedicated support</li>
+            <li>Custom integration assistance</li>
+          </ul>
+          <a href="#enterprise" class="pkg-cta">Sign up for closed alpha</a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Individual Modules -->
+    <div class="pkg-section">
+      <div class="pkg-section-header">
+        <h2>Individual Modules</h2>
+        <p>Deploy specific accountability layers without the full stack. Each module is independent and standards-based.</p>
+      </div>
+      <div class="pkg-grid">
+        <div class="pkg-card">
+          <div class="pkg-badge">Identity</div>
+          <div class="pkg-name">Flash Tag</div>
+          <p class="pkg-desc">Cryptographic agent identity at spawn. Post-quantum signed, Hedera-anchored. Proves which agent acted, when, and under whose authority.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge">Trust</div>
+          <div class="pkg-name">AATS</div>
+          <p class="pkg-desc">Agent Accountability Trust Score. Continuous behavioral scoring from first deployment. Drift detection, adversarial testing, SOC 2 ready.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge">Lifecycle</div>
+          <div class="pkg-name">ALR</div>
+          <p class="pkg-desc">Agent Lifecycle Record. Birth to decommission — every behavioral state, policy change, and authorization event in one cryptographic record.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge">Commerce</div>
+          <div class="pkg-name">Agent Commerce</div>
+          <p class="pkg-desc">Verified payment tied to verified delivery. Agent-to-agent financial transactions with cryptographic proof of completion.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge">Policy</div>
+          <div class="pkg-name">Governance</div>
+          <p class="pkg-desc">Operator constraints that travel cryptographically with the agent. Inherited at spawn, enforced at runtime, verifiable after the fact.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- A la Carte -->
+    <div class="pkg-section">
+      <div class="pkg-section-header">
+        <h2>À La Carte</h2>
+        <p>Individual protocol modules for teams that want to start with one component and expand.</p>
+      </div>
+      <div class="pkg-grid">
+        <div class="pkg-card">
+          <div class="pkg-badge">Protocol</div>
+          <div class="pkg-name">BSP — Braid Signature Protocol</div>
+          <p class="pkg-desc">Proves the exact sequence and direction of agent-to-agent interactions via mathematical braid topology. Every message in the chain unforgeable.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge">Protocol</div>
+          <div class="pkg-name">ACC — Chain of Custody</div>
+          <p class="pkg-desc">End-to-end cryptographic chain linking identity, context, governance, and commerce into one auditable record. The answer to any SOX or regulatory inquiry.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge">Protocol</div>
+          <div class="pkg-name">CRP — Decision Provenance</div>
+          <p class="pkg-desc">Cryptographic record of what context the agent had at decision time. The signed reasoning environment for every automated action.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge">Protocol</div>
+          <div class="pkg-name">ADCP — Delegation Chain Protocol</div>
+          <p class="pkg-desc">Proves the complete delegation chain from operator to subagent. Every spawning hop is cryptographically signed — no agent can claim authority it was never granted.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge">Protocol</div>
+          <div class="pkg-name">AIIA — Impact Assessment</div>
+          <p class="pkg-desc">Pre-deployment impact gate. Identifies risk profile, constraint gaps, and compliance exposure before any agent goes live. Required gate for high-stakes deployments.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge">Protocol</div>
+          <div class="pkg-name">AICP — Identity Commit Protocol</div>
+          <p class="pkg-desc">Agent-to-agent identity exchange with commitment proof. Ensures both parties in a multi-agent interaction have verifiable, non-repudiable identity at session start.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge">Protocol</div>
+          <div class="pkg-name">ACP — Agent Commerce Protocol</div>
+          <p class="pkg-desc">Base layer for all agent financial transactions. Nonce-protected, double-spend resistant, compatible with USDC/x402. Foundation for the verified payment gate.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge">Protocol</div>
+          <div class="pkg-name">OGPP — On-chain Governance</div>
+          <p class="pkg-desc">Governance policy anchored on-chain and verifiable against any agent's current state. Policy drift between document and runtime becomes detectable and auditable.</p>
+          <div class="pkg-price">Sign up for closed alpha pricing</div>
+          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Physics Layer (.brad) Stack -->
+    <div class="pkg-section">
+      <div class="pkg-section-header">
+        <div class="section-label" style="color:#7c5cfc">Physics Layer — .brad Stack</div>
+        <h2>Dissipative computation as a trust substrate</h2>
+        <p>A new class of trust primitive. Identity, governance, and access control that emerge from physical dynamics — not programmed rules. Hardware-bound, authority-free, holographically distributed. Patent Applications Filed 2026.</p>
+      </div>
+      <div class="pkg-grid">
+        <div class="pkg-card" style="border-color:rgba(124,92,252,0.3);background:rgba(124,92,252,0.03)">
+          <div class="pkg-badge physics">Patent Pending</div>
+          <div class="pkg-name">Physics Layer (.brad)</div>
+          <p class="pkg-desc">The foundation. A coupled oscillator network running on commodity CPU/GPU hardware — no external authorities, no key ceremonies. Trust, identity, and governance emerge from physical dynamics. Hardware soul seeded from silicon entropy. History physically encoded; cannot be fabricated.</p>
+          <div class="pkg-price">Coming soon — contact us</div>
+          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge physics">Patent Pending</div>
+          <div class="pkg-name">DSAP — Document Sovereign Agent</div>
+          <p class="pkg-desc">Agent identity derived from the document it serves via HKDF key chain. The agent is cryptographically inseparable from its content. Fission-on-copy detection prevents unauthorized duplication. Witness log anchored to Hedera HCS.</p>
+          <div class="pkg-price">Coming soon — contact us</div>
+          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge physics">Patent Pending</div>
+          <div class="pkg-name">PEP — Packet Escort Protocol</div>
+          <p class="pkg-desc">Guardian subagents escort data packets in transit. Brad reconstitutes at the destination as proof of uncompromised delivery — four conditions must hold simultaneously. Self-documenting on failure: which condition broke tells you which attack vector was used.</p>
+          <div class="pkg-price">Coming soon — contact us</div>
+          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge physics">Patent Pending</div>
+          <div class="pkg-name">SOC — Self-Organized Criticality</div>
+          <p class="pkg-desc">The physical substrate underlying all trust protocols. Agent networks operate at criticality — the edge between order and chaos where information propagation is maximized and trust signals emerge naturally from interaction dynamics.</p>
+          <div class="pkg-price">Coming soon — contact us</div>
+          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge physics">Patent Pending</div>
+          <div class="pkg-name">ALP — Acquaintance Layer Protocol</div>
+          <p class="pkg-desc">Trust gradient derived from shared co-membership history. Fills the gap upstream of CLPR — two agents that have never interacted directly can establish a trust prior from shared institutional context.</p>
+          <div class="pkg-price">Coming soon — contact us</div>
+          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge physics">Patent Pending</div>
+          <div class="pkg-name">MPR — Memory-Predictive Reduction</div>
+          <p class="pkg-desc">Agent memory as a possibility-space reduction operator. Explains why memory retrieval narrows the decision space — and closes the WHY gap in trust modeling. Connects context recall to behavioral prediction.</p>
+          <div class="pkg-price">Coming soon — contact us</div>
+          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge physics">Patent Pending</div>
+          <div class="pkg-name">TPBP — Temporal Polymorphic Belief</div>
+          <p class="pkg-desc">Dynamic trust attribute vector with dual-mode affective/cognitive state machine. Trust states decay under inactivity and strengthen under consistent interaction — a physics-grounded model of how trust actually evolves over time.</p>
+          <div class="pkg-price">Coming soon — contact us</div>
+          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge physics">Patent Pending</div>
+          <div class="pkg-name">OCP — Orbital Consensus Protocol</div>
+          <p class="pkg-desc">World-based consensus with orbital distance weighting and limbo state for contested facts. Multi-agent agreement that reflects confidence and proximity — not just vote count. Integrates with Curator context provenance.</p>
+          <div class="pkg-price">Coming soon — contact us</div>
+          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
+        </div>
+        <div class="pkg-card">
+          <div class="pkg-badge physics">Patent Pending</div>
+          <div class="pkg-name">MSFP — Memory Signature Filter</div>
+          <p class="pkg-desc">Baleen whale–inspired memory retrieval. Three routing modes with relevance stemming and importance clamping — high catch_rate at low false-positive cost. The retrieval primitive at the bottom of the trust stack.</p>
+          <div class="pkg-price">Coming soon — contact us</div>
+          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Enterprise -->
+    <section id="enterprise">
+      <div class="enterprise-grid">
+        <div class="enterprise-copy">
+          <div class="section-label">Enterprise</div>
+          <h2>Deploy the accountability layer inside your infrastructure</h2>
+          <p>
+            Enterprise pilots are available now under closed alpha. We work with you directly on integration into your existing agent infrastructure, compliance documentation, and custom deployment architecture.
+          </p>
+          <p>
+            Typical enterprise engagement: scoping call → pilot design → 30-day deployment → compliance documentation package.
+          </p>
+          <ul class="enterprise-bullets">
+            <li>Custom integration with your existing agent platform</li>
+            <li>Compliance documentation (SOC 2, SOX, HIPAA, government)</li>
+            <li>Dedicated technical contact during pilot</li>
+            <li>Closed alpha pricing locked for the life of the contract</li>
+            <li>Option to co-develop protocol extensions for your vertical</li>
+          </ul>
+        </div>
+
+        <div class="lead-form-card">
+          <h3>Sign up for closed alpha access</h3>
+          <p class="form-sub">Tell us about your organization and use case. We respond within one business day.</p>
+          <form action="https://formspree.io/f/xykajlrr" method="POST">
+            <div class="field">
+              <label for="f-name">Name</label>
+              <input type="text" id="f-name" name="name" placeholder="Your name" required />
+            </div>
+            <div class="field">
+              <label for="f-company">Company / Organization</label>
+              <input type="text" id="f-company" name="company" placeholder="Where you work" required />
+            </div>
+            <div class="field">
+              <label for="f-tier">Interested in</label>
+              <select id="f-tier" name="tier">
+                <option value="">Select a package...</option>
+                <option value="complete">Complete Trust Stack</option>
+                <option value="flash-tag">Flash Tag (Identity)</option>
+                <option value="aats">AATS (Trust Scoring)</option>
+                <option value="alr">ALR (Lifecycle Record)</option>
+                <option value="commerce">Agent Commerce</option>
+                <option value="governance">Governance</option>
+                <option value="enterprise-pilot">Enterprise Pilot</option>
+                <option value="platform-integration">Platform Integration</option>
+                <option value="open-standards">Open Standards / À La Carte</option>
+                <option value="not-sure">Not sure yet</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-usecase">Use Case</label>
+              <textarea id="f-usecase" name="use_case" placeholder="Describe the agents you are deploying, the compliance or audit requirement you need to satisfy, or the problem you are trying to solve." required></textarea>
+            </div>
+            <div class="field">
+              <label for="f-email">Work Email</label>
+              <input type="email" id="f-email" name="email" placeholder="you@company.com" required />
+            </div>
+            <input type="hidden" name="_subject" value="AIbrokerAGEnt Closed Alpha — Enterprise Inquiry" />
+            <button type="submit" class="submit-btn">Request closed alpha access</button>
+          </form>
+          <p class="form-note">Direct: <a href="mailto:john@ai-broker-agent.com" style="color:var(--accent)">john@ai-broker-agent.com</a></p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 AIbrokerAGEnt LLC — a DerosLabs company &nbsp;·&nbsp; North Carolina, USA</p>
+    <p style="margin-top:0.5rem;"><a href="/terms">Terms of Service</a> &nbsp;·&nbsp; <a href="/privacy">Privacy Policy</a></p>
+  </footer>
+
+</body>
+</html>
