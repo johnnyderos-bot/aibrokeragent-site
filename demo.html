@@ -230,6 +230,13 @@
     .infobox { padding: 1.1rem 1.4rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; font-size: 0.84rem; color: var(--text-muted); line-height: 1.7; margin-top: 1rem; }
     .infobox strong { color: var(--text); }
 
+    /* ALPHA CTA BAR */
+    .alpha-bar { display: flex; align-items: center; justify-content: space-between; background: rgba(79,142,247,0.06); border: 1px solid rgba(79,142,247,0.18); border-radius: 8px; padding: 0.6rem 1rem; margin-bottom: 2rem; gap: 1rem; flex-wrap: wrap; }
+    .alpha-bar-text { font-size: 0.8rem; color: var(--text-muted); }
+    .alpha-bar-text strong { color: var(--accent); }
+    .alpha-bar-btn { background: var(--accent); color: #fff; text-decoration: none; border-radius: 6px; padding: 0.4rem 1rem; font-size: 0.8rem; font-weight: 700; white-space: nowrap; transition: opacity 0.15s; }
+    .alpha-bar-btn:hover { opacity: 0.85; }
+
     @media (max-width: 640px) {
       .page-section { padding: 2.5rem 1.25rem 2rem; }
       .tab-btn { padding: 0 0.6rem; font-size: 0.75rem; }
@@ -249,7 +256,7 @@
       <div class="name">AIbroker<span>AGENT</span></div>
       <div class="sub">A DerosLabs Research Initiative</div>
     </div>
-    <div class="login-quote">"A project in discovering what agent trust looks like"</div>
+    <div class="login-quote">"We can't sell trust, but you can buy accountability."</div>
     <form class="login-form" id="login-form">
       <div>
         <label for="u">Username</label>
@@ -280,17 +287,22 @@
     <button class="tab-btn" onclick="showTab(8)">07 Commerce</button>
     <button class="tab-btn" onclick="showTab(9)">08 Chain of Custody</button>
     <button class="tab-btn" onclick="showTab(10)">09 Future State</button>
+    <a href="/pricing.html" style="display:flex;align-items:center;padding:0 0.85rem;height:50px;font-size:0.79rem;font-weight:700;color:#4f8ef7;text-decoration:none;white-space:nowrap;flex-shrink:0;border-bottom:2px solid #4f8ef7">Closed Alpha →</a>
   </nav>
 
   <!-- TAB 1: ABOUT -->
   <div id="tab-1" class="tab-content active">
     <div class="page-section">
+      <div class="alpha-bar">
+        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — We are accepting a limited number of enterprise partners.</span>
+        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+      </div>
       <div class="section-label">About This Project</div>
       <h1>How this <span class="gradient-text">started</span></h1>
 
       <div class="origin-block">
         <p>In early 2026, I kept running into YouTube videos claiming AI agents were ready for enterprise deployment — autonomous systems managing workflows, executing financial operations, making decisions on behalf of organizations. The claims were bold. The evidence was thin.</p>
-        <p>I'm a data analyst at LRS. I started building something in the evenings to answer one question I couldn't shake: can you actually trust an AI agent to act on behalf of a company — not in the hopeful sense, but in the provable, auditable, compliance-grade sense?</p>
+        <p>I'm an independent researcher and builder. I started building something in the evenings to answer one question I couldn't shake: can you actually trust an AI agent to act on behalf of a company — not in the hopeful sense, but in the provable, auditable, compliance-grade sense?</p>
         <p>Two months later, the answer was more complicated than I expected. This presentation is what I found.</p>
       </div>
 
@@ -301,27 +313,27 @@
       </div>
 
       <div class="path-preview">
-        <div class="path-preview-label">This presentation ends with four paths forward — all designed with LRS's interests in mind</div>
+        <div class="path-preview-label">This presentation ends with the path forward — closed alpha, enterprise partnership, and open standards</div>
         <div class="path-mini-grid">
           <div class="path-mini" onclick="showTab(10)">
-            <div class="path-mini-num">Path 01</div>
-            <div class="path-mini-name">Assign &amp; Dissolve</div>
-            <div class="path-mini-desc">IP transfers to LRS. Structure dissolves.</div>
+            <div class="path-mini-num">Alpha Partner</div>
+            <div class="path-mini-name">Closed Alpha Access</div>
+            <div class="path-mini-desc">Early access to the full trust stack. Shape the roadmap.</div>
           </div>
           <div class="path-mini" onclick="showTab(10)">
-            <div class="path-mini-num">Path 02</div>
-            <div class="path-mini-name">Carve-Out</div>
-            <div class="path-mini-desc">LRS grants carve-out. Work goes Apache 2.0.</div>
+            <div class="path-mini-num">Enterprise</div>
+            <div class="path-mini-name">Pilot Program</div>
+            <div class="path-mini-desc">Deploy the trust layer inside your infrastructure.</div>
           </div>
           <div class="path-mini" onclick="showTab(10)">
-            <div class="path-mini-num">Path 03</div>
-            <div class="path-mini-name">Partnership</div>
-            <div class="path-mini-desc">LRS partners or co-funds an AI R&amp;D lab.</div>
+            <div class="path-mini-num">Integration</div>
+            <div class="path-mini-name">Platform Partnership</div>
+            <div class="path-mini-desc">Embed accountability into your AI agent platform.</div>
           </div>
           <div class="path-mini" onclick="showTab(10)">
-            <div class="path-mini-num">Path 04</div>
-            <div class="path-mini-name">Open Source &amp; Close</div>
-            <div class="path-mini-desc">LRS passes. Research open-sourced, entity dissolved.</div>
+            <div class="path-mini-num">Open Standards</div>
+            <div class="path-mini-name">Protocol Adoption</div>
+            <div class="path-mini-desc">Implement open protocols (AATS, ALR, ACC) in your stack.</div>
           </div>
         </div>
       </div>
@@ -335,6 +347,10 @@
   <!-- TAB 2: THE PROBLEM -->
   <div id="tab-2" class="tab-content">
     <div class="page-section">
+      <div class="alpha-bar">
+        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
+        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+      </div>
       <div class="section-label">01 — The Problem</div>
       <h1>What happens when no one can <span class="gradient-text">trust the agent</span>?</h1>
       <p style="max-width:640px;font-size:1.05rem;margin-top:1rem">Enterprise AI is moving fast. Agents are being deployed in healthcare, finance, and government — making decisions, executing transactions, acting autonomously on behalf of organizations. Nobody is asking the right question loudly enough.</p>
@@ -371,6 +387,10 @@
   <!-- TAB 3: OUR APPROACH -->
   <div id="tab-3" class="tab-content">
     <div class="page-section">
+      <div class="alpha-bar">
+        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
+        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+      </div>
       <div class="section-label">02 — Our Approach</div>
       <h1>A <span class="gradient-text">layered answer</span> to a structural problem</h1>
       <p style="max-width:640px;font-size:1rem;margin-top:1rem">No single solution closes this gap. The research produced five interdependent layers, each addressing a distinct dimension of agent accountability. Think of it as the missing compliance foundation — the infrastructure layer the agent economy doesn't have yet.</p>
@@ -423,6 +443,10 @@
   <!-- TAB 4: IDENTITY -->
   <div id="tab-4" class="tab-content">
     <div class="page-section">
+      <div class="alpha-bar">
+        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
+        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+      </div>
       <div class="section-label">Layer 01 — Identity &amp; Provenance</div>
       <h1>Who is the <span class="gradient-text">agent</span>, exactly?</h1>
       <p style="max-width:640px;font-size:1rem;margin-top:1rem">Before you can audit behavior, enforce governance, or verify a transaction — you have to prove which agent ran a task. Today, you can't. Agent identity is a convention, not a proof.</p>
@@ -482,6 +506,10 @@
   <!-- TAB 5: CONTEXT RECALL -->
   <div id="tab-5" class="tab-content">
     <div class="page-section">
+      <div class="alpha-bar">
+        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
+        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+      </div>
       <div class="section-label purple">Layer 02 — Context Recall</div>
       <h1>What did the agent <span class="grad-purple">know</span> when it decided?</h1>
       <p style="max-width:640px;font-size:1rem;margin-top:1rem">Logging the outcome of a decision is not the same as recording the reasoning environment. Today's agent stacks capture what happened — not what context shaped the decision. That gap matters more than most people realize.</p>
@@ -511,6 +539,10 @@
   <!-- TAB 6: GOVERNANCE -->
   <div id="tab-6" class="tab-content">
     <div class="page-section">
+      <div class="alpha-bar">
+        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
+        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+      </div>
       <div class="section-label amber">Layer 03 — Governance</div>
       <h1>Do the rules <span class="grad-amber">travel with the agent</span>?</h1>
       <p style="max-width:640px;font-size:1rem;margin-top:1rem">Enterprise governance policies are written for humans. When agents spawn other agents, those policies stay at the top of the chain. Subagents operate in a governance vacuum — unless the constraints travel with them cryptographically.</p>
@@ -576,6 +608,10 @@
   <!-- TAB 7: TRUST SCORING -->
   <div id="tab-7" class="tab-content">
     <div class="page-section">
+      <div class="alpha-bar">
+        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
+        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+      </div>
       <div class="section-label green">Layer 04 — Trust Scoring &amp; Lifecycle</div>
       <h1>Is it still the <span class="grad-green">same agent</span> it was Monday?</h1>
       <p style="max-width:640px;font-size:1rem;margin-top:1rem">An agent passes review at 10am Monday. By 2am Thursday it has processed thousands of interactions. LLM behavior drifts. Context accumulates. Prompts evolve. There is no standard mechanism to detect or prove whether the 2am Thursday agent is behaviorally the same one that passed review.</p>
@@ -635,6 +671,10 @@
   <!-- TAB 8: COMMERCE -->
   <div id="tab-8" class="tab-content">
     <div class="page-section">
+      <div class="alpha-bar">
+        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
+        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+      </div>
       <div class="section-label pink">Layer 05 — Commerce</div>
       <h1>Did the work <span class="grad-pink">actually happen</span>?</h1>
       <p style="max-width:640px;font-size:1rem;margin-top:1rem">Agents are beginning to transact — requesting resources, paying for services, executing financial operations on behalf of organizations. Payment today is released on trust. Not on verified delivery. That gap has consequences at enterprise scale.</p>
@@ -664,6 +704,10 @@
   <!-- TAB 9: CHAIN OF CUSTODY -->
   <div id="tab-9" class="tab-content">
     <div class="page-section">
+      <div class="alpha-bar">
+        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
+        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+      </div>
       <div class="section-label">08 — Chain of Custody</div>
       <h1>Where all five layers <span class="gradient-text">connect</span></h1>
       <p style="max-width:680px;font-size:1.05rem;margin-top:1rem">Each layer in this research produces a signed record. The Chain of Custody links them into a single auditable thread — running from the moment an agent is spawned through its final transaction. This is the answer to the compliance question we started with.</p>
@@ -712,51 +756,55 @@
   <!-- TAB 10: FUTURE STATE -->
   <div id="tab-10" class="tab-content">
     <div class="page-section">
-      <div class="section-label">08 — Future State</div>
+      <div class="alpha-bar">
+        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — We are accepting a limited number of enterprise partners.</span>
+        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+      </div>
+      <div class="section-label">09 — Future State</div>
       <h1>Where does <span class="gradient-text">this go</span>?</h1>
 
       <div class="llc-box">
         <h3>About AIbrokerAGEnt LLC</h3>
-        <p>AIbrokerAGEnt LLC is a North Carolina limited liability company formed to provide legal structure for this research. It is not a competing product company. Its purpose is infrastructure — the compliance and standards layer the agent economy does not yet have.</p>
-        <p>All protocols were designed to be open standards. The intent was always that this work should be freely available — not enclosed.</p>
+        <p>AIbrokerAGEnt LLC is a North Carolina limited liability company. Its purpose is infrastructure — the accountability and compliance layer the agent economy does not yet have. The protocols (Flash Tag, AATS, ALR, ACC, BSP) are designed as open standards, available for any platform to implement.</p>
+        <p>The company provides the implementation, integration, and enterprise support layer on top of those open standards.</p>
         <p style="margin-top:0.5rem;font-size:0.8rem;color:var(--text-dim)">Formed: May 14, 2026 · North Carolina SOS · EIN 42-2099378 · Parent: DerosLabs</p>
       </div>
 
       <div style="margin-top:2.5rem">
-        <div class="section-label" style="margin-bottom:0.4rem">Four Paths Forward</div>
-        <p style="font-size:0.88rem;max-width:620px">These are the realistic outcomes being considered. They are presented without preference — each is a valid resolution depending on what LRS determines is in their interest.</p>
+        <div class="section-label" style="margin-bottom:0.4rem">How to Work With Us</div>
+        <p style="font-size:0.88rem;max-width:620px">We are in closed alpha. The following engagement paths are open now. All lead to the same place: agents your organization can be held accountable for.</p>
       </div>
 
       <div class="outcome-grid">
         <div class="outcome-card">
           <div class="outcome-num">Path 01</div>
-          <h3>Assign &amp; Dissolve</h3>
-          <p>The research and IP are assigned to LRS. The corporate structure behind this project is dissolved. LRS gains full ownership and control. DerosLabs and AIbrokerAGEnt wind down.</p>
+          <h3>Closed Alpha Partner</h3>
+          <p>Early access to the full trust stack before general availability. Shape the feature roadmap directly. Preferred pricing locked at alpha rates. Limited seats available.</p>
         </div>
         <div class="outcome-card">
           <div class="outcome-num">Path 02</div>
-          <h3>Carve-Out</h3>
-          <p>LRS decides not to pursue the IP but grants a carve-out for AIbrokerAGEnt to continue independently. The work becomes Apache 2.0 open source. Donations are accepted to cover project costs incurred to date.</p>
+          <h3>Enterprise Pilot</h3>
+          <p>Deploy the AIbrokerAGEnt trust layer inside your existing agent infrastructure. Custom integration, dedicated support, and a compliance-ready audit trail from day one.</p>
         </div>
         <div class="outcome-card">
           <div class="outcome-num">Path 03</div>
-          <h3>Partnership or Lab</h3>
-          <p>LRS sees value in the concepts but prefers the work remain at arm's length. LRS partners with AIbrokerAGEnt — or creates an AI R&amp;D Lab to house this work — and helps fund continued development.</p>
+          <h3>Platform Integration</h3>
+          <p>Embed agent accountability natively into your AI platform or agent framework. OEM or partner licensing available. We provide the protocol implementation; you provide the distribution.</p>
         </div>
         <div class="outcome-card">
           <div class="outcome-num">Path 04</div>
-          <h3>Open Source &amp; Close</h3>
-          <p>LRS says no to any involvement. The research is open-sourced in full. The corporate entity is dissolved. The work becomes a public contribution to the agentic AI standards community with no ongoing commercial structure.</p>
+          <h3>Open Standards Adoption</h3>
+          <p>Implement Flash Tag, AATS, ALR, or ACC as open protocols in your own stack. Community supported, Apache 2.0. We provide reference implementations and interoperability testing.</p>
         </div>
       </div>
 
       <div class="intent-card">
-        <p>This started as a data analyst's evenings project. It grew into something larger than expected. The most important thing — and this is stated plainly, not diplomatically — is that it was never meant to be in conflict with LRS.</p>
-        <p>These four paths exist to make sure it isn't. Whichever outcome LRS determines makes the most sense is the right one. The research follows LRS's lead.</p>
+        <p>This started as one question that no one in the industry could answer honestly: can you prove which agent took an action, that it operated within its authorized constraints, and that you can show an auditor the full record today?</p>
+        <p>The infrastructure that answers that question is what we are building. It is in closed alpha now. If your organization deploys autonomous agents in regulated or high-stakes environments, we built this for you.</p>
       </div>
 
-      <div class="infobox" style="margin-top:2rem">
-        This presentation is confidential and intended for internal review only.
+      <div style="text-align:center;margin-top:2rem">
+        <a href="/pricing.html#enterprise" style="display:inline-block;background:var(--accent);color:#fff;text-decoration:none;border-radius:8px;padding:0.8rem 2rem;font-size:0.95rem;font-weight:700;transition:opacity 0.15s" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Sign up for closed alpha access →</a>
       </div>
     </div>
   </div>
@@ -764,6 +812,11 @@
 </div>
 
 <script>
+// URL gate — demo requires ?access=preview to prevent casual crawling
+if (!location.search.includes('access=preview')) {
+  location.replace('/');
+}
+
 const U_HASH = '49fa8755b042b086f0639b1cde4718910a54255d490f59ca131905d1f2805e36';
 const P_HASH = '51c639064702b7b5a48c18f27d1a21995ae7e4096d58dc350d2248ecf37f0fc4';
 
@@ -788,6 +841,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
     sessionStorage.setItem('demo_auth', '1');
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
+    fetch('/demo-login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }).catch(() => {});
   } else {
     err.textContent = 'Invalid credentials.';
     document.getElementById('p').value = '';

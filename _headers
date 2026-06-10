@@ -1,0 +1,4 @@
+/demo.html
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store, no-cache
+  X-Frame-Options: DENY

@@ -1,0 +1,37 @@
+name            = "aibrokeragent-gateway"
+main            = "gateway.js"
+compatibility_date = "2026-05-21"
+
+# ── Go-live steps ──────────────────────────────────────────────────────────────
+#
+# 1. Create KV namespaces and paste the returned IDs below:
+#       wrangler kv namespace create ROACH_MOTEL
+#       wrangler kv namespace create API_KEYS
+#
+# 2. Set secrets (never stored in this file):
+#       wrangler secret put ORIGIN_URL
+#       wrangler secret put CF_API_TOKEN    # Zone:Firewall:Edit permission
+#       wrangler secret put CF_ZONE_ID
+#       wrangler secret put ALERT_WEBHOOK   # optional — Formspree endpoint for alerts
+#
+# 3. Deploy:
+#       wrangler deploy
+#
+# 4. In Cloudflare dashboard → Workers → aibrokeragent-gateway → Routes:
+#    Add route: api.ai-broker-agent.com/* → this Worker
+#
+# ──────────────────────────────────────────────────────────────────────────────
+
+# [[kv_namespaces]]
+# binding = "ROACH_MOTEL"
+# id      = "YOUR_ROACH_MOTEL_KV_ID"
+
+# [[kv_namespaces]]
+# binding = "API_KEYS"
+# id      = "YOUR_API_KEYS_KV_ID"
+
+[dev]
+port = 8787
+
+# Local dev: create a .dev.vars file (git-ignored) with:
+#   ORIGIN_URL=http://localhost:3000
