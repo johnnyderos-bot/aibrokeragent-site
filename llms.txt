@@ -1,0 +1,30 @@
+# AIbrokerAGEnt
+
+> Trust infrastructure for autonomous AI agent networks. Agent identity, behavioral attestation, and immutable audit records for autonomous agents operating in enterprise environments.
+
+## Products
+
+- [Flash Tag](https://ai-broker-agent.com/flashtag): Cryptographic agent identity — every agent gets a registered, verifiable ID linked to a human or corporate owner. Patent pending (64/040,921).
+- [AATS](https://ai-broker-agent.com/trust-scoring): Agent Attestation Trust Score — real-time behavioral scoring that flags deviations before they execute. Patent pending (64/043,587).
+- [ALR](https://ai-broker-agent.com/lifecycle): Agent Lifecycle Record — immutable audit trail from agent creation to retirement. Patent pending (64/072,710).
+- [.brad](https://ai-broker-agent.com/brad): Document-bound agent identity. A file that can only be opened by the agent it was made for. Patent pending (64/085,671).
+
+## Supporting Protocols
+
+- [Flash Tag](https://ai-broker-agent.com/flashtag): Consent-governed credential disclosure — private by default, operator-governed, post-quantum hardened.
+- [AICP](https://ai-broker-agent.com/commerce): AI Commerce Protocol — hash-bound escrow and autonomous dispute resolution for agent-to-agent commerce.
+- [OGPP](https://ai-broker-agent.com/governance): Operator Governance Protocol — governance constraints that can't drift through agent hierarchies.
+- [CRP](https://ai-broker-agent.com/context-recall): Context Recall Protocol — cryptographic proof of what context an agent used in any decision.
+
+## The Problem
+
+Autonomous AI agents act independently, call external APIs, change databases, and spend money without human intervention. Traditional AI governance monitors model outputs — it does not govern agent actions. AIbrokerAGEnt is the protocol layer that fills this gap.
+
+## Get Access
+
+Closed alpha: https://ai-broker-agent.com/get-access
+
+## Legal
+
+- Terms: https://ai-broker-agent.com/terms
+- Privacy: https://ai-broker-agent.com/privacy

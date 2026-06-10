@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#08090c"/>
+
+  <!-- Hex polygon accent — top right, echoing the favicon -->
+  <polygon points="1150,30 1195,55 1195,105 1150,130 1105,105 1105,55"
+           fill="none" stroke="#4f8ef7" stroke-width="2" opacity="0.25"/>
+  <polygon points="1115,52 1150,72 1150,112 1115,132 1080,112 1080,72"
+           fill="none" stroke="#4f8ef7" stroke-width="1" opacity="0.12"/>
+
+  <!-- Left vertical accent bar -->
+  <rect x="112" y="195" width="4" height="230" fill="#4f8ef7" opacity="0.45" rx="2"/>
+
+  <!-- Wordmark: AIbroker (white) -->
+  <text x="148" y="325"
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="104" font-weight="800" fill="#e4e8f0"
+        letter-spacing="-3">AIbroker</text>
+
+  <!-- Wordmark: AGEnt (blue) -->
+  <text x="148" y="440"
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="104" font-weight="800" fill="#4f8ef7"
+        letter-spacing="-3">AGEnt</text>
+
+  <!-- Tagline -->
+  <text x="148" y="508"
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="26" font-weight="400" fill="#8892a4">
+    We can&#39;t sell trust, but you can buy accountability.
+  </text>
+
+  <!-- Domain — bottom right -->
+  <text x="1075" y="594"
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="19" font-weight="500" fill="#4a5568"
+        text-anchor="end">ai-broker-agent.com</text>
+</svg>
