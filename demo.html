@@ -906,7 +906,15 @@
 
       <div id="dsap-demo" style="margin-top:2rem">
 
-        <div id="dsap-creation" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;max-width:500px">
+        <!-- Start button (entry point) -->
+        <div id="dsap-intro" style="text-align:center;padding:3rem 2rem;border:1px solid var(--border);border-radius:16px;background:var(--surface)">
+          <div style="font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--pink);margin-bottom:1rem">Live Demo</div>
+          <div style="font-size:1.45rem;font-weight:700;color:var(--text);margin-bottom:0.65rem">Create a .brad Document</div>
+          <div style="font-size:0.92rem;color:var(--text-muted);max-width:440px;margin:0 auto 1.75rem;line-height:1.7">Set a retention period, then follow the guardian as it enforces access, detects tampering, and manages the full lifecycle.</div>
+          <button onclick="dsapShowCreation()" style="background:var(--pink);color:#fff;border:none;border-radius:10px;padding:0.85rem 2rem;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit">Create a .brad Document →</button>
+        </div>
+
+        <div id="dsap-creation" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;max-width:500px">
           <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--pink);margin-bottom:1.1rem">Document Creation — Set Retention Policy</div>
           <div style="margin-bottom:1rem">
             <label style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:0.3rem">Retention Period</label>
@@ -1161,11 +1169,11 @@ function dsapRetentionChange() {
   document.getElementById('dsap-expiry-preview').textContent = 'Expires: ' + dsapFormatExpiry(days);
 }
 
-// trigger initial preview
-window.addEventListener('DOMContentLoaded', function() {
-  const ep = document.getElementById('dsap-expiry-preview');
-  if (ep) ep.textContent = 'Expires: ' + dsapFormatExpiry(90);
-});
+function dsapShowCreation() {
+  document.getElementById('dsap-intro').style.display = 'none';
+  document.getElementById('dsap-creation').style.display = 'block';
+  dsapRetentionChange();
+}
 
 function dsapCreate() {
   const days = dsapDaysFromPreset();
@@ -1562,8 +1570,8 @@ function dsapReset() {
   const sb = document.getElementById('dsap-stage-bar'); if (sb) sb.innerHTML = '';
   hashStr(DSAP_DOC).then(h => { dsapCurrHash = h; document.getElementById('dsap-hash-display').textContent = h; dsapSetBadge('active'); });
   document.getElementById('dsap-main').style.display = 'none';
-  document.getElementById('dsap-creation').style.display = 'block';
-  dsapRetentionChange();
+  document.getElementById('dsap-creation').style.display = 'none';
+  document.getElementById('dsap-intro').style.display = 'block';
 }
 </script>
 </body>

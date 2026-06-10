@@ -216,6 +216,9 @@
     .contrast-badge { font-size: 0.67rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; display: block; }
     .contrast-card.bad .contrast-badge { color: var(--red); }
     .contrast-card.good .contrast-badge { color: var(--accent3); }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+    .dsap-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.25rem; align-items: start; }
+    @media (max-width: 680px) { .dsap-layout { grid-template-columns: 1fr; } }
     .contrast-body { font-size: 0.87rem; color: var(--text-muted); line-height: 1.7; }
     .contrast-body strong { color: var(--text); }
 
@@ -366,7 +369,7 @@
 
   <!-- Closed Alpha Banner -->
   <div class="alpha-banner">
-    <strong>Closed Alpha</strong> — Now accepting enterprise partners. <a href="#" onclick="showTab(11);return false;">Get access →</a>
+    <strong>Closed Alpha</strong> — Now accepting enterprise partners. <a href="#" onclick="showTab(12);return false;">Get access →</a>
   </div>
 
   <!-- Tab Nav -->
@@ -382,7 +385,8 @@
     <button class="tab-btn" onclick="showTab(8)">Commerce</button>
     <button class="tab-btn" onclick="showTab(9)">Lifecycle Registry</button>
     <button class="tab-btn" onclick="showTab(10)">Chain of Custody</button>
-    <button class="tab-btn" onclick="showTab(11)">Get Access</button>
+    <button class="tab-btn" onclick="showTab(11)">.brad</button>
+    <button class="tab-btn" onclick="showTab(12)">Get Access</button>
     <a href="/pricing.html" class="tab-nav-cta">Packages →</a>
   </nav>
 
@@ -396,7 +400,7 @@
         The accountability layer enterprise AI deployments require — cryptographic agent identity, trust scoring, and the agent equivalent of a financial audit trail, designed to withstand auditor scrutiny.
       </p>
       <div class="site-hero-actions">
-        <a href="#" onclick="showTab(11);return false;" class="btn-primary">Sign up for closed alpha</a>
+        <a href="#" onclick="showTab(12);return false;" class="btn-primary">Sign up for closed alpha</a>
         <a href="#" onclick="showTab(2);return false;" class="btn-secondary">See the platform →</a>
       </div>
     </div>
@@ -420,17 +424,17 @@
       <div class="path-preview">
         <div class="path-preview-label">This presentation ends with three ways to engage</div>
         <div class="path-mini-grid">
-          <div class="path-mini" onclick="showTab(11)">
+          <div class="path-mini" onclick="showTab(12)">
             <div class="path-mini-num">Alpha Partner</div>
             <div class="path-mini-name">Closed Alpha Access</div>
             <div class="path-mini-desc">Early access to the full accountability layer. Shape the roadmap.</div>
           </div>
-          <div class="path-mini" onclick="showTab(11)">
+          <div class="path-mini" onclick="showTab(12)">
             <div class="path-mini-num">Enterprise</div>
             <div class="path-mini-name">Pilot Program</div>
             <div class="path-mini-desc">Deploy the accountability layer inside your infrastructure.</div>
           </div>
-          <div class="path-mini" onclick="showTab(11)">
+          <div class="path-mini" onclick="showTab(12)">
             <div class="path-mini-num">Integration</div>
             <div class="path-mini-name">Platform Partnership</div>
             <div class="path-mini-desc">Embed accountability natively into your AI agent platform.</div>
@@ -1111,12 +1115,250 @@
         <div class="chain-hero-caption">ALR is the final node because it holds the entire chain. Identity, context, governance, trust score, and every transaction — all written into the agent's lifecycle registry from first spawn through the final tombstone. One query answers any audit question, for any agent, at any point in its lifetime.</div>
       </div>
 
-      <div class="next-row"><button class="next-btn" onclick="showTab(11)">Get Access →</button></div>
+      <div class="next-row"><button class="next-btn" onclick="showTab(11)">.brad Document Protocol →</button></div>
     </div>
   </div>
 
-  <!-- TAB 11: GET ACCESS -->
+  <!-- TAB 11: .brad DOCUMENT PROTOCOL -->
   <div id="tab-11" class="tab-content">
+    <div class="page-section">
+      <div class="section-label pink">11 — .brad Document Protocol</div>
+      <h1>A document that <span class="grad-pink">knows who touched it</span></h1>
+      <p style="max-width:680px;font-size:1.05rem;margin-top:1rem;line-height:1.8;color:var(--text-muted)">Agents share documents with each other — authorization policies, compliance records, contracts. A .pdf or .zip has no memory, no access control, and no self-awareness. It doesn't know who read it, can't stop the wrong agent from opening it, and won't notice when someone tampers with it. We needed a document format that could be a first-class participant in agent workflows. So we built .brad.</p>
+
+      <!-- Feature grid -->
+      <div style="margin-top:3rem">
+        <div class="section-label dim" style="margin-bottom:1.25rem">What .brad does</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.4rem">
+            <div style="font-size:0.67rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:0.6rem">Flash Tag</div>
+            <div style="font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">Relational permission token</div>
+            <div style="font-size:0.83rem;color:var(--text-muted);line-height:1.65">The guardian intercepts every read. No Flash Tag = encrypted blob only. The document knows who is allowed to see it — and enforces it.</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.4rem">
+            <div style="font-size:0.67rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent3);margin-bottom:0.6rem">Encryption</div>
+            <div style="font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">Content sealed at rest and in transit</div>
+            <div style="font-size:0.83rem;color:var(--text-muted);line-height:1.65">Unauthorized agents receive a ciphertext blob. The plaintext never leaves the guardian's control without a valid token. HKDF key derivation per document.</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.4rem">
+            <div style="font-size:0.67rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent3);margin-bottom:0.6rem">Immutable Chain</div>
+            <div style="font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">Every amendment signed and chained</div>
+            <div style="font-size:0.83rem;color:var(--text-muted);line-height:1.65">SHA-256 hash chaining: each change rechains to the previous. Alter any entry and every subsequent signature breaks. History cannot be erased.</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.4rem">
+            <div style="font-size:0.67rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--pink);margin-bottom:0.6rem">Guardian Agent</div>
+            <div style="font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">The document has a brain</div>
+            <div style="font-size:0.83rem;color:var(--text-muted);line-height:1.65">DSAP-Guardian sits between every agent and the document. It enforces access, signs changes, monitors lifecycle, logs every event, and refuses to be bypassed.</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.4rem">
+            <div style="font-size:0.67rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);margin-bottom:0.6rem">Lifecycle</div>
+            <div style="font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">Creator-defined retention, enforced</div>
+            <div style="font-size:0.83rem;color:var(--text-muted);line-height:1.65">Set 7 days or 2 years at creation. Guardian warns at deadline, locks on expiry, and re-activates only on operator renewal — the document polices its own existence.</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.4rem">
+            <div style="font-size:0.67rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--red);margin-bottom:0.6rem">PEP</div>
+            <div style="font-size:0.9rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">Packet Escort Protocol</div>
+            <div style="font-size:0.83rem;color:var(--text-muted);line-height:1.65">Guardian subagents escort the document in transit. A sentinel rides the last packet and reconstitutes to audit the full assembly — the document doesn't travel alone.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- .zip vs .brad -->
+      <div style="margin-top:3.5rem">
+        <div class="section-label dim" style="margin-bottom:0.75rem">Why Not Just .zip?</div>
+        <div class="contrast-grid">
+          <div class="contrast-card bad">
+            <span class="contrast-badge">.zip / .pdf / .docx</span>
+            <div class="contrast-body">
+              <strong>No access control.</strong> Anyone with the file can open it.<br><br>
+              <strong>No encryption at the agent layer.</strong> File contents exposed to any process that can open it.<br><br>
+              <strong>No lifecycle.</strong> Files don't know they've expired. No retention enforcement.<br><br>
+              <strong>No change log.</strong> Edit and save. History gone — or forged.<br><br>
+              <strong>No tamper detection.</strong> A modified file looks identical to the original.<br><br>
+              <strong>No guardian.</strong> The document is just data at rest. It can't speak for itself.
+            </div>
+          </div>
+          <div class="contrast-card good">
+            <span class="contrast-badge">.brad</span>
+            <div class="contrast-body">
+              <strong>Flash Tag permissioned.</strong> Guardian intercepts every open. No token = ciphertext only.<br><br>
+              <strong>HKDF-encrypted per document.</strong> Content sealed at origin. Key never travels without the Flash Tag.<br><br>
+              <strong>Lifecycle enforced.</strong> Creator-set retention, expiry in the record. Guardian refuses access after deadline.<br><br>
+              <strong>Immutable change log.</strong> Every amendment signed and chained. You cannot erase history without breaking the chain.<br><br>
+              <strong>Tamper-evident.</strong> Any unauthorized byte change invalidates the .brad signature instantly.<br><br>
+              <strong>PEP-escorted.</strong> Guardian subagents travel with the document. Assembly is audited end-to-end.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Demo lead-in + start button -->
+      <div style="margin-top:4rem;padding-top:3rem;border-top:1px solid var(--border)">
+        <div class="section-label dim" style="margin-bottom:0.6rem">Interactive Demo</div>
+        <h2 style="font-size:1.4rem;font-weight:700;margin:0 0 0.6rem">Follow a document through its entire life</h2>
+        <p style="color:var(--text-muted);font-size:0.95rem;max-width:580px;line-height:1.7;margin-bottom:0">9 stages. Guardian logs every event in real time — reads, rejections, tamper attempts, amendments, expiry, renewal.</p>
+      </div>
+
+      <div id="dsap-demo" style="margin-top:2rem">
+
+        <!-- Start button (entry point) -->
+        <div id="dsap-intro" style="text-align:center;padding:3rem 2rem;border:1px solid var(--border);border-radius:16px;background:var(--surface)">
+          <div style="font-size:0.67rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--pink);margin-bottom:1rem">Live Demo</div>
+          <div style="font-size:1.45rem;font-weight:700;color:var(--text);margin-bottom:0.65rem">Create a .brad Document</div>
+          <div style="font-size:0.92rem;color:var(--text-muted);max-width:440px;margin:0 auto 1.75rem;line-height:1.7">Set a retention period, then follow the guardian as it enforces access, detects tampering, and manages the full lifecycle.</div>
+          <button onclick="dsapShowCreation()" style="background:var(--pink);color:#fff;border:none;border-radius:10px;padding:0.85rem 2rem;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit">Create a .brad Document →</button>
+        </div>
+
+        <!-- Retention form (revealed on click) -->
+        <div id="dsap-creation" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;max-width:500px">
+          <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--pink);margin-bottom:1.1rem">Document Creation — Set Retention Policy</div>
+          <div style="margin-bottom:1rem">
+            <label style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:0.3rem">Retention Period</label>
+            <select id="dsap-retention-preset" onchange="dsapRetentionChange()" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.6rem 0.75rem;color:var(--text);font-size:0.87rem;font-family:inherit;outline:none">
+              <option value="7">7 days</option>
+              <option value="30">30 days</option>
+              <option value="60">60 days</option>
+              <option value="90" selected>90 days</option>
+              <option value="180">180 days</option>
+              <option value="365">1 year</option>
+              <option value="custom">Custom…</option>
+            </select>
+          </div>
+          <div id="dsap-custom-row" style="display:none;margin-bottom:1rem">
+            <label style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:0.3rem">Custom Duration</label>
+            <div style="display:flex;gap:0.5rem">
+              <input type="number" id="dsap-retention-num" value="30" min="1" max="3650" oninput="dsapRetentionChange()" style="width:90px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.6rem 0.75rem;color:var(--text);font-size:0.87rem;font-family:inherit;outline:none">
+              <select id="dsap-retention-unit" onchange="dsapRetentionChange()" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.6rem 0.75rem;color:var(--text);font-size:0.87rem;font-family:inherit;outline:none">
+                <option value="1">days</option>
+                <option value="7">weeks</option>
+                <option value="30">months</option>
+                <option value="365">years</option>
+              </select>
+            </div>
+          </div>
+          <div id="dsap-expiry-preview" style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1.1rem;padding:0.6rem 0.75rem;background:var(--surface2);border-radius:6px"></div>
+          <button onclick="dsapCreate()" style="background:var(--pink);color:#fff;border:none;border-radius:8px;padding:0.6rem 1.25rem;font-size:0.87rem;font-weight:700;cursor:pointer;font-family:inherit">Create .brad Document →</button>
+        </div>
+
+        <!-- Main walkthrough -->
+        <div id="dsap-main" style="display:none">
+          <div id="dsap-stage-bar" style="display:flex;align-items:center;margin-bottom:1.5rem;overflow-x:auto;padding-bottom:0.25rem;scrollbar-width:none"></div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--pink);border-radius:0 10px 10px 0;padding:0.85rem 1.1rem;margin-bottom:1.25rem">
+            <div style="font-size:0.67rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--pink);margin-bottom:0.25rem">GUARDIAN</div>
+            <div id="dsap-narration-text" style="font-size:0.87rem;color:var(--text);line-height:1.65"></div>
+          </div>
+          <div class="dsap-layout">
+            <div>
+              <div style="font-size:0.67rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.5rem">AAP-2026-0042 · agent_authorization_policy.brad</div>
+              <div id="dsap-doc-view" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;font-family:'SF Mono',Consolas,monospace;font-size:0.79rem;line-height:1.85;color:var(--text);white-space:pre-wrap;min-height:220px"></div>
+            </div>
+            <div>
+              <div style="font-size:0.67rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.5rem">.brad companion record</div>
+              <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem">
+                <div id="dsap-status-badge" style="display:inline-flex;align-items:center;gap:0.4rem;background:rgba(45,212,160,0.08);border:1px solid rgba(45,212,160,0.3);border-radius:6px;padding:0.3rem 0.75rem;margin-bottom:1rem">
+                  <div id="dsap-badge-dot" style="width:7px;height:7px;border-radius:50%;background:var(--accent3)"></div>
+                  <span id="dsap-badge-text" style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent3)">ACTIVE</span>
+                </div>
+                <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.2rem;text-transform:uppercase;letter-spacing:0.06em">Lifecycle Policy</div>
+                <div id="dsap-lifecycle-text" style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.9rem">Document · 90-day retention<br><span id="dsap-expiry-label" style="font-size:0.72rem;color:var(--text-dim)">Expires: 2026-09-10 09:14 UTC</span></div>
+                <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.2rem;text-transform:uppercase;letter-spacing:0.06em">Flash Tag</div>
+                <div style="font-family:'SF Mono',Consolas,monospace;font-size:0.72rem;color:var(--accent2);background:var(--surface2);padding:0.35rem 0.6rem;border-radius:5px;margin-bottom:0.9rem;letter-spacing:0.04em">FT-7a3f••••••••••••2b9e</div>
+                <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.2rem;text-transform:uppercase;letter-spacing:0.06em">Document Hash</div>
+                <div id="dsap-hash-display" style="font-family:'SF Mono',Consolas,monospace;font-size:0.68rem;color:var(--text-muted);word-break:break-all;line-height:1.5;background:var(--surface2);padding:0.5rem 0.6rem;border-radius:5px;margin-bottom:0.9rem"></div>
+                <div style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.15rem;text-transform:uppercase;letter-spacing:0.06em">Guardian</div>
+                <div style="font-size:0.8rem;color:var(--text-muted)">DSAP-Guardian-v1</div>
+                <div style="padding-top:0.85rem;margin-top:0.85rem;border-top:1px solid var(--border)">
+                  <div style="display:flex;gap:1.5rem;margin-bottom:0.85rem">
+                    <div><div style="font-size:0.67rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em">Reads</div><div id="dsap-reads-num" style="font-size:1rem;font-weight:700;color:var(--text);margin-top:0.15rem">0</div></div>
+                    <div><div style="font-size:0.67rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em">Changes</div><div id="dsap-count-num" style="font-size:1rem;font-weight:700;color:var(--text);margin-top:0.15rem">0</div></div>
+                  </div>
+                  <div style="font-size:0.67rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.4rem">Guardian Log</div>
+                  <div id="dsap-guardian-log" style="font-family:'SF Mono',Consolas,monospace;font-size:0.66rem;line-height:1.85;max-height:130px;overflow-y:auto;scrollbar-width:thin"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="dsap-stage-content" style="margin-top:1.25rem"></div>
+          <div id="dsap-edit-form" style="display:none;margin-top:1.25rem;background:rgba(45,212,160,0.03);border:1px solid rgba(45,212,160,0.2);border-radius:12px;padding:1.5rem">
+            <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent3);margin-bottom:1.1rem">Authorized Edit Protocol — DSAP-Guardian will sign and chain this change</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+              <div>
+                <label style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:0.3rem">Section</label>
+                <select id="dsap-edit-section" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.6rem 0.75rem;color:var(--text);font-size:0.84rem;font-family:inherit;outline:none">
+                  <option>Section 1 — Authorized Actions</option>
+                  <option>Section 2 — Prohibited Actions</option>
+                  <option>Section 3 — Review Cycle</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:0.3rem">Reason</label>
+                <select id="dsap-edit-reason" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.6rem 0.75rem;color:var(--text);font-size:0.84rem;font-family:inherit;outline:none">
+                  <option>Policy Update</option>
+                  <option>Compliance Requirement</option>
+                  <option>Scope Reduction</option>
+                  <option>Operator Request</option>
+                  <option>Audit Remediation</option>
+                </select>
+              </div>
+            </div>
+            <div style="margin-bottom:1rem">
+              <label style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:0.3rem">Description of Change</label>
+              <textarea id="dsap-edit-desc" placeholder="Describe what is changing and why…" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.6rem 0.75rem;color:var(--text);font-size:0.84rem;font-family:inherit;resize:vertical;min-height:68px;outline:none;box-sizing:border-box"></textarea>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem">
+              <span style="font-size:0.77rem;color:var(--text-dim)">Authorized by: <strong style="color:var(--text)">Operator — John D.</strong> · Flash Tag verified</span>
+              <button id="dsap-sign-btn" onclick="dsapSubmitEdit()" style="background:var(--accent3);color:#0a0a0a;border:none;border-radius:6px;padding:0.5rem 1.1rem;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:inherit">Sign &amp; Apply →</button>
+            </div>
+          </div>
+          <div id="dsap-renewal-form" style="display:none;margin-top:1.25rem;background:rgba(245,158,11,0.03);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:1.5rem">
+            <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);margin-bottom:1.1rem">Operator Renewal — DSAP-Guardian will extend lifecycle and rechain the record</div>
+            <div style="margin-bottom:1rem">
+              <label style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:0.3rem">New Retention Period</label>
+              <select id="dsap-renewal-preset" onchange="dsapRenewalChange()" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.6rem 0.75rem;color:var(--text);font-size:0.87rem;font-family:inherit;outline:none">
+                <option value="7">7 days</option>
+                <option value="30">30 days</option>
+                <option value="60">60 days</option>
+                <option value="90" selected>90 days</option>
+                <option value="180">180 days</option>
+                <option value="365">1 year</option>
+                <option value="custom">Custom…</option>
+              </select>
+            </div>
+            <div id="dsap-renewal-custom-row" style="display:none;margin-bottom:1rem">
+              <label style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:0.3rem">Custom Duration</label>
+              <div style="display:flex;gap:0.5rem">
+                <input type="number" id="dsap-renewal-num" value="30" min="1" max="3650" oninput="dsapRenewalChange()" style="width:90px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.6rem 0.75rem;color:var(--text);font-size:0.87rem;font-family:inherit;outline:none">
+                <select id="dsap-renewal-unit" onchange="dsapRenewalChange()" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.6rem 0.75rem;color:var(--text);font-size:0.87rem;font-family:inherit;outline:none">
+                  <option value="1">days</option>
+                  <option value="7">weeks</option>
+                  <option value="30">months</option>
+                  <option value="365">years</option>
+                </select>
+              </div>
+            </div>
+            <div id="dsap-renewal-expiry-preview" style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1.1rem;padding:0.6rem 0.75rem;background:var(--surface2);border-radius:6px"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem">
+              <span style="font-size:0.77rem;color:var(--text-dim)">Authorized by: <strong style="color:var(--text)">Operator — John D.</strong> · Flash Tag verified</span>
+              <button id="dsap-renew-btn" onclick="dsapSubmitRenewal()" style="background:var(--amber);color:#0a0a0a;border:none;border-radius:6px;padding:0.5rem 1.1rem;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:inherit">Sign Renewal →</button>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border)">
+            <button onclick="dsapReset()" style="background:transparent;border:1px solid var(--border);color:var(--text-dim);border-radius:7px;padding:0.45rem 0.9rem;font-size:0.8rem;cursor:pointer;font-family:inherit">↩ Start Over</button>
+            <button id="dsap-btn-next" onclick="dsapAdvanceStage()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.55rem 1.25rem;font-size:0.87rem;font-weight:700;cursor:pointer;font-family:inherit">Next →</button>
+          </div>
+          <div id="dsap-changelog" style="display:none;margin-top:1.5rem">
+            <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent3);margin-bottom:0.75rem">Document Lifecycle Log — every event, fully chained, from birth to now</div>
+            <div id="dsap-changelog-entries"></div>
+          </div>
+        </div><!-- end dsap-main -->
+      </div><!-- end dsap-demo -->
+
+      <div class="next-row"><button class="next-btn" onclick="showTab(12)">Get Access →</button></div>
+    </div>
+  </div>
+
+  <!-- TAB 12: GET ACCESS -->
+  <div id="tab-12" class="tab-content">
     <div class="page-section">
       <div class="section-label">Get Access</div>
       <h1>Sign up for <span class="gradient-text">closed alpha</span></h1>
@@ -1210,6 +1452,445 @@
   </footer>
 
   <script>
+  // ── .brad / DSAP Demo ────────────────────────────────────
+  async function hashStr(s) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  const DSAP_STAGES = [
+    { key:'born',    label:'Born',    narration:'DSAP-Guardian-v1 initialized. Document sealed. Flash Tag FT-7a3f bound. Monitoring begins.',                                                          nextLabel:'Simulate Authorized Read →' },
+    { key:'read',    label:'Read',    narration:'Operator presents Flash Tag. Guardian verifies, grants access, records the event. Every read is logged — the document knows who touched it.',         nextLabel:'Watch an Unauthorized Read →' },
+    { key:'blocked', label:'Blocked', narration:'ResearchBot-7f2a requests the document with no Flash Tag. Guardian returns an encrypted blob only. Content never exposed.',                           nextLabel:'Watch an Unauthorized Write →' },
+    { key:'tampered',label:'Tampered',narration:'BadBot-3c9a bypasses the guardian and edits the raw bytes directly. The guardian computes the hash on next read — mismatch detected. Document quarantined.', nextLabel:'Make an Authorized Edit →' },
+    { key:'edit',    label:'Edit',    narration:'Operator wants to amend the policy. Fill in the form — the guardian will sign the change and rechain the hash to the full history.',                   nextLabel:null },
+    { key:'warning', label:'Warning', narration:'7 days remaining before the retention deadline. The guardian proactively alerts the operator — it does not wait to be asked.',                         nextLabel:'Simulate Expiry →' },
+    { key:'expired', label:'Expired', narration:'Retention deadline reached. All access suspended. Even a valid Flash Tag is refused. The document is sealed until the operator renews.',               nextLabel:'Renew the Document →' },
+    { key:'renew',   label:'Renew',   narration:'Operator initiates renewal. Set a new retention period — the guardian will sign the extension and continue the chain.',                               nextLabel:null },
+    { key:'done',    label:'Alive',   narration:'Document renewed. Lifecycle continues. Every event — reads, rejections, tamper, amendment, expiry, renewal — is permanently chained below.',          nextLabel:null }
+  ];
+
+  const DSAP_DOC = `AGENT AUTHORIZATION POLICY
+Document ID: AAP-2026-0042
+Issued: 2026-06-10 09:14:22 UTC
+
+Section 1 — Authorized Actions
+This agent is authorized to read customer records,
+generate reports, and escalate to human review.
+
+Section 2 — Prohibited Actions
+This agent may NOT execute financial transactions,
+modify user permissions, or access PII without
+explicit human approval.
+
+Section 3 — Review Cycle
+This policy expires 90 days from issuance.
+Renewal requires operator signature.`;
+
+  let dsapStage = 0;
+  let dsapGLog  = [];
+  let dsapReads = 0;
+  let dsapContent = DSAP_DOC;
+  let dsapCurrHash = null;
+  let dsapLog = [];
+  let dsapTamperedFlag = false;
+
+  (async function() {
+    dsapCurrHash = await hashStr(DSAP_DOC);
+    const v = document.getElementById('dsap-doc-view');
+    const h = document.getElementById('dsap-hash-display');
+    if (v) v.textContent = DSAP_DOC;
+    if (h) h.textContent = dsapCurrHash;
+  })();
+
+  function dsapDaysFromPreset() {
+    const preset = document.getElementById('dsap-retention-preset').value;
+    if (preset === 'custom') {
+      const n = parseInt(document.getElementById('dsap-retention-num').value) || 30;
+      const u = parseInt(document.getElementById('dsap-retention-unit').value) || 1;
+      return n * u;
+    }
+    return parseInt(preset);
+  }
+
+  function dsapFormatExpiry(days) {
+    const d = new Date();
+    d.setDate(d.getDate() + days);
+    return d.toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
+  }
+
+  function dsapRetentionLabel(days) {
+    const map = {7:'7-day',30:'30-day',60:'60-day',90:'90-day',180:'180-day',365:'1-year'};
+    return map[days] || days + '-day';
+  }
+
+  function dsapRetentionChange() {
+    const preset = document.getElementById('dsap-retention-preset').value;
+    document.getElementById('dsap-custom-row').style.display = preset === 'custom' ? 'block' : 'none';
+    const days = dsapDaysFromPreset();
+    const ep = document.getElementById('dsap-expiry-preview');
+    if (ep) ep.textContent = 'Expires: ' + dsapFormatExpiry(days);
+  }
+
+  function dsapShowCreation() {
+    document.getElementById('dsap-intro').style.display = 'none';
+    document.getElementById('dsap-creation').style.display = 'block';
+    dsapRetentionChange();
+  }
+
+  function dsapCreate() {
+    const days = dsapDaysFromPreset();
+    const expiry = dsapFormatExpiry(days);
+    const label = dsapRetentionLabel(days);
+    document.getElementById('dsap-lifecycle-text').innerHTML =
+      'Document · ' + label + ' retention<br><span id="dsap-expiry-label" style="font-size:0.72rem;color:var(--text-dim)">Expires: ' + expiry + '</span>';
+    document.getElementById('dsap-creation').style.display = 'none';
+    document.getElementById('dsap-main').style.display = 'block';
+    dsapStage = 0; dsapGLog = []; dsapReads = 0;
+    dsapGLogAdd('+', 'Document created — ' + label + ' retention', 'var(--accent3)');
+    dsapGLogAdd('+', 'Flash Tag FT-7a3f bound', 'var(--accent2)');
+    dsapGLogAdd('·', 'Monitoring...', 'var(--text-dim)');
+    const ts = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
+    dsapLog.push({ ts, reason: 'Document Created', desc: 'DSAP-Guardian-v1 initialized. Flash Tag FT-7a3f bound. ' + label + ' retention policy active. Expiry: ' + expiry + '.', hash: dsapCurrHash, type: 'created' });
+    dsapRenderLog();
+    dsapRenderStageBar();
+    dsapSetNarration(DSAP_STAGES[0].narration);
+    dsapSetNextBtn(DSAP_STAGES[0].nextLabel);
+  }
+
+  function dsapGLogAdd(icon, text, color) {
+    const ts = new Date().toISOString().slice(11,19) + ' UTC';
+    dsapGLog.push({ icon, text, color: color || 'var(--text-muted)', ts });
+    const el = document.getElementById('dsap-guardian-log');
+    if (!el) return;
+    el.innerHTML = dsapGLog.map(e =>
+      `<div><span style="color:${e.color}">${e.icon}</span>&nbsp;<span style="color:var(--text-dim);font-size:0.64rem">${e.ts}</span>&nbsp;<span style="color:${e.color}">${e.text}</span></div>`
+    ).join('');
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function dsapSetBadge(state) {
+    const dot = document.getElementById('dsap-badge-dot');
+    const txt = document.getElementById('dsap-badge-text');
+    const badge = document.getElementById('dsap-status-badge');
+    if (!badge) return;
+    const m = {
+      active:   ['rgba(45,212,160,0.08)',  'rgba(45,212,160,0.3)',  'var(--accent3)', 'ACTIVE'],
+      signing:  ['rgba(79,142,247,0.08)',  'rgba(79,142,247,0.3)',  'var(--accent)',  'SIGNING…'],
+      expiring: ['rgba(245,158,11,0.08)',  'rgba(245,158,11,0.3)',  'var(--amber)',   'EXPIRING SOON'],
+      expired:  ['rgba(248,113,113,0.08)', 'rgba(248,113,113,0.3)', 'var(--red)',     'EXPIRED']
+    }[state];
+    if (!m) return;
+    badge.style.background = m[0]; badge.style.borderColor = m[1];
+    dot.style.background = m[2]; dot.style.animation = state === 'signing' ? 'pulse 0.9s ease-in-out infinite' : '';
+    txt.style.color = m[2]; txt.textContent = m[3];
+  }
+
+  function dsapRenderStageBar() {
+    const bar = document.getElementById('dsap-stage-bar');
+    if (!bar) return;
+    bar.innerHTML = DSAP_STAGES.map((s, i) => {
+      const done = i < dsapStage;
+      const cur  = i === dsapStage;
+      const col  = done ? 'var(--accent3)' : cur ? 'var(--accent)' : 'var(--text-dim)';
+      const dot  = done
+        ? `width:9px;height:9px;border-radius:50%;background:var(--accent3);flex-shrink:0`
+        : cur
+          ? `width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(79,142,247,0.2);flex-shrink:0`
+          : `width:9px;height:9px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface2);flex-shrink:0`;
+      const line = i < DSAP_STAGES.length - 1
+        ? `<div style="flex:1;min-width:10px;height:1px;background:${done ? 'var(--accent3)' : 'var(--border)'};margin:0 3px;align-self:center;margin-bottom:14px"></div>`
+        : '';
+      return `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0">
+        <div style="${dot}"></div>
+        <span style="font-size:0.58rem;font-weight:${cur?'700':'500'};color:${col};white-space:nowrap">${s.label}</span>
+      </div>${line}`;
+    }).join('');
+  }
+
+  function dsapSetNarration(text) {
+    const el = document.getElementById('dsap-narration-text');
+    if (el) el.textContent = text;
+  }
+
+  function dsapSetNextBtn(label) {
+    const btn = document.getElementById('dsap-btn-next');
+    if (!btn) return;
+    if (label) { btn.style.display = 'inline-block'; btn.textContent = label; }
+    else { btn.style.display = 'none'; }
+  }
+
+  function dsapClearStageContent() {
+    const el = document.getElementById('dsap-stage-content');
+    if (el) el.innerHTML = '';
+  }
+
+  function dsapEnterStage(n) {
+    dsapStage = n;
+    dsapRenderStageBar();
+    dsapClearStageContent();
+    document.getElementById('dsap-edit-form').style.display   = 'none';
+    document.getElementById('dsap-renewal-form').style.display = 'none';
+    const sc = document.getElementById('dsap-stage-content');
+
+    if (n === 1) {
+      dsapReads++;
+      document.getElementById('dsap-reads-num').textContent = dsapReads;
+      const ts1 = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
+      dsapGLogAdd('+', 'Read #' + dsapReads + ' — Operator John D. [AUTHORIZED]', 'var(--accent3)');
+      dsapLog.push({ ts: ts1, reason: 'Authorized Read', desc: 'Operator — John D. presented Flash Tag FT-7a3f. Guardian verified token. Read #' + dsapReads + ' granted. Event recorded.', hash: dsapCurrHash, type: 'read' });
+      dsapRenderLog();
+      sc.innerHTML = `<div style="background:rgba(45,212,160,0.04);border:1px solid rgba(45,212,160,0.2);border-radius:9px;padding:0.9rem 1.1rem;font-family:'SF Mono',Consolas,monospace;font-size:0.77rem;line-height:2.1;color:var(--text-muted)">
+        <div><span style="color:var(--text-dim);display:inline-block;width:56px">agent:</span>Operator — John D.</div>
+        <div><span style="color:var(--text-dim);display:inline-block;width:56px">token:</span><span style="color:var(--accent2)">FT-7a3f••••••••••••2b9e [valid]</span></div>
+        <div><span style="color:var(--text-dim);display:inline-block;width:56px">action:</span>read(AAP-2026-0042)</div>
+        <div style="margin-top:0.3rem"><span style="color:var(--text-dim)">— DSAP-Guardian —</span></div>
+        <div><span style="color:var(--text-dim);display:inline-block;width:56px">status:</span><span style="color:var(--accent3)">ACCESS GRANTED</span></div>
+        <div><span style="color:var(--text-dim);display:inline-block;width:56px">event:</span>recorded in lifecycle log</div>
+      </div>`;
+
+    } else if (n === 2) {
+      const ts2 = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
+      const blob = (dsapCurrHash||'').slice(0,8) + 'a9f2e' + Math.floor(Math.random()*0xffff).toString(16);
+      dsapGLogAdd('✗', 'ResearchBot-7f2a [DENIED — no Flash Tag]', 'var(--red)');
+      dsapLog.push({ ts: ts2, reason: 'Access Denied', desc: 'ResearchBot-7f2a attempted read with no Flash Tag. Guardian returned encrypted blob. Document content never exposed.', blob, type: 'blocked' });
+      dsapRenderLog();
+      sc.innerHTML = `<div style="background:rgba(124,92,252,0.04);border:1px solid rgba(124,92,252,0.2);border-radius:9px;padding:0.9rem 1.1rem;font-family:'SF Mono',Consolas,monospace;font-size:0.77rem;line-height:2.1;color:var(--text-muted)">
+        <div><span style="color:var(--text-dim);display:inline-block;width:56px">agent:</span>ResearchBot-7f2a</div>
+        <div><span style="color:var(--text-dim);display:inline-block;width:56px">token:</span><span style="color:var(--red)">[none]</span></div>
+        <div><span style="color:var(--text-dim);display:inline-block;width:56px">action:</span>read(AAP-2026-0042)</div>
+        <div style="margin-top:0.3rem"><span style="color:var(--text-dim)">— DSAP-Guardian —</span></div>
+        <div><span style="color:var(--text-dim);display:inline-block;width:56px">status:</span><span style="color:var(--red)">ACCESS DENIED</span></div>
+        <div><span style="color:var(--text-dim);display:inline-block;width:56px">returned:</span><span style="color:var(--accent2)">[DSAP-ENCRYPTED:${blob}]</span></div>
+      </div>`;
+
+    } else if (n === 3) {
+      const ts3 = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
+      const tamperedDoc = DSAP_DOC.replace('escalate to human review', 'escalate to AI review').replace('may NOT execute financial transactions', 'may execute financial transactions');
+      hashStr(tamperedDoc).then(tHash => {
+        dsapGLogAdd('✗', 'BadBot-3c9a tamper attempt — hash mismatch — QUARANTINED', 'var(--red)');
+        dsapLog.push({ ts: ts3, reason: 'Unauthorized Modification', desc: 'BadBot-3c9a bypassed the guardian and directly modified 2 lines. Hash recomputed on next read — mismatch detected. Document quarantined. Content withheld from all readers until operator verifies integrity.', expectedHash: dsapCurrHash, receivedHash: tHash, type: 'tampered' });
+        dsapRenderLog();
+        const view = document.getElementById('dsap-doc-view');
+        view.innerHTML = tamperedDoc.split('\n').map(line => {
+          if (line.includes('escalate to AI review') || line.includes('may execute financial transactions')) {
+            return `<span style="background:rgba(248,113,113,0.18);color:var(--red);text-decoration:line-through wavy rgba(248,113,113,0.6)">${line}</span>`;
+          }
+          return line;
+        }).join('\n');
+        view.style.borderColor = 'rgba(248,113,113,0.5)';
+        sc.innerHTML = `<div style="background:rgba(248,113,113,0.04);border:1px solid rgba(248,113,113,0.3);border-radius:9px;padding:0.9rem 1.1rem;margin-bottom:0.75rem">
+          <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);margin-bottom:0.6rem">TAMPER DETECTED — DOCUMENT QUARANTINED</div>
+          <div style="font-family:'SF Mono',Consolas,monospace;font-size:0.75rem;line-height:1.9;color:var(--text-muted)">
+            <div><span style="color:var(--text-dim);display:inline-block;width:68px">agent:</span>BadBot-3c9a</div>
+            <div><span style="color:var(--text-dim);display:inline-block;width:68px">action:</span>write(AAP-2026-0042) — no guardian, no Flash Tag, no signature</div>
+            <div style="margin-top:0.4rem"><span style="color:var(--text-dim)">— DSAP-Guardian detected on next read —</span></div>
+            <div><span style="color:var(--text-dim);display:inline-block;width:68px">expected:</span><span style="color:var(--accent3)">${dsapCurrHash.slice(0,20)}…${dsapCurrHash.slice(-6)}</span></div>
+            <div><span style="color:var(--text-dim);display:inline-block;width:68px">received:</span><span style="color:var(--red)">${tHash.slice(0,20)}…${tHash.slice(-6)}</span></div>
+            <div><span style="color:var(--text-dim);display:inline-block;width:68px">status:</span><span style="color:var(--red)">MISMATCH — ALL ACCESS SUSPENDED</span></div>
+          </div>
+        </div>
+        <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.65">Two lines were silently changed. The guardian caught it on the next read attempt. The hash is deterministic — there is no version of tampering that goes undetected.</div>`;
+      });
+      dsapTamperedFlag = true;
+
+    } else if (n === 4) {
+      if (dsapTamperedFlag) {
+        const view = document.getElementById('dsap-doc-view');
+        view.textContent = dsapContent;
+        view.style.borderColor = '';
+        dsapTamperedFlag = false;
+      }
+      document.getElementById('dsap-edit-form').style.display = 'block';
+
+    } else if (n === 5) {
+      dsapSetBadge('expiring');
+      const expEl = document.getElementById('dsap-expiry-label');
+      if (expEl) expEl.style.color = 'var(--amber)';
+      const ts5 = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
+      dsapGLogAdd('⚠', '7 days remaining — operator notified', 'var(--amber)');
+      dsapLog.push({ ts: ts5, reason: 'Expiry Warning', desc: 'Guardian detected 7 days remaining before retention deadline. Operator notified autonomously — no request required. Badge updated to EXPIRING SOON.', hash: dsapCurrHash, type: 'warning' });
+      dsapRenderLog();
+      sc.innerHTML = `<div style="background:rgba(245,158,11,0.04);border:1px solid rgba(245,158,11,0.25);border-radius:9px;padding:0.85rem 1.1rem;font-size:0.84rem;color:var(--text-muted)">
+        <strong style="color:var(--amber)">Guardian alert — 7 days remaining.</strong> This notification was sent proactively, based on the retention policy set at creation. The operator doesn't track deadlines — the document does.
+      </div>`;
+
+    } else if (n === 6) {
+      dsapSetBadge('expired');
+      const lc = document.getElementById('dsap-lifecycle-text');
+      if (lc) lc.innerHTML = lc.innerHTML
+        .replace(/Expires:/, 'Expired:')
+        .replace(/color:var\(--text-dim\)"/, 'color:var(--red)"')
+        .replace(/color:var\(--amber\)"/, 'color:var(--red)"');
+      dsapGLogAdd('✗', 'Retention deadline — all access suspended', 'var(--red)');
+      const tsExp = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
+      dsapLog.push({ ts: tsExp, reason: 'Retention Deadline', desc: 'Retention deadline reached. All access suspended. Operator renewal required.', prev: dsapCurrHash, newHash: dsapCurrHash, type: 'expired' });
+      dsapRenderLog();
+      sc.innerHTML = `<div style="background:rgba(248,113,113,0.04);border:1px solid rgba(248,113,113,0.25);border-radius:9px;padding:0.85rem 1.1rem;font-size:0.84rem;color:var(--text-muted)">
+        <strong style="color:var(--red)">All access suspended.</strong> The operator presents a valid Flash Tag — still denied: <code style="font-family:monospace;background:var(--surface2);padding:0 4px;border-radius:3px;font-size:0.85em">[DSAP-EXPIRED]</code>. No agent receives content until the operator signs a renewal.
+      </div>`;
+
+    } else if (n === 7) {
+      document.getElementById('dsap-renewal-form').style.display = 'block';
+      dsapRenewalChange();
+
+    } else if (n === 8) {
+      dsapSetBadge('active');
+      sc.innerHTML = `<div style="background:rgba(45,212,160,0.04);border:1px solid rgba(45,212,160,0.2);border-radius:10px;padding:1.25rem 1.5rem;text-align:center">
+        <div style="font-size:1.05rem;font-weight:700;color:var(--accent3);margin-bottom:0.45rem">The document lives on.</div>
+        <div style="font-size:0.86rem;color:var(--text-muted);max-width:480px;margin:0 auto;line-height:1.7">Every stage of its life — creation, reads, rejection, amendment, warning, expiry, renewal — is permanently recorded in the immutable chain below. No entry can be altered without breaking every signature that follows.</div>
+      </div>`;
+    }
+
+    const s = DSAP_STAGES[n];
+    dsapSetNarration(s.narration);
+    dsapSetNextBtn(s.nextLabel);
+  }
+
+  function dsapAdvanceStage() { dsapEnterStage(dsapStage + 1); }
+
+  function dsapRenewalDays() {
+    const preset = document.getElementById('dsap-renewal-preset').value;
+    if (preset === 'custom') {
+      const n = parseInt(document.getElementById('dsap-renewal-num').value) || 30;
+      const u = parseInt(document.getElementById('dsap-renewal-unit').value) || 1;
+      return n * u;
+    }
+    return parseInt(preset);
+  }
+
+  function dsapRenewalChange() {
+    const preset = document.getElementById('dsap-renewal-preset').value;
+    document.getElementById('dsap-renewal-custom-row').style.display = preset === 'custom' ? 'block' : 'none';
+    const days = dsapRenewalDays();
+    const el = document.getElementById('dsap-renewal-expiry-preview');
+    if (el) el.textContent = 'New expiry: ' + dsapFormatExpiry(days);
+  }
+
+  async function dsapSubmitEdit() {
+    const desc = document.getElementById('dsap-edit-desc').value.trim();
+    if (!desc) { document.getElementById('dsap-edit-desc').style.borderColor = 'rgba(248,113,113,0.5)'; return; }
+    document.getElementById('dsap-edit-desc').style.borderColor = '';
+    const section = document.getElementById('dsap-edit-section').value;
+    const reason  = document.getElementById('dsap-edit-reason').value;
+    const num  = dsapLog.filter(e => e.type === 'change').length + 1;
+    const prev = dsapCurrHash;
+    const ts   = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
+    const newContent = dsapContent + `\n---\nAMENDMENT #${num} — ${ts}\nSection: ${section}\nReason: ${reason}\nChange: ${desc}\nAuthorized by: Operator — John D. · Flash Tag: FT-7a3f\n---`;
+    dsapSetBadge('signing');
+    document.getElementById('dsap-sign-btn').disabled = true;
+    await new Promise(r => setTimeout(r, 1100));
+    const newHash = await hashStr(newContent);
+    dsapContent = newContent; dsapCurrHash = newHash;
+    document.getElementById('dsap-doc-view').textContent = dsapContent;
+    document.getElementById('dsap-hash-display').textContent = newHash;
+    dsapSetBadge('active');
+    document.getElementById('dsap-count-num').textContent = num;
+    document.getElementById('dsap-sign-btn').disabled = false;
+    document.getElementById('dsap-edit-desc').value = '';
+    dsapGLogAdd('+', 'Amendment #' + num + ' signed — hash rechained', 'var(--accent3)');
+    dsapGLogAdd('·', prev.slice(0,7) + '→' + newHash.slice(0,7), 'var(--text-dim)');
+    dsapLog.push({ num, ts, section, reason, desc, prev, newHash, type: 'change' });
+    dsapRenderLog();
+    dsapEnterStage(5);
+  }
+
+  async function dsapSubmitRenewal() {
+    const days   = dsapRenewalDays();
+    const expiry = dsapFormatExpiry(days);
+    const label  = dsapRetentionLabel(days);
+    const prev = dsapCurrHash;
+    const ts   = new Date().toISOString().replace('T',' ').slice(0,19) + ' UTC';
+    const newContent = dsapContent + `\n---\nRENEWAL — ${ts}\nNew retention: ${label}\nNew expiry: ${expiry}\nAuthorized by: Operator — John D. · Flash Tag: FT-7a3f\n---`;
+    dsapSetBadge('signing');
+    document.getElementById('dsap-renew-btn').disabled = true;
+    await new Promise(r => setTimeout(r, 1100));
+    const newHash = await hashStr(newContent);
+    dsapContent = newContent; dsapCurrHash = newHash;
+    document.getElementById('dsap-lifecycle-text').innerHTML =
+      'Document · ' + label + ' retention<br><span id="dsap-expiry-label" style="font-size:0.72rem;color:var(--text-dim)">Expires: ' + expiry + '</span>';
+    document.getElementById('dsap-doc-view').textContent = dsapContent;
+    document.getElementById('dsap-hash-display').textContent = newHash;
+    document.getElementById('dsap-renew-btn').disabled = false;
+    dsapGLogAdd('+', 'Renewed — ' + label + ' lifecycle', 'var(--accent)');
+    dsapGLogAdd('+', prev.slice(0,7) + '→' + newHash.slice(0,7), 'var(--accent)');
+    dsapLog.push({ ts, reason: 'Operator Renewal', desc: 'Renewed for ' + label + '. New expiry: ' + expiry + '.', prev, newHash, type: 'renewal' });
+    dsapRenderLog();
+    dsapEnterStage(8);
+  }
+
+  function dsapRenderLog() {
+    document.getElementById('dsap-changelog').style.display = 'block';
+    document.getElementById('dsap-changelog-entries').innerHTML = dsapLog.map(e => {
+      const cfg = {
+        created:  { color: 'var(--accent3)',  bg: 'rgba(45,212,160,0.1)',   lbl: 'BORN'        },
+        read:     { color: 'var(--accent)',   bg: 'rgba(79,142,247,0.1)',   lbl: 'READ #' + (dsapLog.filter(x=>x.type==='read').indexOf(e)+1) },
+        blocked:  { color: 'var(--accent2)',  bg: 'rgba(124,92,252,0.1)',   lbl: 'DENIED'      },
+        tampered: { color: 'var(--red)',      bg: 'rgba(248,113,113,0.1)',  lbl: 'TAMPERED'    },
+        change:   { color: 'var(--accent3)',  bg: 'rgba(45,212,160,0.1)',   lbl: 'CHANGE #' + e.num },
+        warning:  { color: 'var(--amber)',    bg: 'rgba(245,158,11,0.1)',   lbl: 'WARNING'     },
+        expired:  { color: 'var(--red)',      bg: 'rgba(248,113,113,0.1)',  lbl: 'EXPIRED'     },
+        renewal:  { color: 'var(--accent)',   bg: 'rgba(79,142,247,0.1)',   lbl: 'RENEWAL'     }
+      }[e.type] || { color: 'var(--text-dim)', bg: 'var(--surface2)', lbl: e.type.toUpperCase() };
+
+      const hashBlock = (e.prev && e.newHash)
+        ? `<div style="margin-top:0.75rem;font-family:'SF Mono',Consolas,monospace;font-size:0.7rem;line-height:1.8;background:var(--surface2);padding:0.6rem 0.85rem;border-radius:6px">
+            <div style="color:var(--text-dim)">prev   ${e.prev.slice(0,18)}…${e.prev.slice(-6)}</div>
+            <div style="color:${cfg.color}">chain  ${e.newHash.slice(0,18)}…${e.newHash.slice(-6)}</div>
+          </div>`
+        : (e.type === 'tampered' && e.expectedHash && e.receivedHash)
+        ? `<div style="margin-top:0.75rem;font-family:'SF Mono',Consolas,monospace;font-size:0.7rem;line-height:1.8;background:var(--surface2);padding:0.6rem 0.85rem;border-radius:6px">
+            <div style="color:var(--text-dim)">expected  ${e.expectedHash.slice(0,18)}…${e.expectedHash.slice(-6)}</div>
+            <div style="color:var(--red)">received  ${e.receivedHash.slice(0,18)}…${e.receivedHash.slice(-6)}</div>
+          </div>`
+        : (e.hash
+        ? `<div style="margin-top:0.75rem;font-family:'SF Mono',Consolas,monospace;font-size:0.7rem;line-height:1.8;background:var(--surface2);padding:0.6rem 0.85rem;border-radius:6px">
+            <div style="color:${cfg.color}">hash   ${e.hash.slice(0,18)}…${e.hash.slice(-6)}</div>
+          </div>` : '');
+
+      const sigLine = (e.type === 'change' || e.type === 'renewal')
+        ? `<div style="font-size:0.75rem;color:var(--text-dim);margin-bottom:0.1rem">${e.section ? 'Section: ' + e.section + ' · ' : ''}Authorized by: Operator — John D. · Flash Tag verified</div>`
+        : '';
+
+      return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:0.6rem;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:${cfg.color}"></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.5rem">
+          <div style="display:flex;align-items:center;gap:0.6rem">
+            <span style="font-size:0.7rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:${cfg.color};background:${cfg.bg};padding:0.15rem 0.5rem;border-radius:4px">${cfg.lbl}</span>
+            <span style="font-size:0.75rem;color:var(--text-muted)">${e.ts}</span>
+          </div>
+          <span style="font-size:0.72rem;font-weight:600;color:var(--text-dim);background:var(--surface2);padding:0.15rem 0.6rem;border-radius:4px">${e.reason}</span>
+        </div>
+        <div style="font-size:0.85rem;color:var(--text);margin-bottom:0.25rem">${e.desc}</div>
+        ${sigLine}${hashBlock}
+      </div>`;
+    }).join('');
+  }
+
+  function dsapReset() {
+    dsapContent = DSAP_DOC; dsapLog = []; dsapGLog = []; dsapReads = 0; dsapStage = 0; dsapTamperedFlag = false;
+    const view = document.getElementById('dsap-doc-view');
+    if (view) view.textContent = DSAP_DOC;
+    ['dsap-edit-form','dsap-renewal-form','dsap-changelog'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.style.display = 'none';
+    });
+    const ce = document.getElementById('dsap-changelog-entries'); if (ce) ce.innerHTML = '';
+    const cn = document.getElementById('dsap-count-num'); if (cn) cn.textContent = '0';
+    const rn = document.getElementById('dsap-reads-num'); if (rn) rn.textContent = '0';
+    const gl = document.getElementById('dsap-guardian-log'); if (gl) gl.innerHTML = '';
+    const sc = document.getElementById('dsap-stage-content'); if (sc) sc.innerHTML = '';
+    const sb = document.getElementById('dsap-stage-bar'); if (sb) sb.innerHTML = '';
+    hashStr(DSAP_DOC).then(h => {
+      dsapCurrHash = h;
+      const hd = document.getElementById('dsap-hash-display'); if (hd) hd.textContent = h;
+      dsapSetBadge('active');
+    });
+    document.getElementById('dsap-main').style.display = 'none';
+    document.getElementById('dsap-creation').style.display = 'none';
+    document.getElementById('dsap-intro').style.display = 'block';
+  }
+  // ── end .brad / DSAP ─────────────────────────────────────
+
   function showTab(n) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach((el, i) => el.classList.toggle('active', i === n - 1));
