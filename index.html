@@ -49,7 +49,7 @@
           "name": "Flash Tag",
           "url": "https://ai-broker-agent.com/flashtag",
           "description": "Cryptographic agent identity — every agent gets a registered, verifiable ID. Patent pending (64/040,921).",
-          "offers": {"@type": "Offer", "availability": "https://schema.org/InStoreOnly", "description": "Closed alpha — apply for access"}
+          "offers": {"@type": "Offer", "availability": "https://schema.org/InStoreOnly", "description": "Contact us to discuss your use case"}
         }
       },
       {
@@ -60,7 +60,7 @@
           "name": "AATS",
           "url": "https://ai-broker-agent.com/trust-scoring",
           "description": "Agent Attestation Trust Score — real-time behavioral scoring. Patent pending (64/043,587).",
-          "offers": {"@type": "Offer", "availability": "https://schema.org/InStoreOnly", "description": "Closed alpha — apply for access"}
+          "offers": {"@type": "Offer", "availability": "https://schema.org/InStoreOnly", "description": "Contact us to discuss your use case"}
         }
       },
       {
@@ -71,7 +71,7 @@
           "name": "ALR",
           "url": "https://ai-broker-agent.com/lifecycle",
           "description": "Agent Lifecycle Record — immutable audit trail from agent creation to retirement. Patent pending (64/072,710).",
-          "offers": {"@type": "Offer", "availability": "https://schema.org/InStoreOnly", "description": "Closed alpha — apply for access"}
+          "offers": {"@type": "Offer", "availability": "https://schema.org/InStoreOnly", "description": "Contact us to discuss your use case"}
         }
       }
     ]
@@ -96,12 +96,6 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 16px; line-height: 1.6; min-height: 100vh; }
-
-    /* ALPHA BANNER */
-    .alpha-banner { background: rgba(79,142,247,0.08); border-bottom: 1px solid rgba(79,142,247,0.2); text-align: center; padding: 0.5rem 1rem; font-size: 0.8rem; color: var(--text-muted); }
-    .alpha-banner strong { color: var(--accent); }
-    .alpha-banner a { color: var(--accent); text-decoration: none; font-weight: 600; }
-    .alpha-banner a:hover { text-decoration: underline; }
 
     /* TAB NAV */
     .tab-nav { position: sticky; top: 0; z-index: 100; background: rgba(8,9,12,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 1rem; display: flex; align-items: stretch; overflow-x: auto; scrollbar-width: none; gap: 0; }
@@ -318,7 +312,7 @@
     .path-mini-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; line-height: 1.5; }
     .nav-hint { margin-top: 1.75rem; font-size: 0.82rem; color: var(--text-dim); }
 
-    /* GET ACCESS TAB */
+    /* CONTACT TAB */
     .llc-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-top: 2rem; }
     .llc-box h3 { color: var(--text); font-size: 1rem; }
     .llc-box p { font-size: 0.86rem; margin-top: 0.5rem; }
@@ -367,17 +361,12 @@
 </head>
 <body>
 
-  <!-- Closed Alpha Banner -->
-  <div class="alpha-banner">
-    <strong>Closed Alpha</strong> — Now accepting enterprise partners. <a href="#" onclick="showTab(13);return false;">Get access →</a>
-  </div>
-
   <!-- Tab Nav -->
   <nav class="tab-nav">
     <div class="tab-nav-logo">AIbroker<span>AGENT</span></div>
     <button class="tab-btn active" onclick="showTab(1)">About</button>
     <button class="tab-btn" onclick="showTab(2)">The Problem</button>
-    <button class="tab-btn" onclick="showTab(3)">Our Approach</button>
+    <button class="tab-btn" onclick="showTab(3)">How It Works</button>
     <button class="tab-btn" onclick="showTab(4)">Identity</button>
     <button class="tab-btn" onclick="showTab(5)">Context Recall</button>
     <button class="tab-btn" onclick="showTab(6)">Governance</button>
@@ -387,22 +376,20 @@
     <button class="tab-btn" onclick="showTab(10)">Chain of Custody</button>
     <button class="tab-btn" onclick="showTab(11)">.brad</button>
     <button class="tab-btn" onclick="showTab(12)">QPAS</button>
-    <button class="tab-btn" onclick="showTab(13)">Get Access</button>
-    <a href="/pricing.html" class="tab-nav-cta">Packages →</a>
+    <button class="tab-btn" onclick="showTab(13)">Contact Us</button>
   </nav>
 
   <!-- TAB 1: ABOUT -->
   <div id="tab-1" class="tab-content active">
 
     <div class="site-hero">
-      <div class="site-hero-badge">Closed Alpha</div>
       <h1>We can't sell trust. But you can <em>buy accountability</em>.</h1>
       <p class="site-hero-sub">
         The accountability layer enterprise AI deployments require — cryptographic agent identity, trust scoring, and the agent equivalent of a financial audit trail, designed to withstand auditor scrutiny.
       </p>
       <div class="site-hero-actions">
-        <a href="#" onclick="showTab(13);return false;" class="btn-primary">Sign up for closed alpha</a>
-        <a href="#" onclick="showTab(2);return false;" class="btn-secondary">See the platform →</a>
+        <a href="#" onclick="showTab(13);return false;" class="btn-primary">Get in touch</a>
+        <a href="#" onclick="showTab(2);return false;" class="btn-secondary">See the problem →</a>
       </div>
     </div>
 
@@ -426,9 +413,9 @@
         <div class="path-preview-label">This presentation ends with three ways to engage</div>
         <div class="path-mini-grid">
           <div class="path-mini" onclick="showTab(13)">
-            <div class="path-mini-num">Alpha Partner</div>
-            <div class="path-mini-name">Closed Alpha Access</div>
-            <div class="path-mini-desc">Early access to the full accountability layer. Shape the roadmap.</div>
+            <div class="path-mini-num">Consulting</div>
+            <div class="path-mini-name">Advisory Engagement</div>
+            <div class="path-mini-desc">Work directly with us to map the stack to your compliance requirements.</div>
           </div>
           <div class="path-mini" onclick="showTab(13)">
             <div class="path-mini-num">Enterprise</div>
@@ -443,7 +430,7 @@
         </div>
       </div>
 
-      <p class="nav-hint">Use the tabs above to navigate — or click any path card to jump straight to Get Access.</p>
+      <p class="nav-hint">Use the tabs above to navigate — or click any path card to jump straight to Contact Us.</p>
       <div class="next-row"><button class="next-btn" onclick="showTab(2)">The Problem →</button></div>
     </div>
   </div>
@@ -480,64 +467,70 @@
         Every agent framework today can tell you <strong>what</strong> an agent did. None can <strong>prove</strong> it — continuously, cryptographically, in a form an auditor can independently verify. This is not a flaw in a single platform. It is a gap across the entire agent layer — and it is about to become a compliance problem.
       </div>
 
-      <div class="next-row"><button class="next-btn" onclick="showTab(3)">Our Approach →</button></div>
+      <div class="next-row"><button class="next-btn" onclick="showTab(3)">How It Works →</button></div>
     </div>
   </div>
 
-  <!-- TAB 3: OUR APPROACH -->
+  <!-- TAB 3: HOW IT WORKS -->
   <div id="tab-3" class="tab-content">
     <div class="page-section">
-      <div class="section-label">02 — Our Approach</div>
+      <div class="section-label">02 — How It Works</div>
       <h1>A <span class="gradient-text">layered answer</span> to a structural problem</h1>
-      <p style="max-width:640px;font-size:1rem;margin-top:1rem">No single solution closes this gap. The research produced six interdependent layers, each addressing a distinct dimension of agent accountability. Think of it as the missing accountability foundation — the layer the agent economy doesn't have yet.</p>
-      <p style="max-width:640px;font-size:0.87rem;margin-top:0.75rem;color:var(--text-dim)">Each layer is backed by a specification and working prototype. None are production-deployed at enterprise scale — this is research in closed alpha, not a shipping product.</p>
+
+      <div class="infobox" style="max-width:680px;margin-top:1.5rem;background:rgba(79,142,247,0.04);border:1px solid rgba(79,142,247,0.18);border-left:3px solid var(--accent);padding:1.25rem 1.5rem;border-radius:0 10px 10px 0">
+        <p style="font-size:0.95rem;line-height:1.75;color:var(--text-muted)"><strong style="color:var(--text)">Picture this.</strong> Your company deploys an AI agent to review and approve vendor payments. It runs overnight. At 2am it approves a $340,000 wire transfer. By morning the CFO is asking three questions: Who authorized that agent to do this? What did it know when it decided? Was it still operating within your policy at that moment?</p>
+        <p style="font-size:0.95rem;line-height:1.75;color:var(--text-muted);margin-top:0.75rem">Your team opens the logs. There's a timestamp and an outcome. That's it. No proof of identity. No record of the reasoning context. No continuous behavioral history.</p>
+        <p style="font-size:0.95rem;line-height:1.75;color:var(--text-muted);margin-top:0.75rem">This is not a technology failure — it's a structural gap that exists across every agent framework today. The AIBrokerAgent stack is six layers designed to close it.</p>
+      </div>
+
+      <p style="max-width:640px;font-size:0.92rem;margin-top:2rem;color:var(--text-muted)">Each layer answers one plain question. Together they give you the complete accountability record — the kind an auditor, regulator, or board can actually use.</p>
 
       <div class="stack-diagram">
         <div class="stack-layer l-blue">
           <div class="stack-num">01</div>
           <div class="stack-body">
-            <div class="stack-name">Identity &amp; Provenance</div>
-            <div class="stack-desc">Cryptographic proof of which agent acted, when, and in what sequence — the foundation everything else depends on. Without this layer, every other accountability claim is unverifiable.</div>
+            <div class="stack-name">Identity &amp; Provenance — <em style="font-weight:400;font-style:normal;color:var(--text-muted)">Who is this agent, exactly?</em></div>
+            <div class="stack-desc">Every agent gets a cryptographic identity at birth — like a passport that can't be faked. When an action happens, you can prove which agent did it, when it was spawned, who authorized it, and the exact sequence of interactions it had. No more "the log says it happened."</div>
           </div>
         </div>
         <div class="stack-layer l-purple">
           <div class="stack-num">02</div>
           <div class="stack-body">
-            <div class="stack-name">Context Recall</div>
-            <div class="stack-desc">A signed record of what context the agent had at the exact moment of a decision — not just the outcome, but the reasoning environment. Enables meaningful explanation for any automated action.</div>
+            <div class="stack-name">Context Recall — <em style="font-weight:400;font-style:normal;color:var(--text-muted)">What did it know when it decided?</em></div>
+            <div class="stack-desc">At the moment of every significant decision, a signed snapshot is taken of what the agent knew — its instructions, its constraints, the information it had. Six months later when the regulator asks "why did it do that?", you can show them the exact reasoning environment, not a reconstruction.</div>
           </div>
         </div>
         <div class="stack-layer l-amber">
           <div class="stack-num">03</div>
           <div class="stack-body">
-            <div class="stack-name">Governance</div>
-            <div class="stack-desc">Operator constraints that travel cryptographically with the agent — inherited at spawn, enforced at runtime, verifiable after the fact. Governance that doesn't just exist in policy documents.</div>
+            <div class="stack-name">Governance — <em style="font-weight:400;font-style:normal;color:var(--text-muted)">Was it operating within its authority?</em></div>
+            <div class="stack-desc">Your policies travel with the agent — cryptographically embedded, not just written in a document. If the agent was authorized to approve payments up to $50,000, that constraint is verifiable. It's not governance by honor system — it's governance by math.</div>
           </div>
         </div>
         <div class="stack-layer l-green">
           <div class="stack-num">04</div>
           <div class="stack-body">
-            <div class="stack-name">Trust Scoring (AATS)</div>
-            <div class="stack-desc">Continuous behavioral measurement from first deployment — drift detection, adversarial testing, five-dimension score that proves the 2am agent is the same one that passed Monday's review.</div>
+            <div class="stack-name">Trust Scoring — <em style="font-weight:400;font-style:normal;color:var(--text-muted)">Is the 2am agent the same one you approved Monday?</em></div>
+            <div class="stack-desc">Agents drift. Models get updated. Context changes behavior. A continuous behavioral score measures every agent from its first deployment — so you can prove the agent acting overnight is behaving consistently with the one your team reviewed. It's the equivalent of a continuous SOC 2 audit, not an annual one.</div>
           </div>
         </div>
         <div class="stack-layer l-pink">
           <div class="stack-num">05</div>
           <div class="stack-body">
-            <div class="stack-name">Commerce &amp; Accountability</div>
-            <div class="stack-desc">Payment tied to verified delivery, and a unified chain of custody that links all six layers into one auditable record — answerable to any SOC 2, SOX, or regulatory inquiry.</div>
+            <div class="stack-name">Commerce &amp; Accountability — <em style="font-weight:400;font-style:normal;color:var(--text-muted)">Did it deliver what it was paid for?</em></div>
+            <div class="stack-desc">When agents transact on your behalf, payment is tied to verified delivery. And everything — identity, context, governance, behavior, transaction — is linked into one unified chain of custody that answers any SOC 2, SOX, or regulatory inquiry from a single record.</div>
           </div>
         </div>
         <div class="stack-layer l-teal">
           <div class="stack-num">06</div>
           <div class="stack-body">
-            <div class="stack-name">Agent Lifecycle Registry (ALR)</div>
-            <div class="stack-desc">The persistent record from spawn to tombstone. AATS measures the score; ALR holds the complete history — every behavioral state, policy change, adversarial result, and authorization event, immutably stored.</div>
+            <div class="stack-name">Lifecycle Registry — <em style="font-weight:400;font-style:normal;color:var(--text-muted)">What's the complete history of this agent?</em></div>
+            <div class="stack-desc">From the moment an agent is created to the moment it's retired, every meaningful event is recorded immutably — every policy change, behavioral state, adversarial test result, and authorization event. The permanent, auditable record of an agent's life.</div>
           </div>
         </div>
       </div>
 
-      <p style="font-size:0.82rem;color:var(--text-dim);margin-top:1.5rem">The next six tabs walk through each layer — the real-world problem it addresses, why it matters, and how the research attempts to solve it.</p>
+      <p style="font-size:0.82rem;color:var(--text-dim);margin-top:1.5rem">The next six tabs walk through each layer in detail — the real-world problem it addresses and how the stack solves it.</p>
       <div class="next-row"><button class="next-btn" onclick="showTab(4)">Identity &amp; Provenance →</button></div>
     </div>
   </div>
@@ -1513,16 +1506,16 @@
         <div style="margin-top:1rem;font-size:0.82rem;color:var(--text-dim);line-height:1.6">✦ Provisional patent filed. Coming to platform. Interested in early access? <a href="#" onclick="showTab(13);return false;" style="color:var(--accent2);text-decoration:none">Get in touch →</a></div>
       </div>
 
-      <div class="next-row"><button class="next-btn" onclick="showTab(13)">Get Access →</button></div>
+      <div class="next-row"><button class="next-btn" onclick="showTab(13)">Contact Us →</button></div>
     </div>
   </div>
 
-  <!-- TAB 13: GET ACCESS -->
+  <!-- TAB 13: CONTACT US -->
   <div id="tab-13" class="tab-content">
     <div class="page-section">
-      <div class="section-label">Get Access</div>
-      <h1>Sign up for <span class="gradient-text">closed alpha</span></h1>
-      <p style="max-width:620px;font-size:1rem;margin-top:0.5rem;margin-bottom:0.5rem">We are onboarding a limited number of enterprise partners before general availability. Tell us about your use case and we will follow up within one business day.</p>
+      <div class="section-label">Contact Us</div>
+      <h1>Let's <span class="gradient-text">talk</span></h1>
+      <p style="max-width:620px;font-size:1rem;margin-top:0.5rem;margin-bottom:0.5rem">If you are deploying AI agents in a regulated or high-stakes environment and need to be able to answer an auditor's questions, we want to hear from you. Tell us what you're building and we'll follow up within one business day.</p>
 
       <div class="llc-box" style="margin-top:1.5rem">
         <h3>About AIbrokerAGEnt LLC</h3>
@@ -1538,8 +1531,8 @@
       <div class="outcome-grid">
         <div class="outcome-card">
           <div class="outcome-num">Path 01</div>
-          <h3>Closed Alpha Partner</h3>
-          <p>Early access to the full trust stack before general availability. Shape the feature roadmap directly. Preferred pricing locked at alpha rates. Limited seats available.</p>
+          <h3>Advisory Engagement</h3>
+          <p>Work directly with us to map the accountability stack to your compliance requirements. Understand what's ready today and what's on the roadmap.</p>
         </div>
         <div class="outcome-card">
           <div class="outcome-num">Path 02</div>
@@ -1555,19 +1548,19 @@
 
       <div class="lead-form-wrap">
         <div class="lead-form-copy">
-          <h2>Request closed alpha access</h2>
-          <p>We are selective. We are looking for organizations deploying autonomous agents in regulated or high-stakes environments who need an accountability layer that supports audit and regulatory requirements today.</p>
-          <p>Typical engagement: scoping call → pilot design → 30-day deployment → accountability documentation package.</p>
+          <h2>Get in touch</h2>
+          <p>We work with organizations deploying autonomous agents in regulated or high-stakes environments — healthcare, financial services, government, and enterprise operations where someone will eventually have to answer an auditor.</p>
+          <p>Typical engagement: scoping call → gap analysis → pilot design → accountability documentation package.</p>
           <ul>
-            <li>Custom integration with your existing agent platform</li>
-            <li>Accountability records (SOC 2, SOX, HIPAA, government)</li>
-            <li>Dedicated technical contact during pilot</li>
-            <li>Alpha pricing locked for the life of the contract</li>
+            <li>Accountability gap analysis against your existing agent stack</li>
+            <li>Protocol mapping to SOC 2, SOX, HIPAA, or government requirements</li>
+            <li>Custom integration design with your agent platform</li>
+            <li>Dedicated technical contact throughout engagement</li>
           </ul>
         </div>
 
         <div class="lead-form-card">
-          <h3>Sign up for closed alpha</h3>
+          <h3>Send us a message</h3>
           <p class="form-sub">We respond within one business day.</p>
           <form action="https://formspree.io/f/xykajlrr" method="POST">
             <div class="field">
@@ -1582,7 +1575,7 @@
               <label for="g-tier">Interested in</label>
               <select id="g-tier" name="tier">
                 <option value="">Select a path...</option>
-                <option value="alpha-partner">Closed Alpha Partner</option>
+                <option value="advisory">Advisory Engagement</option>
                 <option value="enterprise-pilot">Enterprise Pilot</option>
                 <option value="platform-integration">Platform Integration</option>
                 <option value="not-sure">Not sure yet</option>
@@ -1596,8 +1589,8 @@
               <label for="g-email">Work Email</label>
               <input type="email" id="g-email" name="email" placeholder="you@company.com" required />
             </div>
-            <input type="hidden" name="_subject" value="AIbrokerAGEnt Closed Alpha Request" />
-            <button type="submit" class="submit-btn">Request closed alpha access</button>
+            <input type="hidden" name="_subject" value="AIBrokerAgent Inquiry" />
+            <button type="submit" class="submit-btn">Send message</button>
           </form>
           <p class="form-note">Direct: <a href="mailto:john@ai-broker-agent.com">john@ai-broker-agent.com</a></p>
         </div>
