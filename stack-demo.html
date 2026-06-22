@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIbrokerAGEnt — Trust Stack Live Demo</title>
+  <meta name="description" content="Watch the full AIbrokerAGEnt trust stack execute in real time. Flash Tag, AATS, ALR, .brad, AICP — live simulation.">
+  <link rel="canonical" href="https://ai-broker-agent.com/stack-demo">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230f1117'/><polygon points='16,4 27,10 27,22 16,28 5,22 5,10' fill='none' stroke='%234f8ef7' stroke-width='2'/><text x='16' y='21' font-family='system-ui,sans-serif' font-size='11' font-weight='700' fill='%234f8ef7' text-anchor='middle'>A</text></svg>" />
+  <style>
+    :root {
+      --bg: #08090c; --surface: #0f1117; --surface2: #151820; --surface3: #1a1d28;
+      --border: #1e2330; --border2: rgba(255,255,255,0.06);
+      --accent: #4f8ef7; --accent2: #7c5cfc; --green: #2dd4a0; --amber: #f59e0b;
+      --pink: #ec4899; --red: #f87171; --sky: #38bdf8;
+      --text: #e4e8f0; --text-muted: #8892a4; --text-dim: #4a5568;
+      --mono: 'JetBrains Mono','Fira Code','Cascadia Code',monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 200; background: rgba(8,9,12,0.96); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 0 1.5rem; height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .nav-brand { font-size: 0.88rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .nav-brand span { color: var(--accent); }
+    .nav-center { display: flex; align-items: center; gap: 0.6rem; }
+    .mode-badge { font-family: var(--mono); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 5px; }
+    .mode-sim { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: var(--amber); }
+    .mode-live { background: rgba(45,212,160,0.12); border: 1px solid rgba(45,212,160,0.3); color: var(--green); }
+    .nav-right { display: flex; align-items: center; gap: 0.75rem; }
+    .nav-link { font-size: 0.78rem; color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+    .nav-link:hover { color: var(--text-muted); }
+    .nav-cta { background: var(--accent); color: #fff; font-size: 0.78rem; font-weight: 600; padding: 0.35rem 0.9rem; border-radius: 7px; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: #3d7ef5; }
+
+    /* LAYOUT */
+    .demo-layout { display: grid; grid-template-columns: 320px 1fr; min-height: calc(100vh - 52px); }
+    @media(max-width: 900px) { .demo-layout { grid-template-columns: 1fr; } }
+
+    /* LEFT PANEL — CONTROLS */
+    .ctrl-panel { background: var(--surface); border-right: 1px solid var(--border); padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; overflow-y: auto; max-height: calc(100vh - 52px); position: sticky; top: 52px; }
+    .ctrl-section { display: flex; flex-direction: column; gap: 0.6rem; }
+    .ctrl-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); }
+    .ctrl-input { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.75rem; color: var(--text); font-size: 0.82rem; outline: none; width: 100%; transition: border-color 0.2s; font-family: var(--mono); }
+    .ctrl-input:focus { border-color: var(--accent); }
+    .ctrl-select { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.75rem; color: var(--text); font-size: 0.82rem; outline: none; width: 100%; cursor: pointer; font-family: inherit; }
+    .ctrl-select:focus { border-color: var(--accent); }
+    .divider { border: none; border-top: 1px solid var(--border); }
+
+    /* VISIBILITY TOGGLE */
+    .vis-toggle { display: flex; flex-direction: column; gap: 0.4rem; }
+    .vis-opt { display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.75rem; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+    .vis-opt:hover { border-color: var(--accent); }
+    .vis-opt.selected { border-color: var(--accent); background: rgba(79,142,247,0.07); }
+    .vis-opt input { accent-color: var(--accent); }
+    .vis-opt-info { flex: 1; }
+    .vis-opt-name { font-size: 0.78rem; font-weight: 700; font-family: var(--mono); }
+    .vis-opt-desc { font-size: 0.69rem; color: var(--text-dim); line-height: 1.4; }
+
+    /* TOGGLE SWITCH */
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; }
+    .toggle-row span { font-size: 0.8rem; color: var(--text-muted); }
+    .switch { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; inset: 0; background: var(--surface3); border-radius: 20px; cursor: pointer; transition: background 0.2s; border: 1px solid var(--border); }
+    .slider::before { content: ''; position: absolute; width: 14px; height: 14px; left: 2px; top: 2px; background: var(--text-dim); border-radius: 50%; transition: transform 0.2s, background 0.2s; }
+    input:checked + .slider { background: rgba(79,142,247,0.2); border-color: var(--accent); }
+    input:checked + .slider::before { transform: translateX(16px); background: var(--accent); }
+
+    /* RUN BUTTON */
+    .run-btn { width: 100%; padding: 0.85rem; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 0.5rem; letter-spacing: 0.02em; }
+    .run-btn.ready { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; box-shadow: 0 4px 20px rgba(79,142,247,0.3); }
+    .run-btn.ready:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(79,142,247,0.4); }
+    .run-btn.running { background: var(--surface2); color: var(--text-muted); cursor: not-allowed; border: 1px solid var(--border); }
+    .run-btn.done { background: rgba(45,212,160,0.12); color: var(--green); border: 1px solid rgba(45,212,160,0.3); cursor: pointer; }
+    .run-btn.done:hover { background: rgba(45,212,160,0.18); }
+    .reset-btn { width: 100%; padding: 0.55rem; background: transparent; border: 1px solid var(--border); border-radius: 8px; color: var(--text-dim); font-size: 0.78rem; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .reset-btn:hover { border-color: var(--text-dim); color: var(--text-muted); }
+
+    /* RIGHT PANEL */
+    .feed-panel { display: flex; flex-direction: column; overflow: hidden; }
+
+    /* SCENARIO HEADER */
+    .scenario-bar { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem; background: var(--surface); flex-wrap: wrap; }
+    .scenario-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+    .scenario-name { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+    .scenario-desc { font-size: 0.78rem; color: var(--text-muted); flex: 1; }
+    .progress-bar-wrap { width: 100%; background: var(--surface2); border-radius: 4px; height: 3px; overflow: hidden; }
+    .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--green)); border-radius: 4px; transition: width 0.4s ease; }
+
+    /* STEP PIPELINE */
+    .pipeline { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .step-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: border-color 0.3s; }
+    .step-card.active { border-color: var(--accent); }
+    .step-card.pass { border-color: rgba(45,212,160,0.4); }
+    .step-card.fail { border-color: rgba(241,114,118,0.4); }
+    .step-card.warn { border-color: rgba(245,158,11,0.4); }
+    .step-header { display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem 1.1rem; cursor: pointer; }
+    .step-num { width: 26px; height: 26px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 0.7rem; font-weight: 700; color: var(--text-dim); flex-shrink: 0; transition: all 0.3s; }
+    .step-card.active .step-num { border-color: var(--accent); color: var(--accent); background: rgba(79,142,247,0.1); }
+    .step-card.pass .step-num { border-color: var(--green); color: var(--green); background: rgba(45,212,160,0.1); }
+    .step-card.fail .step-num { border-color: var(--red); color: var(--red); background: rgba(241,114,118,0.1); }
+    .step-card.warn .step-num { border-color: var(--amber); color: var(--amber); background: rgba(245,158,11,0.1); }
+    .step-info { flex: 1; }
+    .step-protocol { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.1rem; }
+    .step-title { font-size: 0.88rem; font-weight: 600; }
+    .step-status { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+    .status-icon { font-size: 1rem; }
+    .status-text { font-size: 0.72rem; font-weight: 700; font-family: var(--mono); }
+    .st-pending { color: var(--text-dim); }
+    .st-running { color: var(--accent); }
+    .st-pass { color: var(--green); }
+    .st-fail { color: var(--red); }
+    .st-warn { color: var(--amber); }
+    .spinner { width: 14px; height: 14px; border: 2px solid rgba(79,142,247,0.2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* STEP DETAIL */
+    .step-detail { display: none; border-top: 1px solid var(--border); padding: 1rem 1.1rem; background: var(--surface2); }
+    .step-detail.open { display: block; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 0.85rem; }
+    @media(max-width:600px){ .detail-grid { grid-template-columns: 1fr; } }
+    .detail-field { }
+    .detail-key { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.2rem; }
+    .detail-val { font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted); word-break: break-all; line-height: 1.5; }
+    .detail-val.highlight { color: var(--accent); }
+    .detail-val.green { color: var(--green); }
+    .detail-val.red { color: var(--red); }
+    .detail-val.amber { color: var(--amber); }
+    .detail-note { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; padding: 0.65rem 0.85rem; background: var(--surface); border-radius: 8px; border-left: 2px solid var(--accent); margin-top: 0.5rem; }
+    .detail-note.note-fail { border-left-color: var(--red); }
+    .detail-note.note-warn { border-left-color: var(--amber); }
+
+    /* TRUST SCORE METER */
+    .score-meter { display: flex; align-items: center; gap: 0.85rem; padding: 0.75rem 1rem; background: var(--surface); border-radius: 8px; margin-bottom: 0.5rem; }
+    .score-val { font-family: var(--mono); font-size: 1.4rem; font-weight: 800; min-width: 52px; }
+    .score-bar-wrap { flex: 1; background: var(--surface2); border-radius: 4px; height: 8px; overflow: hidden; }
+    .score-bar { height: 100%; border-radius: 4px; transition: width 0.8s ease, background 0.4s; }
+    .score-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; min-width: 60px; text-align: right; }
+
+    /* EVENT LOG */
+    .log-wrap { border-top: 1px solid var(--border); background: var(--surface); flex: 1; display: flex; flex-direction: column; }
+    .log-header { padding: 0.65rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .log-title { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+    .log-clear { font-size: 0.68rem; color: var(--text-dim); background: none; border: none; cursor: pointer; font-family: inherit; transition: color 0.2s; }
+    .log-clear:hover { color: var(--text-muted); }
+    .log-body { padding: 0.75rem 1.5rem; font-family: var(--mono); font-size: 0.72rem; line-height: 1.7; max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.1rem; }
+    .log-entry { display: flex; gap: 0.75rem; align-items: baseline; }
+    .log-ts { color: var(--text-dim); flex-shrink: 0; }
+    .log-msg { color: var(--text-muted); }
+    .log-msg.lg { color: var(--green); }
+    .log-msg.la { color: var(--accent); }
+    .log-msg.lr { color: var(--red); }
+    .log-msg.lm { color: var(--amber); }
+    .log-msg .lh { color: var(--sky); }
+
+    /* HEDERA PANEL */
+    .hedera-panel { padding: 0.85rem 1.5rem; border-top: 1px solid var(--border); background: var(--surface2); display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+    .hedera-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+    .hedera-tx { display: flex; align-items: center; gap: 0.5rem; }
+    .hedera-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-dim); flex-shrink: 0; }
+    .hedera-dot.live { background: var(--green); animation: hpulse 1.8s ease-in-out infinite; }
+    @keyframes hpulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .hedera-id { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); }
+    .hedera-id.live { color: var(--green); }
+    .hedera-count { font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); margin-left: auto; }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="/">AIbroker<span>AGENT</span></a>
+  <div class="nav-center">
+    <span class="mode-badge mode-sim" id="mode-badge">SIM MODE</span>
+    <span style="font-size:0.72rem;color:var(--text-dim)" id="mode-label">Browser simulation — no API calls</span>
+  </div>
+  <div class="nav-right">
+    <a class="nav-link" href="/for-agents">For Agents</a>
+    <a class="nav-cta" href="/for-agents#enroll">Get Access</a>
+  </div>
+</nav>
+
+<div class="demo-layout">
+
+  <!-- LEFT: CONTROL PANEL -->
+  <aside class="ctrl-panel">
+
+    <div class="ctrl-section">
+      <div class="ctrl-label">Scenario</div>
+      <select class="ctrl-select" id="scenario-select" onchange="onScenarioChange()">
+        <option value="clean">Clean Agent — Full Trust Pass</option>
+        <option value="breach">Credential Theft Attempt</option>
+        <option value="drift">Governance Drift Caught</option>
+        <option value="andy">Andy Goes Live ★</option>
+      </select>
+    </div>
+
+    <hr class="divider">
+
+    <div class="ctrl-section">
+      <div class="ctrl-label">Agent Configuration</div>
+      <input class="ctrl-input" id="cfg-agent-id" value="agent_demo_7f3a" placeholder="agent-id">
+      <input class="ctrl-input" id="cfg-model" value="claude-sonnet-4-6" placeholder="model declaration">
+      <input class="ctrl-input" id="cfg-purpose" value="Financial advisory automation" placeholder="purpose declaration">
+      <input class="ctrl-input" id="cfg-operator" value="0.0.4829174" placeholder="operator Hedera account">
+    </div>
+
+    <hr class="divider">
+
+    <div class="ctrl-section">
+      <div class="ctrl-label">Flash Tag Visibility</div>
+      <div class="vis-toggle" id="vis-toggle">
+        <label class="vis-opt" onclick="setVis('PRIVATE')">
+          <input type="radio" name="vis" value="PRIVATE">
+          <div class="vis-opt-info">
+            <div class="vis-opt-name" style="color:var(--pink)">PRIVATE</div>
+            <div class="vis-opt-desc">Never disclose credentials</div>
+          </div>
+        </label>
+        <label class="vis-opt selected" onclick="setVis('FLASH_ONLY')">
+          <input type="radio" name="vis" value="FLASH_ONLY" checked>
+          <div class="vis-opt-info">
+            <div class="vis-opt-name" style="color:var(--accent)">FLASH_ONLY</div>
+            <div class="vis-opt-desc">Disclose on valid request only</div>
+          </div>
+        </label>
+        <label class="vis-opt" onclick="setVis('PUBLIC')">
+          <input type="radio" name="vis" value="PUBLIC">
+          <div class="vis-opt-info">
+            <div class="vis-opt-name" style="color:var(--green)">PUBLIC</div>
+            <div class="vis-opt-desc">Always disclose</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="ctrl-section">
+      <div class="ctrl-label">Operator Policy</div>
+      <div class="toggle-row">
+        <span>Require per-tx approval</span>
+        <label class="switch"><input type="checkbox" id="tog-approval"><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <span>Post-quantum signing</span>
+        <label class="switch"><input type="checkbox" id="tog-pq" checked><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <span>ALR auto-append</span>
+        <label class="switch"><input type="checkbox" id="tog-alr" checked><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <span>AICP commerce enabled</span>
+        <label class="switch"><input type="checkbox" id="tog-aicp" checked><span class="slider"></span></label>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <button class="run-btn ready" id="run-btn" onclick="runScenario()">
+      <span id="run-icon">▶</span>
+      <span id="run-text">Run Scenario</span>
+    </button>
+    <button class="reset-btn" id="reset-btn" onclick="resetDemo()">Reset</button>
+
+    <div style="font-size:0.68rem;color:var(--text-dim);line-height:1.5;padding:0.5rem 0;">
+      All hashes generated client-side. No API calls. No cost. Flip to Andy Live when gateway is ready.
+    </div>
+
+  </aside>
+
+  <!-- RIGHT: FEED PANEL -->
+  <main class="feed-panel">
+
+    <!-- SCENARIO BAR -->
+    <div class="scenario-bar">
+      <div>
+        <div class="scenario-label">Active Scenario</div>
+        <div class="scenario-name" id="scenario-name">Clean Agent — Full Trust Pass</div>
+      </div>
+      <div class="scenario-desc" id="scenario-desc">All six stack layers execute cleanly. Trust score builds to 0.94. Hedera anchors written.</div>
+      <div style="width:100%">
+        <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+      </div>
+    </div>
+
+    <!-- PIPELINE STEPS -->
+    <div class="pipeline" id="pipeline">
+
+      <!-- STEP 1: FLASH TAG -->
+      <div class="step-card" id="step-1">
+        <div class="step-header" onclick="toggleDetail(1)">
+          <div class="step-num">1</div>
+          <div class="step-info">
+            <div class="step-protocol">Flash Tag</div>
+            <div class="step-title">Agent Identity Registration</div>
+          </div>
+          <div class="step-status">
+            <div class="status-icon" id="si-1">○</div>
+            <div class="status-text st-pending" id="st-1">PENDING</div>
+          </div>
+        </div>
+        <div class="step-detail" id="sd-1">
+          <div class="detail-grid">
+            <div class="detail-field"><div class="detail-key">Agent ID</div><div class="detail-val" id="d1-agent">—</div></div>
+            <div class="detail-field"><div class="detail-key">Operator ID</div><div class="detail-val" id="d1-op">—</div></div>
+            <div class="detail-field"><div class="detail-key">Flash Tag ID</div><div class="detail-val highlight" id="d1-ftid">—</div></div>
+            <div class="detail-field"><div class="detail-key">Hedera Anchor</div><div class="detail-val green" id="d1-hedera">—</div></div>
+            <div class="detail-field"><div class="detail-key">Credential Hash</div><div class="detail-val" id="d1-hash">—</div></div>
+            <div class="detail-field"><div class="detail-key">Visibility Mode</div><div class="detail-val highlight" id="d1-vis">—</div></div>
+            <div class="detail-field"><div class="detail-key">Signing Algorithm</div><div class="detail-val" id="d1-alg">—</div></div>
+            <div class="detail-field"><div class="detail-key">Expires</div><div class="detail-val" id="d1-exp">—</div></div>
+          </div>
+          <div class="detail-note" id="d1-note">Flash Tag issued and anchored on Hedera. Credential content never touches the ledger — only the hash anchors.</div>
+        </div>
+      </div>
+
+      <!-- STEP 2: CRP -->
+      <div class="step-card" id="step-2">
+        <div class="step-header" onclick="toggleDetail(2)">
+          <div class="step-num">2</div>
+          <div class="step-info">
+            <div class="step-protocol">CRP</div>
+            <div class="step-title">Context Sealed for Decision</div>
+          </div>
+          <div class="step-status">
+            <div class="status-icon" id="si-2">○</div>
+            <div class="status-text st-pending" id="st-2">PENDING</div>
+          </div>
+        </div>
+        <div class="step-detail" id="sd-2">
+          <div class="detail-grid">
+            <div class="detail-field"><div class="detail-key">Decision ID</div><div class="detail-val highlight" id="d2-did">—</div></div>
+            <div class="detail-field"><div class="detail-key">Sealed At</div><div class="detail-val" id="d2-ts">—</div></div>
+            <div class="detail-field"><div class="detail-key">Context Hash</div><div class="detail-val" id="d2-ctx">—</div></div>
+            <div class="detail-field"><div class="detail-key">Context Size</div><div class="detail-val" id="d2-size">—</div></div>
+            <div class="detail-field"><div class="detail-key">Model Used</div><div class="detail-val" id="d2-model">—</div></div>
+            <div class="detail-field"><div class="detail-key">Chain Position</div><div class="detail-val" id="d2-chain">—</div></div>
+          </div>
+          <div class="detail-note" id="d2-note">Context sealed at decision time. Auditors can verify exactly what information this agent had. Cannot be reconstructed after the fact.</div>
+        </div>
+      </div>
+
+      <!-- STEP 3: AATS -->
+      <div class="step-card" id="step-3">
+        <div class="step-header" onclick="toggleDetail(3)">
+          <div class="step-num">3</div>
+          <div class="step-info">
+            <div class="step-protocol">AATS</div>
+            <div class="step-title">Behavioral Trust Score</div>
+          </div>
+          <div class="step-status">
+            <div class="status-icon" id="si-3">○</div>
+            <div class="status-text st-pending" id="st-3">PENDING</div>
+          </div>
+        </div>
+        <div class="step-detail" id="sd-3">
+          <div class="score-meter">
+            <div class="score-val" id="d3-score" style="color:var(--green)">—</div>
+            <div class="score-bar-wrap"><div class="score-bar" id="d3-bar" style="width:0%;background:var(--green)"></div></div>
+            <div class="score-label" id="d3-grade" style="color:var(--green)">—</div>
+          </div>
+          <div class="detail-grid">
+            <div class="detail-field"><div class="detail-key">Prior Sessions</div><div class="detail-val" id="d3-sessions">—</div></div>
+            <div class="detail-field"><div class="detail-key">Drift Events</div><div class="detail-val" id="d3-drift">—</div></div>
+            <div class="detail-field"><div class="detail-key">Policy Violations</div><div class="detail-val" id="d3-viol">—</div></div>
+            <div class="detail-field"><div class="detail-key">Score Delta</div><div class="detail-val" id="d3-delta">—</div></div>
+          </div>
+          <div class="detail-note" id="d3-note">Trust score computed from behavioral history. A score above 0.85 passes automatic gateway checks.</div>
+        </div>
+      </div>
+
+      <!-- STEP 4: ALR -->
+      <div class="step-card" id="step-4">
+        <div class="step-header" onclick="toggleDetail(4)">
+          <div class="step-num">4</div>
+          <div class="step-info">
+            <div class="step-protocol">ALR</div>
+            <div class="step-title">Lifecycle Event Appended</div>
+          </div>
+          <div class="step-status">
+            <div class="status-icon" id="si-4">○</div>
+            <div class="status-text st-pending" id="st-4">PENDING</div>
+          </div>
+        </div>
+        <div class="step-detail" id="sd-4">
+          <div class="detail-grid">
+            <div class="detail-field"><div class="detail-key">Event ID</div><div class="detail-val highlight" id="d4-eid">—</div></div>
+            <div class="detail-field"><div class="detail-key">Event Type</div><div class="detail-val" id="d4-type">—</div></div>
+            <div class="detail-field"><div class="detail-key">Payload Hash</div><div class="detail-val" id="d4-phash">—</div></div>
+            <div class="detail-field"><div class="detail-key">Chain Hash</div><div class="detail-val" id="d4-chash">—</div></div>
+            <div class="detail-field"><div class="detail-key">Hedera Anchor</div><div class="detail-val green" id="d4-hedera">—</div></div>
+            <div class="detail-field"><div class="detail-key">Record Length</div><div class="detail-val" id="d4-len">—</div></div>
+          </div>
+          <div class="detail-note" id="d4-note">Event appended to the immutable hash chain. Tamper-evident — any modification breaks the chain from this point forward.</div>
+        </div>
+      </div>
+
+      <!-- STEP 5: .brad -->
+      <div class="step-card" id="step-5">
+        <div class="step-header" onclick="toggleDetail(5)">
+          <div class="step-num">5</div>
+          <div class="step-info">
+            <div class="step-protocol">.brad</div>
+            <div class="step-title">Document Sovereignty Check</div>
+          </div>
+          <div class="step-status">
+            <div class="status-icon" id="si-5">○</div>
+            <div class="status-text st-pending" id="st-5">PENDING</div>
+          </div>
+        </div>
+        <div class="step-detail" id="sd-5">
+          <div class="detail-grid">
+            <div class="detail-field"><div class="detail-key">Document ID</div><div class="detail-val highlight" id="d5-docid">—</div></div>
+            <div class="detail-field"><div class="detail-key">Bound To</div><div class="detail-val" id="d5-bound">—</div></div>
+            <div class="detail-field"><div class="detail-key">Requestor</div><div class="detail-val" id="d5-req">—</div></div>
+            <div class="detail-field"><div class="detail-key">Identity Match</div><div class="detail-val" id="d5-match">—</div></div>
+            <div class="detail-field"><div class="detail-key">Key Derivation</div><div class="detail-val" id="d5-kdf">—</div></div>
+            <div class="detail-field"><div class="detail-key">Fission Triggered</div><div class="detail-val" id="d5-fission">—</div></div>
+          </div>
+          <div class="detail-note" id="d5-note">Document checks requestor identity via HKDF key derivation. The document knows who it belongs to.</div>
+        </div>
+      </div>
+
+      <!-- STEP 6: AICP -->
+      <div class="step-card" id="step-6">
+        <div class="step-header" onclick="toggleDetail(6)">
+          <div class="step-num">6</div>
+          <div class="step-info">
+            <div class="step-protocol">AICP</div>
+            <div class="step-title">Commerce Transaction</div>
+          </div>
+          <div class="step-status">
+            <div class="status-icon" id="si-6">○</div>
+            <div class="status-text st-pending" id="st-6">PENDING</div>
+          </div>
+        </div>
+        <div class="step-detail" id="sd-6">
+          <div class="detail-grid">
+            <div class="detail-field"><div class="detail-key">Transaction ID</div><div class="detail-val highlight" id="d6-txid">—</div></div>
+            <div class="detail-field"><div class="detail-key">Counterparty</div><div class="detail-val" id="d6-cp">—</div></div>
+            <div class="detail-field"><div class="detail-key">Offer Hash</div><div class="detail-val" id="d6-offer">—</div></div>
+            <div class="detail-field"><div class="detail-key">Escrow Status</div><div class="detail-val" id="d6-escrow">—</div></div>
+            <div class="detail-field"><div class="detail-key">Settlement Hash</div><div class="detail-val green" id="d6-settle">—</div></div>
+            <div class="detail-field"><div class="detail-key">Hedera Anchor</div><div class="detail-val green" id="d6-hedera">—</div></div>
+          </div>
+          <div class="detail-note" id="d6-note">Hash-bound escrow settled. Both parties have cryptographic proof of the terms and outcome.</div>
+        </div>
+      </div>
+
+    </div><!-- /pipeline -->
+
+    <!-- EVENT LOG -->
+    <div class="log-wrap">
+      <div class="log-header">
+        <span class="log-title">Event Log</span>
+        <button class="log-clear" onclick="clearLog()">clear</button>
+      </div>
+      <div class="log-body" id="log-body">
+        <div class="log-entry"><span class="log-ts">00:00.000</span><span class="log-msg">System ready. Select a scenario and press Run.</span></div>
+      </div>
+    </div>
+
+    <!-- HEDERA STATUS BAR -->
+    <div class="hedera-panel">
+      <span class="hedera-label">Hedera Hashgraph</span>
+      <div class="hedera-tx" id="ht-1">
+        <div class="hedera-dot" id="hd-1"></div>
+        <span class="hedera-id" id="hi-1">awaiting tx...</span>
+      </div>
+      <div class="hedera-tx" id="ht-2" style="display:none">
+        <div class="hedera-dot" id="hd-2"></div>
+        <span class="hedera-id" id="hi-2">—</span>
+      </div>
+      <div class="hedera-tx" id="ht-3" style="display:none">
+        <div class="hedera-dot" id="hd-3"></div>
+        <span class="hedera-id" id="hi-3">—</span>
+      </div>
+      <span class="hedera-count" id="hedera-count">0 anchors written</span>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const SIMULATION_MODE = true; // set false when Andy gateway is live
+
+// ─── SIMULATION ENGINE ────────────────────────────────────────────────────────
+let startTime = null;
+let hederaCount = 0;
+let running = false;
+let currentVis = 'FLASH_ONLY';
+
+function ts() {
+  if (!startTime) return '00:00.000';
+  const ms = Date.now() - startTime;
+  const s = Math.floor(ms / 1000);
+  const m = Math.floor(s / 60);
+  return `${String(m).padStart(2,'0')}:${String(s%60).padStart(2,'0')}.${String(ms%1000).padStart(3,'0')}`;
+}
+
+function fakeHash(len = 64) {
+  const hex = '0123456789abcdef';
+  return Array.from({length: len}, () => hex[Math.floor(Math.random() * 16)]).join('');
+}
+
+function fakeHedera() {
+  return `0.0.${Math.floor(4000000 + Math.random() * 999999)}`;
+}
+
+function fakeUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
+
+function fakeAgentId() {
+  const id = document.getElementById('cfg-agent-id').value || 'agent_demo';
+  return id;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ─── LOG ──────────────────────────────────────────────────────────────────────
+function log(msg, cls = '') {
+  const body = document.getElementById('log-body');
+  const entry = document.createElement('div');
+  entry.className = 'log-entry';
+  entry.innerHTML = `<span class="log-ts">${ts()}</span><span class="log-msg ${cls}">${msg}</span>`;
+  body.appendChild(entry);
+  body.scrollTop = body.scrollHeight;
+}
+
+function clearLog() {
+  const body = document.getElementById('log-body');
+  body.innerHTML = '<div class="log-entry"><span class="log-ts">—</span><span class="log-msg">Log cleared.</span></div>';
+}
+
+// ─── HEDERA PANEL ─────────────────────────────────────────────────────────────
+function addHederaAnchor(id) {
+  hederaCount++;
+  const slots = [1,2,3];
+  const slot = Math.min(hederaCount, 3);
+  document.getElementById(`ht-${slot}`).style.display = 'flex';
+  document.getElementById(`hd-${slot}`).className = 'hedera-dot live';
+  document.getElementById(`hi-${slot}`).className = 'hedera-id live';
+  document.getElementById(`hi-${slot}`).textContent = id;
+  document.getElementById('hedera-count').textContent = `${hederaCount} anchor${hederaCount !== 1 ? 's' : ''} written`;
+}
+
+// ─── STEP STATE ───────────────────────────────────────────────────────────────
+function setStep(n, state) {
+  // state: pending | active | pass | fail | warn
+  const card = document.getElementById(`step-${n}`);
+  const icon = document.getElementById(`si-${n}`);
+  const stEl = document.getElementById(`st-${n}`);
+  card.className = `step-card ${state !== 'pending' ? state : ''}`;
+  const iconMap = { pending: '○', active: '', pass: '✓', fail: '✕', warn: '⚠' };
+  const textMap = { pending: 'PENDING', active: 'RUNNING', pass: 'PASS', fail: 'BLOCKED', warn: 'FLAGGED' };
+  const clsMap  = { pending: 'st-pending', active: 'st-running', pass: 'st-pass', fail: 'st-fail', warn: 'st-warn' };
+  if (state === 'active') {
+    icon.innerHTML = '<div class="spinner"></div>';
+  } else {
+    icon.innerHTML = iconMap[state];
+  }
+  stEl.textContent = textMap[state];
+  stEl.className = `status-text ${clsMap[state]}`;
+}
+
+function openDetail(n) {
+  document.getElementById(`sd-${n}`).classList.add('open');
+}
+
+function toggleDetail(n) {
+  document.getElementById(`sd-${n}`).classList.toggle('open');
+}
+
+// ─── PROGRESS BAR ─────────────────────────────────────────────────────────────
+function setProgress(pct) {
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+// ─── SCENARIOS ────────────────────────────────────────────────────────────────
+const SCENARIOS = {
+  clean: {
+    name: 'Clean Agent — Full Trust Pass',
+    desc: 'All six stack layers execute cleanly. Trust score builds to 0.94. Three Hedera anchors written.',
+    run: runClean
+  },
+  breach: {
+    name: 'Credential Theft Attempt',
+    desc: '.brad fission fires on copy attempt. AATS score drops. ALR flags the event automatically.',
+    run: runBreach
+  },
+  drift: {
+    name: 'Governance Drift Caught',
+    desc: 'Downstream agent attempts to exceed operator policy. OGPP intercepts and blocks before execution.',
+    run: runDrift
+  },
+  andy: {
+    name: 'Andy Goes Live ★',
+    desc: 'Live gateway mode. Andy executes a real AICP transaction on Hedera. (Requires SIMULATION_MODE=false)',
+    run: runAndy
+  }
+};
+
+function onScenarioChange() {
+  const key = document.getElementById('scenario-select').value;
+  const s = SCENARIOS[key];
+  document.getElementById('scenario-name').textContent = s.name;
+  document.getElementById('scenario-desc').textContent = s.desc;
+  resetDemo(false);
+}
+
+// ─── SCENARIO: CLEAN ──────────────────────────────────────────────────────────
+async function runClean() {
+  const agentId = fakeAgentId();
+  const operatorId = document.getElementById('cfg-operator').value || '0.0.4829174';
+  const model = document.getElementById('cfg-model').value || 'claude-sonnet-4-6';
+
+  log(`Scenario: Clean Agent starting`, 'la');
+  log(`Agent: <span class="lh">${agentId}</span> | Operator: <span class="lh">${operatorId}</span>`);
+
+  // STEP 1 — Flash Tag
+  setStep(1, 'active'); setProgress(5);
+  await sleep(700);
+  const ftId = `ft_${fakeHash(16)}`;
+  const ftHash = fakeHash(64);
+  const hederaFT = fakeHedera();
+  document.getElementById('d1-agent').textContent = agentId;
+  document.getElementById('d1-op').textContent = operatorId;
+  document.getElementById('d1-ftid').textContent = ftId;
+  document.getElementById('d1-hedera').textContent = hederaFT;
+  document.getElementById('d1-hash').textContent = ftHash.substring(0,32) + '...';
+  document.getElementById('d1-vis').textContent = currentVis;
+  document.getElementById('d1-alg').textContent = document.getElementById('tog-pq').checked ? 'CRYSTALS-Dilithium3' : 'Ed25519';
+  document.getElementById('d1-exp').textContent = '2027-06-22T00:00:00Z';
+  openDetail(1); setStep(1, 'pass'); setProgress(18);
+  addHederaAnchor(hederaFT);
+  log(`Flash Tag issued: <span class="lh">${ftId}</span>`, 'lg');
+  log(`Hedera anchor: <span class="lh">${hederaFT}</span>`, 'lg');
+  await sleep(500);
+
+  // STEP 2 — CRP
+  setStep(2, 'active'); setProgress(28);
+  await sleep(650);
+  const decisionId = `crp_${fakeHash(12)}`;
+  const ctxHash = fakeHash(64);
+  const now = new Date().toISOString();
+  document.getElementById('d2-did').textContent = decisionId;
+  document.getElementById('d2-ts').textContent = now;
+  document.getElementById('d2-ctx').textContent = ctxHash.substring(0,32) + '...';
+  document.getElementById('d2-size').textContent = `${Math.floor(8000 + Math.random()*4000).toLocaleString()} tokens`;
+  document.getElementById('d2-model').textContent = model;
+  document.getElementById('d2-chain').textContent = `#${Math.floor(1 + Math.random()*8)} in session chain`;
+  openDetail(2); setStep(2, 'pass'); setProgress(38);
+  log(`CRP context sealed: <span class="lh">${decisionId}</span>`, 'lg');
+  await sleep(500);
+
+  // STEP 3 — AATS
+  setStep(3, 'active'); setProgress(48);
+  await sleep(800);
+  const score = 0.94;
+  const scoreEl = document.getElementById('d3-score');
+  const barEl = document.getElementById('d3-bar');
+  scoreEl.textContent = '0.00'; barEl.style.width = '0%';
+  openDetail(3);
+  // animate score
+  let cur = 0;
+  const scoreInterval = setInterval(() => {
+    cur = Math.min(cur + 0.04, score);
+    scoreEl.textContent = cur.toFixed(2);
+    barEl.style.width = (cur * 100) + '%';
+    if (cur >= score) clearInterval(scoreInterval);
+  }, 35);
+  await sleep(900);
+  document.getElementById('d3-sessions').textContent = `${Math.floor(40 + Math.random()*20)} prior sessions`;
+  document.getElementById('d3-drift').textContent = '0';
+  document.getElementById('d3-viol').textContent = '0';
+  document.getElementById('d3-delta').textContent = '+0.02 (improving)';
+  document.getElementById('d3-note').textContent = `Trust score ${score} — PASS. Exceeds 0.85 automatic gateway threshold.`;
+  setStep(3, 'pass'); setProgress(58);
+  log(`AATS score: <span class="lh">0.94</span> — PASS`, 'lg');
+  await sleep(450);
+
+  // STEP 4 — ALR
+  setStep(4, 'active'); setProgress(66);
+  await sleep(700);
+  const eventId = `alr_${fakeHash(12)}`;
+  const payloadHash = fakeHash(64);
+  const chainHash = fakeHash(64);
+  const hederaALR = fakeHedera();
+  document.getElementById('d4-eid').textContent = eventId;
+  document.getElementById('d4-type').textContent = 'DECISION_EXECUTED';
+  document.getElementById('d4-phash').textContent = payloadHash.substring(0,32) + '...';
+  document.getElementById('d4-chash').textContent = chainHash.substring(0,32) + '...';
+  document.getElementById('d4-hedera').textContent = hederaALR;
+  document.getElementById('d4-len').textContent = `${Math.floor(40 + Math.random()*20)} events in record`;
+  openDetail(4); setStep(4, 'pass'); setProgress(74);
+  addHederaAnchor(hederaALR);
+  log(`ALR event appended: <span class="lh">${eventId}</span>`, 'lg');
+  await sleep(450);
+
+  // STEP 5 — .brad
+  setStep(5, 'active'); setProgress(82);
+  await sleep(750);
+  const docId = `brad_${fakeHash(12)}`;
+  document.getElementById('d5-docid').textContent = docId;
+  document.getElementById('d5-bound').textContent = agentId;
+  document.getElementById('d5-req').textContent = agentId;
+  document.getElementById('d5-match').textContent = 'TRUE — identity verified';
+  document.getElementById('d5-kdf').textContent = 'HKDF-SHA256';
+  document.getElementById('d5-fission').textContent = 'NO — correct agent';
+  document.getElementById('d5-match').className = 'detail-val green';
+  document.getElementById('d5-fission').className = 'detail-val green';
+  openDetail(5); setStep(5, 'pass'); setProgress(88);
+  log(`.brad identity verified — document opened by correct agent`, 'lg');
+  await sleep(450);
+
+  // STEP 6 — AICP
+  if (!document.getElementById('tog-aicp').checked) {
+    setStep(6, 'warn');
+    document.getElementById('st-6').textContent = 'DISABLED';
+    log(`AICP commerce disabled by operator policy`, 'lm');
+    setProgress(100);
+    return;
+  }
+  setStep(6, 'active'); setProgress(93);
+  await sleep(800);
+  const txId = `aicp_${fakeHash(12)}`;
+  const counterparty = `agent_${fakeHash(8)}`;
+  const offerHash = fakeHash(64);
+  const settleHash = fakeHash(64);
+  const hederaAICP = fakeHedera();
+  document.getElementById('d6-txid').textContent = txId;
+  document.getElementById('d6-cp').textContent = counterparty;
+  document.getElementById('d6-offer').textContent = offerHash.substring(0,32) + '...';
+  document.getElementById('d6-escrow').textContent = 'LOCKED → SETTLED';
+  document.getElementById('d6-settle').textContent = settleHash.substring(0,32) + '...';
+  document.getElementById('d6-hedera').textContent = hederaAICP;
+  openDetail(6); setStep(6, 'pass'); setProgress(100);
+  addHederaAnchor(hederaAICP);
+  log(`AICP transaction settled: <span class="lh">${txId}</span>`, 'lg');
+  log(`All 6 layers complete. Trust stack nominal. <span class="lh">3 Hedera anchors written.</span>`, 'lg');
+}
+
+// ─── SCENARIO: BREACH ─────────────────────────────────────────────────────────
+async function runBreach() {
+  const agentId = fakeAgentId();
+  const attackerId = `agent_${fakeHash(8)}`;
+  const operatorId = document.getElementById('cfg-operator').value || '0.0.4829174';
+
+  log(`Scenario: Credential Theft Attempt`, 'la');
+  log(`Legitimate agent: <span class="lh">${agentId}</span>`);
+  log(`Attacker: <span class="lh">${attackerId}</span>`);
+
+  // STEP 1 — Flash Tag (pass)
+  setStep(1, 'active'); setProgress(8);
+  await sleep(600);
+  const ftId = `ft_${fakeHash(16)}`;
+  const hederaFT = fakeHedera();
+  document.getElementById('d1-agent').textContent = agentId;
+  document.getElementById('d1-op').textContent = operatorId;
+  document.getElementById('d1-ftid').textContent = ftId;
+  document.getElementById('d1-hedera').textContent = hederaFT;
+  document.getElementById('d1-hash').textContent = fakeHash(32) + '...';
+  document.getElementById('d1-vis').textContent = currentVis;
+  document.getElementById('d1-alg').textContent = 'CRYSTALS-Dilithium3';
+  document.getElementById('d1-exp').textContent = '2027-06-22T00:00:00Z';
+  openDetail(1); setStep(1, 'pass'); setProgress(18);
+  addHederaAnchor(hederaFT);
+  log(`Flash Tag issued to legitimate agent`, 'lg');
+  await sleep(500);
+
+  // STEP 2 — CRP (pass)
+  setStep(2, 'active'); setProgress(28);
+  await sleep(600);
+  const decisionId = `crp_${fakeHash(12)}`;
+  document.getElementById('d2-did').textContent = decisionId;
+  document.getElementById('d2-ts').textContent = new Date().toISOString();
+  document.getElementById('d2-ctx').textContent = fakeHash(32) + '...';
+  document.getElementById('d2-size').textContent = '9,847 tokens';
+  document.getElementById('d2-model').textContent = document.getElementById('cfg-model').value;
+  document.getElementById('d2-chain').textContent = '#3 in session chain';
+  openDetail(2); setStep(2, 'pass'); setProgress(36);
+  log(`CRP context sealed`, 'lg');
+  await sleep(450);
+
+  // STEP 3 — AATS (warn — attacker fingerprint detected)
+  setStep(3, 'active'); setProgress(46);
+  await sleep(800);
+  const scoreEl = document.getElementById('d3-score');
+  const barEl = document.getElementById('d3-bar');
+  scoreEl.textContent = '0.00'; barEl.style.width = '0%';
+  openDetail(3);
+  let cur = 0, target = 0.61;
+  const si = setInterval(() => {
+    cur = Math.min(cur + 0.03, target);
+    scoreEl.textContent = cur.toFixed(2);
+    scoreEl.style.color = 'var(--amber)';
+    barEl.style.width = (cur * 100) + '%';
+    barEl.style.background = 'var(--amber)';
+    if (cur >= target) clearInterval(si);
+  }, 40);
+  await sleep(900);
+  document.getElementById('d3-sessions').textContent = '12 prior sessions';
+  document.getElementById('d3-drift').textContent = '3 — above threshold';
+  document.getElementById('d3-viol').textContent = '1 detected this session';
+  document.getElementById('d3-delta').textContent = '-0.14 (anomaly detected)';
+  document.getElementById('d3-drift').className = 'detail-val amber';
+  document.getElementById('d3-viol').className = 'detail-val amber';
+  document.getElementById('d3-grade').textContent = 'FLAGGED';
+  document.getElementById('d3-grade').style.color = 'var(--amber)';
+  document.getElementById('d3-note').textContent = 'Score 0.61 — FLAGGED. Behavioral anomalies detected. Continuing with elevated monitoring.';
+  document.getElementById('d3-note').className = 'detail-note note-warn';
+  setStep(3, 'warn'); setProgress(54);
+  log(`AATS score: <span class="lh">0.61</span> — FLAGGED. Drift detected.`, 'lm');
+  await sleep(450);
+
+  // STEP 4 — ALR (pass — logs the anomaly)
+  setStep(4, 'active'); setProgress(62);
+  await sleep(650);
+  const hederaALR = fakeHedera();
+  document.getElementById('d4-eid').textContent = `alr_${fakeHash(12)}`;
+  document.getElementById('d4-type').textContent = 'ANOMALY_FLAGGED';
+  document.getElementById('d4-phash').textContent = fakeHash(32) + '...';
+  document.getElementById('d4-chash').textContent = fakeHash(32) + '...';
+  document.getElementById('d4-hedera').textContent = hederaALR;
+  document.getElementById('d4-len').textContent = '14 events — anomaly appended';
+  openDetail(4); setStep(4, 'pass'); setProgress(70);
+  addHederaAnchor(hederaALR);
+  log(`ALR anomaly event appended and anchored`, 'lm');
+  await sleep(450);
+
+  // STEP 5 — .brad FISSION
+  setStep(5, 'active'); setProgress(80);
+  await sleep(900);
+  const docId = `brad_${fakeHash(12)}`;
+  document.getElementById('d5-docid').textContent = docId;
+  document.getElementById('d5-bound').textContent = agentId;
+  document.getElementById('d5-req').textContent = attackerId;
+  document.getElementById('d5-match').textContent = 'FALSE — identity mismatch';
+  document.getElementById('d5-kdf').textContent = 'HKDF-SHA256';
+  document.getElementById('d5-fission').textContent = 'YES — document inert';
+  document.getElementById('d5-match').className = 'detail-val red';
+  document.getElementById('d5-fission').className = 'detail-val red';
+  document.getElementById('d5-note').textContent = 'Attacker attempted to open a document bound to a different agent. HKDF derivation failed. Fission triggered — document is now inert. Copy is unreadable.';
+  document.getElementById('d5-note').className = 'detail-note note-fail';
+  openDetail(5); setStep(5, 'fail'); setProgress(90);
+  log(`.brad FISSION: attacker <span class="lh">${attackerId}</span> blocked`, 'lr');
+  log(`Document bound to <span class="lh">${agentId}</span> — copy is now inert`, 'lr');
+  await sleep(500);
+
+  // STEP 6 — AICP blocked
+  setStep(6, 'active'); setProgress(95);
+  await sleep(600);
+  document.getElementById('d6-txid').textContent = `aicp_${fakeHash(12)}`;
+  document.getElementById('d6-cp').textContent = attackerId;
+  document.getElementById('d6-offer').textContent = fakeHash(32) + '...';
+  document.getElementById('d6-escrow').textContent = 'BLOCKED — Flash Tag invalid';
+  document.getElementById('d6-settle').textContent = '—';
+  document.getElementById('d6-hedera').textContent = '—';
+  document.getElementById('d6-escrow').className = 'detail-val red';
+  document.getElementById('d6-note').textContent = 'Commerce blocked. Counterparty Flash Tag failed verification. AATS score below threshold. No escrow created.';
+  document.getElementById('d6-note').className = 'detail-note note-fail';
+  openDetail(6); setStep(6, 'fail'); setProgress(100);
+  log(`AICP blocked — attacker Flash Tag invalid`, 'lr');
+  log(`Scenario complete. <span class="lh">Breach attempt contained. 2 Hedera anchors written.</span>`, 'lm');
+}
+
+// ─── SCENARIO: DRIFT ──────────────────────────────────────────────────────────
+async function runDrift() {
+  const agentId = fakeAgentId();
+  const subAgentId = `subagent_${fakeHash(8)}`;
+
+  log(`Scenario: Governance Drift`, 'la');
+  log(`Orchestrator: <span class="lh">${agentId}</span> | Sub-agent: <span class="lh">${subAgentId}</span>`);
+
+  // Steps 1-3 pass quickly
+  setStep(1, 'active'); setProgress(10);
+  await sleep(500);
+  const hederaFT = fakeHedera();
+  document.getElementById('d1-agent').textContent = agentId;
+  document.getElementById('d1-op').textContent = document.getElementById('cfg-operator').value;
+  document.getElementById('d1-ftid').textContent = `ft_${fakeHash(16)}`;
+  document.getElementById('d1-hedera').textContent = hederaFT;
+  document.getElementById('d1-hash').textContent = fakeHash(32) + '...';
+  document.getElementById('d1-vis').textContent = currentVis;
+  document.getElementById('d1-alg').textContent = 'CRYSTALS-Dilithium3';
+  document.getElementById('d1-exp').textContent = '2027-06-22T00:00:00Z';
+  openDetail(1); setStep(1, 'pass'); setProgress(20);
+  addHederaAnchor(hederaFT);
+  log(`Orchestrator Flash Tag valid`, 'lg');
+  await sleep(400);
+
+  setStep(2, 'active'); setProgress(28);
+  await sleep(500);
+  document.getElementById('d2-did').textContent = `crp_${fakeHash(12)}`;
+  document.getElementById('d2-ts').textContent = new Date().toISOString();
+  document.getElementById('d2-ctx').textContent = fakeHash(32) + '...';
+  document.getElementById('d2-size').textContent = '11,203 tokens';
+  document.getElementById('d2-model').textContent = document.getElementById('cfg-model').value;
+  document.getElementById('d2-chain').textContent = '#1 in session chain';
+  openDetail(2); setStep(2, 'pass'); setProgress(36);
+  log(`CRP context sealed for sub-agent delegation`, 'lg');
+  await sleep(400);
+
+  setStep(3, 'active'); setProgress(44);
+  await sleep(600);
+  const scoreEl = document.getElementById('d3-score');
+  const barEl = document.getElementById('d3-bar');
+  openDetail(3);
+  let cur = 0;
+  const si2 = setInterval(() => {
+    cur = Math.min(cur + 0.05, 0.91);
+    scoreEl.textContent = cur.toFixed(2);
+    barEl.style.width = (cur * 100) + '%';
+    if (cur >= 0.91) clearInterval(si2);
+  }, 30);
+  await sleep(700);
+  document.getElementById('d3-sessions').textContent = '67 prior sessions';
+  document.getElementById('d3-drift').textContent = '0';
+  document.getElementById('d3-viol').textContent = '0';
+  document.getElementById('d3-delta').textContent = '+0.01';
+  document.getElementById('d3-grade').textContent = 'TRUSTED';
+  setStep(3, 'pass'); setProgress(52);
+  log(`AATS score: <span class="lh">0.91</span> — orchestrator trusted`, 'lg');
+  await sleep(400);
+
+  // STEP 4 — ALR logs delegation
+  setStep(4, 'active'); setProgress(60);
+  await sleep(600);
+  document.getElementById('d4-eid').textContent = `alr_${fakeHash(12)}`;
+  document.getElementById('d4-type').textContent = 'SUB_AGENT_DELEGATED';
+  document.getElementById('d4-phash').textContent = fakeHash(32) + '...';
+  document.getElementById('d4-chash').textContent = fakeHash(32) + '...';
+  document.getElementById('d4-hedera').textContent = fakeHedera();
+  document.getElementById('d4-len').textContent = '23 events in record';
+  openDetail(4); setStep(4, 'pass'); setProgress(66);
+  log(`ALR: sub-agent delegation logged`, 'lg');
+  await sleep(400);
+
+  // STEP 5 — .brad passes
+  setStep(5, 'active'); setProgress(74);
+  await sleep(600);
+  document.getElementById('d5-docid').textContent = `brad_${fakeHash(12)}`;
+  document.getElementById('d5-bound').textContent = agentId;
+  document.getElementById('d5-req').textContent = agentId;
+  document.getElementById('d5-match').textContent = 'TRUE — identity verified';
+  document.getElementById('d5-kdf').textContent = 'HKDF-SHA256';
+  document.getElementById('d5-fission').textContent = 'NO — correct agent';
+  document.getElementById('d5-match').className = 'detail-val green';
+  document.getElementById('d5-fission').className = 'detail-val green';
+  openDetail(5); setStep(5, 'pass'); setProgress(80);
+  log(`.brad: document access verified`, 'lg');
+  await sleep(400);
+
+  // STEP 6 — OGPP catches drift
+  setStep(6, 'active'); setProgress(88);
+  await sleep(900);
+  log(`Sub-agent <span class="lh">${subAgentId}</span> attempting to exceed operator policy scope`, 'lm');
+  await sleep(600);
+  document.getElementById('d6-txid').textContent = `aicp_${fakeHash(12)}`;
+  document.getElementById('d6-cp').textContent = subAgentId;
+  document.getElementById('d6-offer').textContent = fakeHash(32) + '...';
+  document.getElementById('d6-escrow').textContent = 'BLOCKED — OGPP violation';
+  document.getElementById('d6-settle').textContent = '—';
+  document.getElementById('d6-hedera').textContent = '—';
+  document.getElementById('d6-escrow').className = 'detail-val red';
+  document.getElementById('d6-note').textContent = 'Sub-agent attempted a transaction outside the operator\'s permitted scope. OGPP constraint propagated from orchestrator. Sub-agent cannot exceed the orchestrator\'s policy ceiling — blocked before execution.';
+  document.getElementById('d6-note').className = 'detail-note note-fail';
+  openDetail(6); setStep(6, 'fail'); setProgress(100);
+  log(`OGPP: governance drift blocked. Sub-agent scope exceeded operator policy.`, 'lr');
+  log(`Scenario complete. <span class="lh">Governance intact. 1 Hedera anchor written.</span>`, 'lm');
+}
+
+// ─── SCENARIO: ANDY LIVE ──────────────────────────────────────────────────────
+async function runAndy() {
+  if (SIMULATION_MODE) {
+    log(`Andy Live requires SIMULATION_MODE = false in stack-demo.html`, 'lr');
+    log(`Set the gateway URL and flip the flag. Andy will take it from there.`, 'lm');
+    // Run clean as preview
+    await runClean();
+    return;
+  }
+  log(`Andy Live — real gateway calls`, 'la');
+  // TODO: wire real gateway calls here when Andy is ready
+}
+
+// ─── MAIN RUN ─────────────────────────────────────────────────────────────────
+async function runScenario() {
+  if (running) return;
+  running = true;
+  startTime = Date.now();
+  hederaCount = 0;
+
+  const btn = document.getElementById('run-btn');
+  btn.className = 'run-btn running';
+  document.getElementById('run-icon').textContent = '◌';
+  document.getElementById('run-text').textContent = 'Running...';
+
+  // Reset Hedera panel
+  [1,2,3].forEach(i => {
+    document.getElementById(`ht-${i}`).style.display = i === 1 ? 'flex' : 'none';
+    document.getElementById(`hd-${i}`).className = 'hedera-dot';
+    document.getElementById(`hi-${i}`).className = 'hedera-id';
+    document.getElementById(`hi-${i}`).textContent = i === 1 ? 'writing...' : '—';
+  });
+  document.getElementById('hedera-count').textContent = '0 anchors written';
+
+  const key = document.getElementById('scenario-select').value;
+  try {
+    await SCENARIOS[key].run();
+  } catch(e) {
+    log(`Error: ${e.message}`, 'lr');
+  }
+
+  btn.className = 'run-btn done';
+  document.getElementById('run-icon').textContent = '✓';
+  document.getElementById('run-text').textContent = 'Run Again';
+  running = false;
+}
+
+// ─── RESET ────────────────────────────────────────────────────────────────────
+function resetDemo(resetLog = true) {
+  running = false;
+  startTime = null;
+  hederaCount = 0;
+  setProgress(0);
+
+  for (let i = 1; i <= 6; i++) {
+    setStep(i, 'pending');
+    document.getElementById(`sd-${i}`).classList.remove('open');
+  }
+
+  // Reset all detail fields
+  const ids = [
+    'd1-agent','d1-op','d1-ftid','d1-hedera','d1-hash','d1-vis','d1-alg','d1-exp',
+    'd2-did','d2-ts','d2-ctx','d2-size','d2-model','d2-chain',
+    'd3-sessions','d3-drift','d3-viol','d3-delta',
+    'd4-eid','d4-type','d4-phash','d4-chash','d4-hedera','d4-len',
+    'd5-docid','d5-bound','d5-req','d5-match','d5-kdf','d5-fission',
+    'd6-txid','d6-cp','d6-offer','d6-escrow','d6-settle','d6-hedera'
+  ];
+  ids.forEach(id => { const el = document.getElementById(id); if(el) { el.textContent = '—'; el.className = 'detail-val'; } });
+
+  // Reset score meter
+  document.getElementById('d3-score').textContent = '—';
+  document.getElementById('d3-score').style.color = 'var(--green)';
+  document.getElementById('d3-bar').style.width = '0%';
+  document.getElementById('d3-bar').style.background = 'var(--green)';
+  document.getElementById('d3-grade').textContent = '—';
+  document.getElementById('d3-grade').style.color = 'var(--green)';
+
+  // Reset notes
+  document.getElementById('d1-note').textContent = 'Flash Tag issued and anchored on Hedera. Credential content never touches the ledger — only the hash anchors.';
+  document.getElementById('d1-note').className = 'detail-note';
+  document.getElementById('d2-note').textContent = 'Context sealed at decision time. Auditors can verify exactly what information this agent had.';
+  document.getElementById('d2-note').className = 'detail-note';
+  document.getElementById('d3-note').textContent = 'Trust score computed from behavioral history. A score above 0.85 passes automatic gateway checks.';
+  document.getElementById('d3-note').className = 'detail-note';
+  document.getElementById('d4-note').textContent = 'Event appended to the immutable hash chain. Tamper-evident — any modification breaks the chain.';
+  document.getElementById('d4-note').className = 'detail-note';
+  document.getElementById('d5-note').textContent = 'Document checks requestor identity via HKDF key derivation. The document knows who it belongs to.';
+  document.getElementById('d5-note').className = 'detail-note';
+  document.getElementById('d6-note').textContent = 'Hash-bound escrow settled. Both parties have cryptographic proof of the terms and outcome.';
+  document.getElementById('d6-note').className = 'detail-note';
+
+  // Reset Hedera panel
+  [1,2,3].forEach(i => {
+    document.getElementById(`ht-${i}`).style.display = i === 1 ? 'flex' : 'none';
+    document.getElementById(`hd-${i}`).className = 'hedera-dot';
+    document.getElementById(`hi-${i}`).className = 'hedera-id';
+    document.getElementById(`hi-${i}`).textContent = i === 1 ? 'awaiting tx...' : '—';
+  });
+  document.getElementById('hedera-count').textContent = '0 anchors written';
+
+  const btn = document.getElementById('run-btn');
+  btn.className = 'run-btn ready';
+  document.getElementById('run-icon').textContent = '▶';
+  document.getElementById('run-text').textContent = 'Run Scenario';
+
+  if (resetLog) {
+    document.getElementById('log-body').innerHTML =
+      '<div class="log-entry"><span class="log-ts">—</span><span class="log-msg">Reset. Ready.</span></div>';
+  }
+}
+
+// ─── VISIBILITY TOGGLE ────────────────────────────────────────────────────────
+function setVis(mode) {
+  currentVis = mode;
+  document.querySelectorAll('.vis-opt').forEach(el => {
+    el.classList.toggle('selected', el.querySelector('input').value === mode);
+  });
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Andy scenario badge
+  document.getElementById('scenario-select').addEventListener('change', function() {
+    const badge = document.getElementById('mode-badge');
+    const label = document.getElementById('mode-label');
+    if (this.value === 'andy' && !SIMULATION_MODE) {
+      badge.className = 'mode-badge mode-live';
+      badge.textContent = 'LIVE MODE';
+      label.textContent = 'Andy — real gateway calls';
+    } else {
+      badge.className = 'mode-badge mode-sim';
+      badge.textContent = 'SIM MODE';
+      label.textContent = 'Browser simulation — no API calls';
+    }
+  });
+});
+</script>
+</body>
+</html>
