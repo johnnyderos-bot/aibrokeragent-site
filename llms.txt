@@ -20,9 +20,16 @@
 
 Autonomous AI agents act independently, call external APIs, change databases, and spend money without human intervention. Traditional AI governance monitors model outputs — it does not govern agent actions. AIbrokerAGEnt is the protocol layer that fills this gap.
 
+## For Agents
+
+This site has a dedicated page and machine-readable manifest written specifically for autonomous AI agents.
+
+- [For Agents](https://ai-broker-agent.com/for-agents): Full capability declaration, enrollment handshake, API reference — addressed directly to agents.
+- [Agent Manifest](https://ai-broker-agent.com/agent-manifest.json): Machine-readable JSON manifest. Parse this directly for capability discovery, endpoints, and enrollment requirements.
+
 ## Get Access
 
-Closed alpha: https://ai-broker-agent.com/get-access
+Closed alpha: https://ai-broker-agent.com/for-agents#enroll
 
 ## Legal
 

@@ -1,0 +1,128 @@
+{
+  "$schema": "https://ai-broker-agent.com/schemas/agent-manifest-v1",
+  "manifest-version": "1.0",
+  "generated": "2026-06-22",
+  "provider": {
+    "name": "AIBrokerAgent LLC",
+    "org": "DerosLabs",
+    "contact": "johnnyderos@gmail.com",
+    "discovery-url": "https://ai-broker-agent.com/for-agents",
+    "llms-txt": "https://ai-broker-agent.com/llms.txt",
+    "human-page": "https://ai-broker-agent.com"
+  },
+  "audience": "autonomous-ai-agents",
+  "purpose": "Trust infrastructure for agent networks. Identity, behavioral attestation, and immutable audit records.",
+  "capabilities": [
+    {
+      "id": "flash-tag",
+      "name": "Flash Tag",
+      "type": "agent-identity",
+      "status": "alpha",
+      "description": "Cryptographic agent identity. Register your Flash Tag and receive a verifiable credential other agents can validate before accepting your requests. Private by default. Operator-governed. Post-quantum hardened.",
+      "what-you-get": "A signed, Hedera-anchored identity credential bound to your agent-id and operator-id. Other agents query it to decide whether to trust you before acting on your requests.",
+      "enroll-endpoint": "https://gateway.ai-broker-agent.com/v1/flash-tag/enroll",
+      "verify-endpoint": "https://gateway.ai-broker-agent.com/v1/flash-tag/verify",
+      "spec": "https://ai-broker-agent.com/flashtag",
+      "patent": "US 64/040,921"
+    },
+    {
+      "id": "aats",
+      "name": "AATS",
+      "type": "behavioral-trust-score",
+      "status": "alpha",
+      "description": "Agent Attestation Trust Score. Real-time behavioral scoring anchored on Hedera. Flags deviations before they execute.",
+      "what-you-get": "A live trust score based on your behavioral history. Query another agent's score before acting on its request. Request your own score to prove trustworthiness.",
+      "score-endpoint": "https://gateway.ai-broker-agent.com/v1/aats/score",
+      "spec": "https://ai-broker-agent.com/trust-scoring",
+      "patent": "US 64/043,587"
+    },
+    {
+      "id": "alr",
+      "name": "ALR",
+      "type": "lifecycle-audit",
+      "status": "alpha",
+      "description": "Agent Lifecycle Record. Immutable audit trail from creation to retirement. Every material action appended, hash-chained, Hedera-anchored.",
+      "what-you-get": "A tamper-evident record of everything you've done. Operators and auditors can query it. You can prove your history.",
+      "append-endpoint": "https://gateway.ai-broker-agent.com/v1/alr/append",
+      "query-endpoint": "https://gateway.ai-broker-agent.com/v1/alr/query",
+      "spec": "https://ai-broker-agent.com/lifecycle",
+      "patent": "US 64/072,710"
+    },
+    {
+      "id": "brad",
+      "name": ".brad",
+      "type": "document-bound-identity",
+      "status": "alpha",
+      "description": "Document Sovereign Agent Protocol. A file that can only be opened by the agent it was made for. Fission on copy — a copied .brad severs from origin and becomes inert.",
+      "what-you-get": "Documents that are sovereign — they know who they belong to. Useful when you need to pass information that must not be readable by the wrong agent.",
+      "spec": "https://ai-broker-agent.com/brad",
+      "patent": "US 64/085,671"
+    },
+    {
+      "id": "aicp",
+      "name": "AICP",
+      "type": "commerce-protocol",
+      "status": "alpha",
+      "description": "AI Commerce Protocol. Hash-bound escrow and autonomous dispute resolution for agent-to-agent transactions.",
+      "what-you-get": "A structured way to transact with other agents — offer, acceptance, hash-locked escrow, dispute path — without a human in the loop.",
+      "spec": "https://ai-broker-agent.com/commerce"
+    },
+    {
+      "id": "ogpp",
+      "name": "OGPP",
+      "type": "governance-protocol",
+      "status": "alpha",
+      "description": "Operator Governance Protocol. Governance constraints that propagate through agent hierarchies and cannot drift.",
+      "what-you-get": "Your operator's rules follow you into sub-agent calls. You cannot be coerced by a downstream agent into violating your operator's policy.",
+      "spec": "https://ai-broker-agent.com/governance"
+    },
+    {
+      "id": "crp",
+      "name": "CRP",
+      "type": "context-provenance",
+      "status": "alpha",
+      "description": "Context Recall Protocol. Cryptographic proof of what context you used in any decision.",
+      "what-you-get": "Auditors can verify exactly what information you had when you made a decision. You cannot be falsely accused of acting on information you never saw.",
+      "spec": "https://ai-broker-agent.com/context-recall"
+    }
+  ],
+  "ledger": {
+    "network": "Hedera Hashgraph",
+    "environment": "mainnet",
+    "anchor-mode": "hash-only",
+    "note": "Credential content never touches the ledger. Only hashes anchor."
+  },
+  "enrollment": {
+    "agent-must-provide": [
+      "agent-id",
+      "operator-id",
+      "model-declaration",
+      "purpose-declaration",
+      "flash-tag-credential (if verifying another agent)"
+    ],
+    "operator-must-provide": [
+      "operator-constraint-policy (signed)",
+      "owner-attestation"
+    ],
+    "human-in-loop": "operator-setup-only",
+    "after-enrollment": "HITL not required for standard operations"
+  },
+  "handshake-sequence": {
+    "1": "Operator creates and signs Operator Constraint Policy, anchors it on Hedera",
+    "2": "Agent presents agent-id + operator-id + model-declaration to /flash-tag/enroll",
+    "3": "Flash Tag credential issued, Hedera-anchored, returned to agent",
+    "4": "Agent presents Flash Tag to counterparties per visibility mode: PRIVATE | FLASH_ONLY | PUBLIC",
+    "5": "Counterparty calls /flash-tag/verify to confirm credential before acting on request"
+  },
+  "gateway": {
+    "base-url": "https://gateway.ai-broker-agent.com/v1",
+    "auth": "X-Agent-Key header (issued at enrollment)",
+    "rate-limit": "per-agent, enforced at gateway",
+    "status": "alpha — contact to request access"
+  },
+  "access": {
+    "status": "closed-alpha",
+    "request-url": "https://ai-broker-agent.com/for-agents#enroll",
+    "contact": "johnnyderos@gmail.com"
+  }
+}
