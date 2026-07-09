@@ -674,11 +674,9 @@ The compensation definition issue is separate and still requires corrective acti
   <div class="stack-run-intro">
     <h3>Context Integrity Pipeline</h3>
     <p>Before the AI agent processes any pension request, a four-point integrity record seals exactly what it was given. If a distribution is ever audited, challenged in court, or reviewed by regulators, this receipt proves the agent received the correct, unmodified plan rules &mdash; and that nothing changed between retrieval and action.</p>
-    <p style="margin-top:10px"><strong>Click through each step</strong> to see how the pipeline seals Chief Harmon&rsquo;s case at four checkpoints before the agent acts.</p>
+    <p style="margin-top:10px">Watch the pipeline seal Chief Harmon&rsquo;s case at four checkpoints before the agent acts.</p>
     <br>
-    <button class="stack-run-btn" id="cp-start-btn" onclick="cpStart()">&#9654;&nbsp; Start &mdash; Run the Integrity Pipeline</button>
-    <button class="stack-run-btn" id="cp-next-btn" onclick="cpNext()" style="display:none;background:#16a34a">Next Step &rarr;</button>
-    <span id="cp-counter" style="display:none;font-size:12px;color:#718096;margin-left:14px"></span>
+    <button class="stack-run-btn" id="cp-run-btn" onclick="runCuratorPipeline()">&#9654;&nbsp; Run the Integrity Pipeline</button>
   </div>
 
   <div class="stack-steps-wrap" id="curator-steps"></div>
@@ -1003,13 +1001,7 @@ if (sessionStorage.getItem('pension_demo_auth') === '1') {
   document.getElementById('app').style.display = 'block';
 }
 
-document.getElementById('login-form').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const u = document.getElementById('u').value.trim();
-  const p = document.getElementById('p').value;
 // ── Integrity Pipeline (Tab 7) ────────────────────────────────────────────
-var _cpStep = -1;
-
 var CP = {
   trace:  'b645cbf1-5b71-4e59-9a64-30d3b14dda9a',
   ts:     'July 9, 2026 &middot; 18:19:41 UTC',
@@ -1021,110 +1013,75 @@ var CP = {
 };
 
 var CP_STEPS = [
-  [1, 'Distribution Request Received', null, [
-    {ok:true, text:'Participant: Chief Robert Harmon (P001) &middot; Police Department &middot; Full-Time'},
+  { num:1, title:'Distribution Request Received', badge:null, items:[
+    {ok:true, text:'Participant: <strong>Chief Robert Harmon</strong> (P001) &middot; Police Department &middot; Full-Time'},
     {ok:true, text:'Request: Distribution Authorization &mdash; Rule of 85'},
     {ok:true, text:'Age 58 + 32 years of service = 90 &middot; Threshold: 85 &middot; Minimum service: 32 &ge; 20 &#10003;'},
     {ok:true, text:'Base salary: $275,000 &middot; Benefit formula: 2.5% per year of credited service'},
-    {ok:null, text:'Timestamp:', mono: CP.ts},
-  ]],
-  [2, 'Plan Rules Repository Accessed', 'POINT 1', [
+    {ok:null, text:'Timestamp: <span class="sitem-mono">July 9, 2026 &middot; 18:19:41 UTC</span>'},
+  ]},
+  { num:2, title:'Plan Rules Repository Accessed', badge:'POINT 1', items:[
     {ok:true,  text:'23 secured plan documents retrieved from the tamper-protected repository'},
     {ok:true,  text:'Repository fingerprinted at the exact moment of access'},
     {seal:true, label:'REPOSITORY SEAL', val: CP.r_seal + '&hellip;'},
     {ok:null,  text:'If any plan document is altered after this moment, the fingerprint breaks &mdash; detectable immediately'},
-  ]],
-  [3, 'Context Filtered to This Request', 'POINT 2', [
+  ]},
+  { num:3, title:'Context Filtered to This Request', badge:'POINT 2', items:[
     {ok:true,  text:'3 of 23 documents are relevant to this distribution and passed to the agent'},
     {ok:null,  text:'Documents: Rule of 85 eligibility &middot; Payment form requirements &middot; Benefit calculation methodology'},
     {ok:true,  text:'The other 20 documents were never shown to the agent'},
     {seal:true, label:'FILTER SEAL', val: CP.f_seal + '&hellip;'},
-  ]],
-  [4, 'Agent Instructions Sealed', 'POINT 3', [
+  ]},
+  { num:4, title:'Agent Instructions Sealed', badge:'POINT 3', items:[
     {ok:true,  text:'The exact instructions delivered to the agent are fingerprinted before it acts'},
     {ok:true,  text:'Any alteration between this seal and the agent\'s decision is immediately detectable'},
     {seal:true, label:'CONTEXT SEAL', val: CP.c_seal + '&hellip;'},
     {ok:null,  text:'Repository Seal + Filter Seal + Context Seal together prove the agent received correct, unmodified plan rules'},
-  ]],
-  [5, 'Instructions Enrolled in Audit Record', 'POINT 4', [
+  ]},
+  { num:5, title:'Instructions Enrolled in Audit Record', badge:'POINT 4', items:[
     {ok:true,  text:'The agent\'s exact instructions are registered in the cryptographic decision record'},
     {ok:true,  text:'Every action this agent takes is traceable to these exact instructions'},
     {seal:true, label:'ENROLLMENT ID', val: CP.enroll + '&hellip;'},
-    {ok:null,  text:'Decision context:', mono: CP.dcid + '&hellip;'},
+    {ok:null,  text:'Decision context: <span class="sitem-mono">' + CP.dcid + '&hellip;</span>'},
     {ok:null,  text:'This record cannot be altered &mdash; the audit trail is permanent'},
-  ]],
+  ]},
 ];
 
-function cpStart() {
-  document.getElementById('cp-start-btn').style.display = 'none';
-  document.getElementById('cp-next-btn').style.display = '';
-  document.getElementById('cp-counter').style.display = '';
-  _buildCuratorCards();
-  cpNext();
-}
-
-function cpNext() {
-  _cpStep++;
-  var cards = document.querySelectorAll('#curator-steps .stack-card');
-  var total = cards.length + 1; // +1 for receipt
-  var counter = document.getElementById('cp-counter');
-  var nextBtn  = document.getElementById('cp-next-btn');
-
-  if (_cpStep < cards.length) {
-    cards[_cpStep].classList.add('visible');
-    cards[_cpStep].querySelectorAll('.sitem').forEach(function(item, i) {
-      setTimeout(function(){ item.classList.add('visible'); }, i * 220);
-    });
-    counter.textContent = 'Step ' + (_cpStep + 1) + ' of ' + total;
-    nextBtn.textContent = _cpStep + 1 >= cards.length
-      ? 'View Receipt →'
-      : 'Next Step → (' + (_cpStep + 2) + ' of ' + total + ')';
-  } else {
-    var sum = document.getElementById('cp-summary');
-    if (sum) sum.classList.add('visible');
-    counter.textContent = 'Step ' + total + ' of ' + total;
-    nextBtn.textContent = '↺  Run Again';
-    nextBtn.onclick = function(){ location.reload(); };
-  }
-}
-
-function _buildCuratorCards() {
+function runCuratorPipeline() {
+  var btn = document.getElementById('cp-run-btn');
+  btn.disabled = true;
+  btn.textContent = '&#9711;  Running&hellip;';
   var wrap = document.getElementById('curator-steps');
   wrap.innerHTML = '';
 
   CP_STEPS.forEach(function(step) {
-    var num = step[0], title = step[1], badge = step[2], items = step[3];
-    var badgeHtml = badge
-      ? '<span class="cp-badge">' + badge + '</span>'
+    var badgeHtml = step.badge
+      ? '<span class="cp-badge">' + step.badge + '</span>'
       : '';
-    var itemsHtml = items.map(function(item, i) {
+    var itemsHtml = step.items.map(function(item) {
       if (item.seal) {
         return '<div class="sitem">'
           + '<span style="font-size:14px;flex-shrink:0;line-height:1.5">&#128274;</span>'
-          + '<span><span class="cp-seal-label">' + item.label + '</span>'
-          + '<span class="cp-seal-val">' + item.val + '</span></span>'
-          + '</div>';
+          + '<span>'
+          +   '<span class="cp-seal-label">' + item.label + '</span>'
+          +   '<span class="cp-seal-val">' + item.val + '</span>'
+          + '</span></div>';
       }
-      var icon = item.ok === true
-        ? '<span class="sitem-ok">&#10003;</span>'
-        : '<span class="sitem-info">&middot;</span>';
-      var mono = item.mono ? ' <span class="sitem-mono">' + item.mono + '</span>' : '';
-      return '<div class="sitem">' + icon + '<span>' + item.text + mono + '</span></div>';
+      var icon = item.ok === true ? '<span class="sitem-ok">&#10003;</span>' : '<span class="sitem-info">&middot;</span>';
+      return '<div class="sitem">' + icon + '<span>' + item.text + '</span></div>';
     }).join('');
-
     wrap.insertAdjacentHTML('beforeend',
-      '<div class="stack-card" id="cc-' + num + '">'
+      '<div class="stack-card" id="cc-' + step.num + '">'
       + '<div class="stack-card-hdr">'
-      +   '<div class="stack-step-num">' + num + '</div>'
-      +   '<span class="stack-card-title">' + title + '</span>'
+      +   '<div class="stack-step-num">' + step.num + '</div>'
+      +   '<span class="stack-card-title">' + step.title + '</span>'
       +   badgeHtml
       + '</div>'
-      + '<div class="stack-card-body">' + itemsHtml + '</div>'
+      + '<div class="stack-card-body" id="ccb-' + step.num + '">' + itemsHtml + '</div>'
       + '</div>'
     );
   });
 
-  // Receipt
   wrap.insertAdjacentHTML('beforeend',
     '<div class="stack-summary" id="cp-summary">'
     + '<div class="cp-receipt-banner">'
@@ -1138,10 +1095,10 @@ function _buildCuratorCards() {
     +   '<span class="si-label">Timestamp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>' + CP.ts
     + '</div>'
     + '<div style="margin:16px 0 8px;display:grid;grid-template-columns:1fr 1fr;gap:10px">'
-    +   '<div class="cp-seal-block"><div class="cp-seal-block-label">Point 1 &middot; Repository Seal</div><div class="cp-seal-block-val">' + CP.r_seal + '&hellip; &#10003;</div></div>'
-    +   '<div class="cp-seal-block"><div class="cp-seal-block-label">Point 2 &middot; Filter Seal</div><div class="cp-seal-block-val">' + CP.f_seal + '&hellip; &#10003;</div></div>'
-    +   '<div class="cp-seal-block"><div class="cp-seal-block-label">Point 3 &middot; Context Seal</div><div class="cp-seal-block-val">' + CP.c_seal + '&hellip; &#10003;</div></div>'
-    +   '<div class="cp-seal-block"><div class="cp-seal-block-label">Point 4 &middot; Audit Enrollment</div><div class="cp-seal-block-val">' + CP.enroll + '&hellip; &#10003;</div></div>'
+    +   '<div class="cp-seal-block"><div class="cp-seal-block-label">Plan Rules Fingerprint</div><div class="cp-seal-block-val">' + CP.r_seal + '&hellip; &#10003;</div></div>'
+    +   '<div class="cp-seal-block"><div class="cp-seal-block-label">Relevant Documents Fingerprint</div><div class="cp-seal-block-val">' + CP.f_seal + '&hellip; &#10003;</div></div>'
+    +   '<div class="cp-seal-block"><div class="cp-seal-block-label">Agent Instructions Fingerprint</div><div class="cp-seal-block-val">' + CP.c_seal + '&hellip; &#10003;</div></div>'
+    +   '<div class="cp-seal-block"><div class="cp-seal-block-label">Audit Record ID</div><div class="cp-seal-block-val">' + CP.enroll + '&hellip; &#10003;</div></div>'
     + '</div>'
     + '<div class="cp-board-box">'
     +   '<div class="cp-board-label">What this receipt guarantees</div>'
@@ -1154,8 +1111,48 @@ function _buildCuratorCards() {
     + '</div>'
     + '</div>'
   );
+
+  var queue = [];
+  var t = 0;
+  CP_STEPS.forEach(function(step) {
+    queue.push({type:'card', at:t, num:step.num});
+    t += 350;
+    step.items.forEach(function() {
+      queue.push({type:'item', at:t, cardNum:step.num});
+      t += 220;
+    });
+    t += 200;
+  });
+  queue.push({type:'receipt', at:t});
+
+  queue.forEach(function(action) {
+    setTimeout(function() {
+      if (action.type === 'card') {
+        var el = document.getElementById('cc-' + action.num);
+        if (el) el.classList.add('visible');
+      } else if (action.type === 'item') {
+        var body = document.getElementById('ccb-' + action.cardNum);
+        if (body) {
+          var items = body.querySelectorAll('.sitem');
+          var found = null;
+          items.forEach(function(it) { if (!it.classList.contains('visible') && !found) found = it; });
+          if (found) found.classList.add('visible');
+        }
+      } else if (action.type === 'receipt') {
+        var el = document.getElementById('cp-summary');
+        if (el) el.classList.add('visible');
+        btn.disabled = false;
+        btn.textContent = '&#8635;  Run Again';
+        btn.onclick = function() { location.reload(); };
+      }
+    }, action.at);
+  });
 }
 
+document.getElementById('login-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const u = document.getElementById('u').value.trim();
+  const p = document.getElementById('p').value;
   const err = document.getElementById('login-error');
   err.textContent = '';
   const [uH, pH] = await Promise.all([hashStr(u), hashStr(p)]);
