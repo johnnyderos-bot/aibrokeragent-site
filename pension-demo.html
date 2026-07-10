@@ -772,11 +772,12 @@ function initFullStack() {
       setTimeout(function() {
         card.classList.add('visible');
         _fireHcsLog(idx, card);
+        // Step's detail arrives together as one unit, not a slow one-by-one trickle
         card.querySelectorAll('.sitem').forEach(function(item, i) {
-          setTimeout(function(){ item.classList.add('visible'); }, i * 200);
+          setTimeout(function(){ item.classList.add('visible'); }, i * 30);
         });
       }, t);
-      t += 420 + itemCount * 200 + 180;
+      t += 950 + itemCount * 90;
     });
     setTimeout(function() {
       var sum = document.getElementById('stack-summary');
@@ -833,10 +834,10 @@ function nextStep() {
   // Fire real Hedera log for steps that hash
   _fireHcsLog(_stackStep, card);
 
-  // Cascade items within the card
+  // Step's detail arrives together as one unit, not a slow one-by-one trickle
   var items = card.querySelectorAll('.sitem');
   items.forEach(function(item, i) {
-    setTimeout(function(){ item.classList.add('visible'); }, i * 200);
+    setTimeout(function(){ item.classList.add('visible'); }, i * 30);
   });
 
   var counter = document.getElementById('stack-step-counter');
