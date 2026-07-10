@@ -795,13 +795,14 @@ function initFullStack() {
   });
 }
 
-// Steps that fire a real Hedera log event when they reveal (0-indexed: step 11 = display step 12, step 15 = display step 16)
+// Steps that fire a real Hedera log event when they reveal
+// (0-indexed card position: step0 card occupies index 0, so display step N = index N for N>=1)
 var _hcsSteps = {
-  11: { event: 'aicp_complete',  agent_id: 'andy-pension-admin',
+  12: { event: 'aicp_complete',  agent_id: 'andy-pension-admin',
         payload: function(V){ return {ctr_id: V.ctr, chain_tail: V.chain_tail, avg_score: 5}; } },
-  15: { event: 'acc_audit_pass', agent_id: 'andy-pension-admin',
+  16: { event: 'acc_audit_pass', agent_id: 'andy-pension-admin',
         payload: function(V){ return {alr_tail: V.alr_tail, chain_integrity: 'PASS', agents: 2}; } },
-  16: { event: 'acc_audit_pass', agent_id: 'andy-pension-admin',   // summary card
+  17: { event: 'acc_audit_pass', agent_id: 'andy-pension-admin',   // summary card
         payload: function(V){ return {summary: 'transaction_complete', agents: 2}; } },
 };
 
@@ -858,6 +859,9 @@ function _buildStackCards(pipeline) {
   var P = pipeline || {};
 
   var V = {
+    // Curator Dispatch (step 0)
+    curator_hcs: P.curator_hcs || null,
+    brief_hash:  P.brief_hash  || '…',
     // Real values from pipeline
     ft_andy:   P.ft_andy   || _ftAndy.registration_id,
     hcs_andy:  P.hcs_andy  || _ftAndy.hcs_sequence,
@@ -917,6 +921,12 @@ function _buildStackCards(pipeline) {
   }
 
   var STEPS = [
+    [0,'Curator Dispatch — Context Brief Assembled',[
+      {ok:true, text:'Context brief assembled by Curator v2'},
+      {ok:null, text:'Brief hash:', mono:V.brief_hash+'…'},
+      {ok:null, text:'Dispatched via Airflow DAG — agent receives exactly this context'},
+      _hcsItem(V.curator_hcs),
+    ]],
     [1,'AIIA — Pre-Deployment Impact Assessment',[
       {ok:true,  text:'Agent: andy-pension-admin · Assessment filed before spawn'},
       {ok:true,  text:'individual_harm: 0.1 · societal_impact: 0.1 · data_sensitivity: 0.6'},
@@ -940,6 +950,7 @@ function _buildStackCards(pipeline) {
       {ok:true,  text:'Task brief enrolled:', mono:V.eid_brief},
       {ok:true,  text:'Calc rules enrolled:', mono:V.eid_rules},
       {ok:true,  text:'Decision context opened:', mono:V.did},
+      {ok:true,  text:'Curator source verified · brief_hash matches dispatch'},
       {ok:null,  text:'If context changes before the agent acts, tamper surfaces both hashes.'},
       _hcsItem(V.crp_hcs),
     ]],
