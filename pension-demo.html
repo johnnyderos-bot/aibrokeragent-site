@@ -711,6 +711,10 @@ var _ftAndy = null, _ftTB = null, _stackStep = -1, _stackTotal = 0;
 var HARNESS   = 'https://api.ai-broker-agent.com';
 var FT_TOPIC  = '0.0.9350280';
 var HASHSCAN  = 'https://hashscan.io/testnet/topic/' + FT_TOPIC;
+// AIBrokerAgent's own console org key — attributes this public demo's runs to our
+// own org for Build 1 recall. Client-embedded is an accepted tradeoff while this
+// is single-org, non-sensitive demo data (see Console Build 1 plan).
+var CONSOLE_API_KEY = 'abk_4a19378bf70f946f85334236a559ad9b';
 
 function _hsLink(seq) {
   return '<a href="' + HASHSCAN + '" target="_blank" rel="noopener" ' +
@@ -753,7 +757,7 @@ function initFullStack() {
 
     // Run full harness pipeline — get real values for every card
     return fetch(HARNESS + '/flash-tag/demo-run', {
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json', 'X-Console-Api-Key': CONSOLE_API_KEY},
       body: JSON.stringify({seller_ft: sellerFT, buyer_ft: buyerFT})
     }).then(function(r){ return r.json(); });
 
