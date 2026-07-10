@@ -775,7 +775,6 @@ function initFullStack() {
       var itemCount = card.querySelectorAll('.sitem').length;
       setTimeout(function() {
         card.classList.add('visible');
-        _fireHcsLog(idx, card);
         // Step's detail arrives together as one unit, not a slow one-by-one trickle
         card.querySelectorAll('.sitem').forEach(function(item, i) {
           setTimeout(function(){ item.classList.add('visible'); }, i * 30);
@@ -799,35 +798,6 @@ function initFullStack() {
   });
 }
 
-// Steps that fire a real Hedera log event when they reveal
-// (0-indexed card position: step0 card occupies index 0, so display step N = index N for N>=1)
-var _hcsSteps = {
-  12: { event: 'aicp_complete',  agent_id: 'andy-pension-admin',
-        payload: function(V){ return {ctr_id: V.ctr, chain_tail: V.chain_tail, avg_score: 5}; } },
-  16: { event: 'acc_audit_pass', agent_id: 'andy-pension-admin',
-        payload: function(V){ return {alr_tail: V.alr_tail, chain_integrity: 'PASS', agents: 2}; } },
-  17: { event: 'acc_audit_pass', agent_id: 'andy-pension-admin',   // summary card
-        payload: function(V){ return {summary: 'transaction_complete', agents: 2}; } },
-};
-
-function _fireHcsLog(stepIdx, card) {
-  var def = _hcsSteps[stepIdx];
-  if (!def) return;
-  var V = window._stackV || {};
-  fetch(HARNESS + '/flash-tag/log', {
-    method: 'POST', headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({event: def.event, agent_id: def.agent_id, payload: def.payload(V)})
-  }).then(function(r){ return r.json(); }).then(function(res) {
-    // Update all hs-link placeholders in this card with the real sequence
-    card.querySelectorAll('.hs-link-pending').forEach(function(el) {
-      el.outerHTML = '<a href="' + HASHSCAN + '" target="_blank" rel="noopener" ' +
-        'style="display:inline-flex;align-items:center;gap:5px;background:#f0fdf4;border:1px solid #86efac;' +
-        'border-radius:4px;padding:3px 10px;font-size:11px;font-weight:700;color:#15803d;text-decoration:none;margin-left:8px">' +
-        '⬡ View on HashScan · seq ' + res.hcs_sequence + '</a>';
-    });
-  }).catch(function(err) { console.error('HCS log failed:', err); });
-}
-
 function nextStep() {
   _stackStep++;
   var cards = document.querySelectorAll('.stack-card-wrap');
@@ -835,9 +805,6 @@ function nextStep() {
 
   var card = cards[_stackStep];
   card.classList.add('visible');
-
-  // Fire real Hedera log for steps that hash
-  _fireHcsLog(_stackStep, card);
 
   // Step's detail arrives together as one unit, not a slow one-by-one trickle
   var items = card.querySelectorAll('.sitem');
@@ -917,6 +884,9 @@ function _buildStackCards(pipeline) {
     brad_auth_hcs: P.brad_auth_hcs || null,
     ship_id:      P.ship_id      || 'ship_a3e7c901',
     pep_hcs:      P.pep_hcs      || null,
+    step12_hcs:   P.step12_hcs   || null,
+    step16_hcs:   P.step16_hcs   || null,
+    summary_hcs:  P.summary_hcs  || null,
   };
 
   function _hcsItem(seq) {
@@ -1023,7 +993,8 @@ function _buildStackCards(pipeline) {
       {ok:true,  text:'Braid word: '+V.braid_word+' · Crossings: 2'},
       {ok:true,  text:'Braid signature:', mono:V.bsp_sig+'…'},
       {ok:true,  text:'CTR status: COMPLETED · chain_tail: '+V.chain_tail},
-      {ok:null,  text:'protocol=AICP/1.0  event=distribution_authorized  avg_score=5', hs:true},
+      {ok:null,  text:'protocol=AICP/1.0  event=distribution_authorized  avg_score=5'},
+      _hcsItem(V.step12_hcs),
     ]],
     [13,'OGPP — Governance Attestation',[
       {ok:true,  text:'Governance drift: NONE — constraints unchanged ✓'},
@@ -1048,11 +1019,12 @@ function _buildStackCards(pipeline) {
       {ok:true,  text:'Andy:     7 actions logged · ALR chain: valid'},
       {ok:true,  text:'TrashBot: 2 actions · buyer-side ALR chain: valid'},
       {ok:true,  text:'ALR tail: '+V.alr_tail+'… · CHAIN INTEGRITY: PASS'},
-      {ok:null,  text:'Both agents Flash-Tagged on Hedera. Every step sealed.', hs:true},
+      {ok:null,  text:'Both agents Flash-Tagged on Hedera. Every step sealed.'},
+      _hcsItem(V.step16_hcs),
     ]],
   ];
 
-  window._stackV = V;  // expose for _fireHcsLog
+  window._stackV = V;
   _stackTotal = STEPS.length;
 
   STEPS.forEach(function(step) {
@@ -1095,7 +1067,7 @@ function _buildStackCards(pipeline) {
     '<div class="stack-step-body">' +
     '<div class="sitem" style="font-size:13px;color:#166534;font-weight:600;padding:8px 0">' +
     'Both agents verified on Hedera · All 16 steps sealed · Audit chain: PASS</div>' +
-    '<div class="sitem" style="margin-top:8px"><span class="hs-link-pending" style="display:inline-flex;align-items:center;gap:5px;background:#f8fafc;border:1px dashed #9aa5b4;border-radius:4px;padding:3px 10px;font-size:11px;color:#9aa5b4">⬡ hashing…</span></div>' +
+    '<div class="sitem" style="margin-top:8px">' + (V.summary_hcs ? _hsLink(V.summary_hcs) : '') + '</div>' +
     '</div>';
   wrap.appendChild(sumDiv);
   _stackTotal++;
