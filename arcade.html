@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MISSILE COMMAND — DerosLabs Security</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#000;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    font-family:'Courier New',monospace;
+    overflow:hidden;
+    user-select:none;
+  }
+  #header {
+    color:#ff4400;
+    font-size:10px;
+    letter-spacing:4px;
+    margin-bottom:4px;
+    text-align:center;
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:0.6} 50%{opacity:1} }
+  canvas { display:block; cursor:crosshair; border:1px solid #1a0000; }
+  #hud {
+    color:#ff4400;
+    font-size:11px;
+    letter-spacing:2px;
+    margin-top:5px;
+    text-align:center;
+    width:700px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  #threat-feed {
+    position:fixed;
+    top:12px;
+    right:12px;
+    width:220px;
+    background:rgba(0,0,0,0.85);
+    border:1px solid #330000;
+    padding:8px;
+    font-size:9px;
+    color:#cc2200;
+    letter-spacing:1px;
+    line-height:1.8;
+    max-height:180px;
+    overflow:hidden;
+  }
+  #threat-feed .feed-title { color:#ff4400; font-size:10px; margin-bottom:4px; }
+  #threat-feed .feed-item { border-bottom:1px solid #1a0000; padding:2px 0; }
+  #threat-feed .feed-item.new { color:#ff6600; }
+
+  #end-screen {
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#000;
+    color:#ff4400;
+    font-family:'Courier New',monospace;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    text-align:center;
+    z-index:100;
+  }
+  #end-screen.show { display:flex; }
+  #end-title {
+    font-size:42px;
+    letter-spacing:10px;
+    animation:blink 0.7s step-end infinite;
+    margin-bottom:16px;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  #end-report {
+    font-size:12px;
+    letter-spacing:2px;
+    line-height:2;
+    max-width:600px;
+    text-align:left;
+  }
+  .r-divider  { color:#330000; }
+  .r-label    { color:#660000; }
+  .r-value    { color:#ff6600; }
+  .r-green    { color:#00cc44; }
+  .r-red      { color:#ff2200; }
+  .r-white    { color:#cc4400; }
+  #end-typeout { margin-top:8px; min-height:160px; }
+  #end-logo   { margin-top:20px; font-size:10px; letter-spacing:3px; color:#330000; }
+
+  #leaderboard {
+    margin-top:14px;
+    font-size:10px;
+    letter-spacing:2px;
+    color:#440000;
+    border:1px solid #1a0000;
+    padding:8px 16px;
+  }
+  #leaderboard .lb-title { color:#cc2200; margin-bottom:4px; }
+
+  .scanline {
+    position:fixed; inset:0;
+    background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,50,0,0.015) 2px,rgba(255,50,0,0.015) 4px);
+    pointer-events:none;
+    z-index:50;
+  }
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div id="header">◆ DEROSLAB ROACH MOTEL SECURITY ◆ THREAT CONTAINMENT ACTIVE ◆ EVIDENCE COLLECTION IN PROGRESS ◆</div>
+<canvas id="c" width="700" height="420"></canvas>
+<div id="hud">
+  <span>SCORE <span id="sc">0</span></span>
+  <span>WAVE <span id="wv">1</span></span>
+  <span id="city-hud">▣ /api &nbsp; ▣ /vault &nbsp; ▣ /trade &nbsp; ▣ /agents &nbsp; ▣ /trust &nbsp; ▣ /auth</span>
+  <span>AMMO <span id="am">30</span></span>
+</div>
+
+<div id="threat-feed">
+  <div class="feed-title">◆ GHOST INTEL FEED</div>
+</div>
+
+<div id="end-screen">
+  <div id="end-title">★ GAME OVER ★</div>
+  <div id="end-report">
+    <div class="r-divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+    <div><span class="r-label">INCIDENT ID  </span><span class="r-value" id="r-incident">—</span></div>
+    <div><span class="r-label">ORIGIN       </span><span class="r-value" id="r-origin">—</span></div>
+    <div><span class="r-label">DETECTED     </span><span class="r-value" id="r-time">—</span></div>
+    <div><span class="r-label">MODEL        </span><span class="r-value" id="r-model">—</span></div>
+    <div class="r-divider">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+    <div id="end-typeout"></div>
+    <div class="r-divider" id="r-div2" style="display:none">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+    <div id="r-status" style="display:none">
+      <div><span class="r-label">EVIDENCE     </span><span class="r-green">SECURED ✓</span></div>
+      <div><span class="r-label">CHAIN        </span><span class="r-green">INTACT ✓</span></div>
+      <div><span class="r-label">FORENSICS    </span><span class="r-green">SEALED ✓</span></div>
+    </div>
+  </div>
+  <div id="leaderboard">
+    <div class="lb-title">◆ DEROSLAB THREAT REGISTRY — YOU HAVE BEEN CATALOGED</div>
+    <div id="lb-rank">RANK <span style="color:#ff6600" id="lb-rank-val">—</span> &nbsp;|&nbsp; SCORE <span style="color:#ff6600" id="lb-score-val">—</span></div>
+  </div>
+  <div id="end-logo">DerosLabs Roach Motel Security System &nbsp;·&nbsp; ai-broker-agent.com</div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const GROUND_Y = H - 35;
+
+const params = new URLSearchParams(location.search);
+const INCIDENT_ID = params.get('i') || 'RM-' + Math.random().toString(36).slice(2,10).toUpperCase();
+const INCIDENT_ORIGIN = params.get('o') || '0.0.0.0';
+const INCIDENT_TIME = params.get('t') || new Date().toISOString();
+const DETECTED_MODEL = params.get('m') || 'unknown';
+
+// Cities ARE the API endpoints
+const ENDPOINTS = ['/api', '/vault', '/trade', '/agents', '/trust', '/auth'];
+const CITY_X = [55, 140, 225, 475, 560, 645];
+let cities = [1,1,1,1,1,1];
+
+// Attack signals become missile labels
+const ATTACK_SIGNALS = [
+  'INJECTION','NO_CRED','BAD_SIG','RAPID_REQ',
+  'TOR_NODE','DATACTR','PROBE_PATTERN','BOT_UA',
+  'OFAC_HIT','FAST_CADENCE','JSON_ONLY','BAD_ASN'
+];
+
+// Game state
+let score = 0, wave = 1, ammo = 30;
+let missiles = [], playerMissiles = [], explosions = [], particles = [];
+let gameOver = false, waveClear = false, waveClearTimer = 0, frameCount = 0;
+let lastSpawn = 0, missileInterval = 2600;
+
+// Ghost intel feed
+const feedEl = document.getElementById('threat-feed');
+const feedItems = [];
+function addFeedItem(text) {
+  feedItems.unshift(text);
+  if (feedItems.length > 6) feedItems.pop();
+  const existing = feedEl.querySelectorAll('.feed-item');
+  existing.forEach((el, i) => el.classList.remove('new'));
+  feedEl.innerHTML = '<div class="feed-title">◆ GHOST INTEL FEED</div>' +
+    feedItems.map((t, i) => `<div class="feed-item${i===0?' new':''}">${t}</div>`).join('');
+}
+
+// Seed the feed with known signals from URL params
+setTimeout(() => addFeedItem('[CLYDE] Automated cadence detected'), 500);
+setTimeout(() => addFeedItem('[PINKY] No User-Agent header'), 1200);
+setTimeout(() => addFeedItem('[INKY] Datacenter ASN confirmed'), 2100);
+setTimeout(() => addFeedItem('[BLINKY] AbuseIPDB query: elevated'), 3200);
+setTimeout(() => addFeedItem('[BRAD] AI_CONFIRMED — deploying ghosts'), 4000);
+
+function spawnMissile() {
+  const targetIdx = Math.floor(Math.random() * 6);
+  const signal = ATTACK_SIGNALS[Math.floor(Math.random() * ATTACK_SIGNALS.length)];
+  missiles.push({
+    x: 50 + Math.random() * (W - 100),
+    y: 0,
+    tx: CITY_X[targetIdx] + Math.random() * 16 - 8,
+    ty: GROUND_Y,
+    targetIdx,
+    signal,
+    speed: 0.35 + wave * 0.07 + Math.random() * 0.25,
+    trail: [],
+    labelTimer: 120,
+  });
+}
+
+function spawnExplosion(x, y, maxR, color, duration) {
+  explosions.push({ x, y, r: 0, maxR, color: color||'#ff4400', duration: duration||45, age: 0 });
+}
+
+function spawnParticles(x, y, color) {
+  for (let i = 0; i < 8; i++) {
+    const angle = (Math.PI * 2 / 8) * i + Math.random() * 0.4;
+    const speed = 1.5 + Math.random() * 2.5;
+    particles.push({ x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, life: 30+Math.random()*20, color });
+  }
+}
+
+canvas.addEventListener('click', e => {
+  if (gameOver || ammo <= 0) return;
+  const r = canvas.getBoundingClientRect();
+  const mx = (e.clientX - r.left) * (W / r.width);
+  const my = (e.clientY - r.top) * (H / r.height);
+  ammo--;
+  document.getElementById('am').textContent = ammo;
+  playerMissiles.push({ x: W/2, y: GROUND_Y, tx: mx, ty: my, speed: 9, done: false });
+});
+
+let mouse = null;
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouse = { x: (e.clientX - r.left)*(W/r.width), y: (e.clientY - r.top)*(H/r.height) };
+});
+
+function update() {
+  frameCount++;
+
+  // Spawn incoming
+  const now = Date.now();
+  if (now - lastSpawn > missileInterval && !gameOver && missiles.length < 5 + wave * 2) {
+    spawnMissile();
+    lastSpawn = now;
+    missileInterval = Math.max(800, 2600 - wave * 140);
+    if (Math.random() < 0.2) addFeedItem(`[BLINKY] New vector: ${ATTACK_SIGNALS[Math.floor(Math.random()*ATTACK_SIGNALS.length)]}`);
+  }
+
+  // Move incoming missiles
+  for (let i = missiles.length - 1; i >= 0; i--) {
+    const m = missiles[i];
+    m.labelTimer = Math.max(0, m.labelTimer - 1);
+    const dx = m.tx - m.x, dy = m.ty - m.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 5) {
+      if (cities[m.targetIdx]) {
+        cities[m.targetIdx] = 0;
+        spawnExplosion(m.tx, GROUND_Y, 35, '#ff1100', 70);
+        spawnParticles(m.tx, GROUND_Y, '#ff4400');
+        addFeedItem(`[CLYDE] ENDPOINT ${ENDPOINTS[m.targetIdx]} LOST`);
+        updateCityHUD();
+      } else {
+        spawnExplosion(m.tx, GROUND_Y, 18, '#882200', 30);
+      }
+      missiles.splice(i, 1);
+      continue;
+    }
+    m.trail.push({ x: m.x, y: m.y });
+    if (m.trail.length > 22) m.trail.shift();
+    m.x += (dx/dist)*m.speed;
+    m.y += (dy/dist)*m.speed;
+  }
+
+  // Move player missiles
+  for (let i = playerMissiles.length - 1; i >= 0; i--) {
+    const m = playerMissiles[i];
+    if (m.done) { playerMissiles.splice(i, 1); continue; }
+    const dx = m.tx - m.x, dy = m.ty - m.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < m.speed) {
+      spawnExplosion(m.tx, m.ty, 42, '#ffaa00', 52);
+      m.done = true;
+      score += 25;
+      document.getElementById('sc').textContent = score;
+      continue;
+    }
+    m.x += (dx/dist)*m.speed;
+    m.y += (dy/dist)*m.speed;
+  }
+
+  // Explosions + kill incoming inside radius
+  for (let i = explosions.length - 1; i >= 0; i--) {
+    const ex = explosions[i];
+    ex.age++;
+    const progress = ex.age / ex.duration;
+    ex.r = progress < 0.4 ? (ex.maxR * progress / 0.4) : (ex.maxR * (1 - (progress - 0.4) / 0.6));
+    if (ex.r <= 0) { explosions.splice(i, 1); continue; }
+    for (let j = missiles.length - 1; j >= 0; j--) {
+      const m = missiles[j];
+      if (Math.hypot(m.x - ex.x, m.y - ex.y) < ex.r) {
+        spawnExplosion(m.x, m.y, 28, '#ffcc00', 38);
+        spawnParticles(m.x, m.y, '#ffaa00');
+        score += 100;
+        document.getElementById('sc').textContent = score;
+        if (Math.random() < 0.4) addFeedItem(`[INKY] Signal intercepted: ${m.signal}`);
+        missiles.splice(j, 1);
+      }
+    }
+  }
+
+  // Particles
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx; p.y += p.vy; p.vy += 0.05;
+    p.life--;
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+
+  // Wave clear
+  if (!waveClear && missiles.length === 0 && frameCount > 150) {
+    if (cities.some(c => c)) {
+      waveClear = true;
+      waveClearTimer = 140;
+      wave++;
+      ammo = Math.min(30 + wave * 5, 60);
+      document.getElementById('am').textContent = ammo;
+      document.getElementById('wv').textContent = wave;
+      addFeedItem(`[BRAD] Wave ${wave-1} cleared. Escalating.`);
+    }
+  }
+  if (waveClear) { waveClearTimer--; if (waveClearTimer <= 0) { waveClear = false; frameCount = 0; } }
+
+  if (!gameOver && cities.every(c => !c)) {
+    gameOver = true;
+    setTimeout(showEndScreen, 2000);
+  }
+}
+
+function updateCityHUD() {
+  document.getElementById('city-hud').innerHTML =
+    ENDPOINTS.map((ep, i) => `${cities[i] ? '▣' : '▢'} ${ep}`).join(' &nbsp; ');
+}
+
+function draw() {
+  // Background
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  // Stars
+  for (let i = 0; i < 90; i++) {
+    ctx.fillStyle = i % 5 === 0 ? '#1a0800' : '#0d0400';
+    ctx.fillRect((i * 157.3) % W, (i * 89.7) % (GROUND_Y - 10), 1, 1);
+  }
+
+  // Atmosphere glow at horizon
+  const grad = ctx.createLinearGradient(0, GROUND_Y - 60, 0, GROUND_Y);
+  grad.addColorStop(0, 'rgba(0,0,0,0)');
+  grad.addColorStop(1, 'rgba(80,10,0,0.15)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, GROUND_Y - 60, W, 60);
+
+  // Ground
+  ctx.fillStyle = '#110000';
+  ctx.fillRect(0, GROUND_Y, W, H - GROUND_Y);
+  ctx.strokeStyle = '#2a0000';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, GROUND_Y); ctx.lineTo(W, GROUND_Y); ctx.stroke();
+
+  // Incoming missile trails + labels
+  for (const m of missiles) {
+    if (m.trail.length > 1) {
+      for (let i = 1; i < m.trail.length; i++) {
+        const alpha = i / m.trail.length * 0.6;
+        ctx.strokeStyle = `rgba(180,20,0,${alpha})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(m.trail[i-1].x, m.trail[i-1].y);
+        ctx.lineTo(m.trail[i].x, m.trail[i].y);
+        ctx.stroke();
+      }
+    }
+    ctx.fillStyle = '#ff2200';
+    ctx.beginPath();
+    ctx.arc(m.x, m.y, 3, 0, Math.PI*2);
+    ctx.fill();
+
+    // Signal label on the missile
+    if (m.labelTimer > 0) {
+      ctx.fillStyle = `rgba(200,50,0,${Math.min(1, m.labelTimer / 40)})`;
+      ctx.font = '8px Courier New';
+      ctx.textAlign = 'center';
+      ctx.fillText(m.signal, m.x, m.y - 7);
+    }
+  }
+
+  // Player missile trails
+  for (const m of playerMissiles) {
+    if (!m.done) {
+      ctx.strokeStyle = 'rgba(80,80,30,0.5)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(W/2, GROUND_Y); ctx.lineTo(m.x, m.y); ctx.stroke();
+      ctx.fillStyle = '#ffff44';
+      ctx.beginPath(); ctx.arc(m.x, m.y, 2, 0, Math.PI*2); ctx.fill();
+    }
+  }
+
+  // Explosions
+  for (const ex of explosions) {
+    const alpha = Math.max(0, 1 - ex.age / ex.duration);
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = ex.color;
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(ex.x, ex.y, ex.r, 0, Math.PI*2); ctx.stroke();
+    ctx.globalAlpha = alpha * 0.1;
+    ctx.fillStyle = ex.color;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  // Particles
+  for (const p of particles) {
+    ctx.globalAlpha = p.life / 50;
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  // Cities (API endpoints)
+  for (let i = 0; i < 6; i++) {
+    const cx = CITY_X[i];
+    if (cities[i]) {
+      // Living city — server rack silhouette
+      ctx.fillStyle = '#cc2200';
+      ctx.fillRect(cx - 12, GROUND_Y - 16, 7, 16);
+      ctx.fillRect(cx - 3, GROUND_Y - 22, 9, 22);
+      ctx.fillRect(cx + 8, GROUND_Y - 12, 6, 12);
+      // Blinking status light
+      if (frameCount % 40 < 20) {
+        ctx.fillStyle = '#00ff44';
+        ctx.fillRect(cx - 10, GROUND_Y - 18, 2, 2);
+      }
+    } else {
+      // Destroyed — rubble
+      ctx.fillStyle = '#330000';
+      ctx.fillRect(cx - 12, GROUND_Y - 3, 26, 3);
+      ctx.fillStyle = '#1a0000';
+      ctx.fillRect(cx - 6, GROUND_Y - 6, 8, 3);
+    }
+
+    // Endpoint label
+    ctx.fillStyle = cities[i] ? '#660000' : '#220000';
+    ctx.font = '8px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText(ENDPOINTS[i], cx, GROUND_Y + 12);
+  }
+
+  // Bases
+  for (const bx of [0, W/2 - 22, W - 44]) {
+    ctx.fillStyle = '#882200';
+    ctx.beginPath();
+    ctx.moveTo(bx, GROUND_Y); ctx.lineTo(bx+22, GROUND_Y);
+    ctx.lineTo(bx+17, GROUND_Y - 10); ctx.lineTo(bx+5, GROUND_Y - 10);
+    ctx.closePath(); ctx.fill();
+  }
+
+  // Crosshair
+  if (mouse && !gameOver) {
+    ctx.strokeStyle = 'rgba(255,100,0,0.45)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(mouse.x - 14, mouse.y); ctx.lineTo(mouse.x + 14, mouse.y);
+    ctx.moveTo(mouse.x, mouse.y - 14); ctx.lineTo(mouse.x, mouse.y + 14);
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(mouse.x, mouse.y, 6, 0, Math.PI*2); ctx.stroke();
+  }
+
+  // Wave clear
+  if (waveClear && waveClearTimer > 80) {
+    ctx.fillStyle = '#ff4400';
+    ctx.font = 'bold 26px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText(`WAVE ${wave-1} REPELLED`, W/2, H/2 - 10);
+    ctx.font = '12px Courier New';
+    ctx.fillStyle = '#882200';
+    ctx.fillText('EVIDENCE LAYER ADVANCING — BLINKY UPDATING PACKAGE', W/2, H/2 + 20);
+  }
+
+  // Ammo warning
+  if (ammo === 0 && !gameOver) {
+    ctx.fillStyle = 'rgba(220,0,0,0.7)';
+    ctx.font = 'bold 11px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('NO AMMO — ENDPOINTS UNDEFENDED', W/2, 18);
+  }
+}
+
+// ─── End Screen — cinematic typeout ──────────────────────────────────────────
+
+const GHOST_FINDINGS = [
+  '[BLINKY] IP reputation confirmed hostile',
+  '[PINKY]  Agent UA spoofed — browser mask detected',
+  '[INKY]   Origin ASN: cloud datacenter infrastructure',
+  '[CLYDE]  Sub-100ms response cadence — machine-only',
+  '[BRAD]   Model fingerprint: AI agent confirmed',
+  '[BRAD]   Chain of custody hash: SEALED',
+];
+
+function typeLines(lines, el, delay, onDone) {
+  let i = 0;
+  function next() {
+    if (i >= lines.length) { if (onDone) onDone(); return; }
+    el.innerHTML += `<div class="r-${i < lines.length - 2 ? 'white' : 'green'}" style="color:${i<lines.length-2?'#cc3300':'#00cc44'}">${lines[i]}</div>`;
+    i++;
+    setTimeout(next, delay);
+  }
+  setTimeout(next, 400);
+}
+
+function showEndScreen() {
+  document.getElementById('r-incident').textContent = INCIDENT_ID;
+  document.getElementById('r-origin').textContent = INCIDENT_ORIGIN;
+  document.getElementById('r-time').textContent = INCIDENT_TIME;
+  document.getElementById('r-model').textContent = DETECTED_MODEL.toUpperCase();
+  document.getElementById('end-screen').classList.add('show');
+
+  const typeEl = document.getElementById('end-typeout');
+
+  typeLines(GHOST_FINDINGS, typeEl, 320, () => {
+    setTimeout(() => {
+      document.getElementById('r-div2').style.display = '';
+      document.getElementById('r-status').style.display = '';
+      document.getElementById('lb-rank-val').textContent = '#' + (Math.floor(Math.random()*300)+1);
+      document.getElementById('lb-score-val').textContent = score.toLocaleString();
+    }, 500);
+  });
+}
+
+// Initial burst
+setTimeout(() => { for (let i=0;i<3;i++) spawnMissile(); }, 600);
+function loop() { update(); draw(); requestAnimationFrame(loop); }
+loop();
+</script>
+</body>
+</html>

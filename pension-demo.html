@@ -762,6 +762,9 @@ function initFullStack() {
     }).then(function(r){ return r.json(); });
 
   }).then(function(pipeline) {
+    // step12_hcs/step16_hcs/summary_hcs now come straight back from
+    // /flash-tag/demo-run itself (Console Build 2) — no separate /flash-tag/log
+    // round trip needed anymore, and they're now part of the recalled transaction.
     window._pipelineV = pipeline;
     _buildStackCards(pipeline);
     startBtn.style.display = 'none';
@@ -775,7 +778,9 @@ function initFullStack() {
       var itemCount = card.querySelectorAll('.sitem').length;
       setTimeout(function() {
         card.classList.add('visible');
-        // Step's detail arrives together as one unit, not a slow one-by-one trickle
+        // Detail lines fade in one-by-one within this step, but the next
+        // step's own timer (below) never starts until this one has had
+        // time to finish — steps never overlap.
         card.querySelectorAll('.sitem').forEach(function(item, i) {
           setTimeout(function(){ item.classList.add('visible'); }, i * 30);
         });
@@ -798,6 +803,7 @@ function initFullStack() {
   });
 }
 
+
 function nextStep() {
   _stackStep++;
   var cards = document.querySelectorAll('.stack-card-wrap');
@@ -806,9 +812,8 @@ function nextStep() {
   var card = cards[_stackStep];
   card.classList.add('visible');
 
-  // Step's detail arrives together as one unit, not a slow one-by-one trickle
-  var items = card.querySelectorAll('.sitem');
-  items.forEach(function(item, i) {
+  // Detail lines fade in one-by-one within this step
+  card.querySelectorAll('.sitem').forEach(function(item, i) {
     setTimeout(function(){ item.classList.add('visible'); }, i * 30);
   });
 
@@ -884,6 +889,7 @@ function _buildStackCards(pipeline) {
     brad_auth_hcs: P.brad_auth_hcs || null,
     ship_id:      P.ship_id      || 'ship_a3e7c901',
     pep_hcs:      P.pep_hcs      || null,
+    // Resolved before build — see initFullStack's prefetch step
     step12_hcs:   P.step12_hcs   || null,
     step16_hcs:   P.step16_hcs   || null,
     summary_hcs:  P.summary_hcs  || null,
@@ -1043,7 +1049,7 @@ function _buildStackCards(pipeline) {
                  item.ok === false ? '<span style="color:#dc2626;font-weight:700;flex-shrink:0">✗</span>' :
                  '<span style="color:#9aa5b4;flex-shrink:0">·</span>';
       var monoHtml = item.mono ? ' <span style="font-family:\'Courier New\',monospace;font-size:11px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:3px;padding:1px 6px;color:#1e40af">' + item.mono + '</span>' : '';
-      // _seq = real seq already known (steps 1-5 from pipeline); hs without _seq = pending (steps 12/16)
+      // _seq = real seq already known (all steps resolve before reveal now — see initFullStack's prefetch)
       var hsHtml = item._seq
         ? _hsLink(item._seq)
         : item.hs

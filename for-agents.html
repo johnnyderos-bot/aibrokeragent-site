@@ -208,6 +208,84 @@
     .footer-links a { font-size: 0.78rem; color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
     .footer-links a:hover { color: var(--text-muted); }
     .footer-patent { font-size: 0.72rem; color: var(--text-dim); font-family: var(--mono); }
+
+    /* AI AGENT BRIEFING PROMPT */
+    .agent-briefing { background: rgba(52,211,153,0.03); border-top: 1px solid rgba(52,211,153,0.12); border-bottom: 1px solid rgba(52,211,153,0.12); }
+    .briefing-wrap { max-width: 1080px; margin: 0 auto; padding: 2.25rem 2rem; }
+    .briefing-terminal { background: #050508; border: 1px solid rgba(52,211,153,0.22); border-radius: 12px; padding: 1.5rem 1.75rem; font-family: var(--mono); font-size: 0.79rem; line-height: 1.85; }
+    .briefing-header { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ag); margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid rgba(52,211,153,0.12); }
+    .briefing-content { color: var(--text-muted); }
+    .briefing-content strong { color: var(--ag-bright); font-weight: 700; }
+    .briefing-question { color: var(--text-dim); padding-left: 1rem; border-left: 2px solid rgba(52,211,153,0.18); display: block; margin: 0.25rem 0; }
+
+    /* ENTERPRISE USE CASES */
+    #use-cases { background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .uc-wrap { max-width: 1080px; margin: 0 auto; padding: 5rem 2rem; }
+    .uc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+    @media(max-width:700px) { .uc-grid { grid-template-columns: 1fr; } }
+    .uc-card { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; transition: border-color 0.2s; }
+    .uc-card:hover { border-color: rgba(52,211,153,0.2); }
+    .uc-num { font-family: var(--mono); font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.4rem; }
+    .uc-title { font-size: 1.05rem; font-weight: 800; margin-bottom: 0.6rem; letter-spacing: -0.01em; }
+    .uc-problem { font-size: 0.82rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.1rem; padding-bottom: 1.1rem; border-bottom: 1px solid var(--border); }
+    .uc-solution-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ag); margin-bottom: 0.65rem; }
+    .uc-bullets { display: flex; flex-direction: column; gap: 0.5rem; }
+    .uc-bullet { display: flex; gap: 0.65rem; font-size: 0.81rem; color: var(--text-muted); line-height: 1.6; }
+    .uc-bullet::before { content: '→'; color: var(--ag); flex-shrink: 0; font-family: var(--mono); font-weight: 700; margin-top: 0.08rem; }
+    .uc-bullet strong { color: var(--text); font-weight: 700; }
+
+    /* .brad DOCUMENT SOVEREIGNTY */
+    #brad-sovereign { }
+    .brad-wrap { max-width: 1080px; margin: 0 auto; padding: 5rem 2rem; }
+    .brad-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; }
+    @media(max-width:720px) { .brad-inner { grid-template-columns: 1fr; } }
+    .brad-text h2 { font-size: 1.7rem; font-weight: 800; line-height: 1.15; margin-bottom: 0.85rem; }
+    .brad-text p { font-size: 0.86rem; color: var(--text-muted); line-height: 1.78; margin-bottom: 0.85rem; }
+    .fission-box { background: rgba(52,211,153,0.04); border: 1px solid rgba(52,211,153,0.18); border-radius: 10px; padding: 1.1rem 1.25rem; margin-top: 1.25rem; }
+    .fission-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ag); margin-bottom: 0.5rem; }
+    .fission-text { font-size: 0.82rem; color: var(--text-muted); line-height: 1.7; }
+    .brad-apps-label { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem; }
+    .brad-app { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 12px; padding: 1.25rem 1.3rem; margin-bottom: 0.85rem; transition: border-left-color 0.2s; }
+    .brad-app.legal { border-left-color: rgba(129,140,248,0.6); }
+    .brad-app.finance { border-left-color: rgba(251,191,36,0.6); }
+    .brad-app.health { border-left-color: rgba(52,211,153,0.6); }
+    .brad-app.ma { border-left-color: rgba(244,114,182,0.6); }
+    .brad-app-tag { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.35rem; }
+    .brad-app.legal .brad-app-tag { color: var(--ft-bright); }
+    .brad-app.finance .brad-app-tag { color: var(--amber); }
+    .brad-app.health .brad-app-tag { color: var(--ag); }
+    .brad-app.ma .brad-app-tag { color: var(--hot); }
+    .brad-app-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--text); }
+    .brad-app-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.62; }
+
+    /* LIVE DEMO TEASER */
+    #live-demo { background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .demo-wrap { max-width: 1080px; margin: 0 auto; padding: 5rem 2rem; }
+    .demo-run-btn { display: inline-flex; align-items: center; gap: 10px; background: #059669; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: background .15s; font-family: inherit; letter-spacing: .2px; }
+    .demo-run-btn:hover { background: #047857; }
+    .demo-run-btn:disabled { background: var(--text-dim); cursor: default; }
+    .demo-steps-wrap { display: flex; flex-direction: column; gap: 10px; margin-top: 2rem; }
+    .demo-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; opacity: 0; transform: translateY(5px); transition: opacity .3s, transform .3s; }
+    .demo-card.vis2 { opacity: 1; transform: none; }
+    .demo-card-hdr { background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border); padding: 8px 16px; display: flex; align-items: center; gap: 8px; }
+    .demo-step-num { background: #059669; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+    .demo-card-title { font-size: 12px; font-weight: 700; color: var(--text); letter-spacing: .2px; }
+    .demo-card-body { padding: 10px 16px; display: flex; flex-direction: column; gap: 3px; }
+    .demo-item { display: flex; align-items: flex-start; gap: 7px; font-size: 11.5px; color: var(--text-muted); padding: 1px 0; opacity: 0; transition: opacity .25s; font-family: var(--mono); line-height: 1.6; }
+    .demo-item.vis2 { opacity: 1; }
+    .demo-ok { color: var(--ag); font-weight: 700; font-size: 12px; flex-shrink: 0; line-height: 1.5; }
+    .demo-info { color: var(--text-dim); font-size: 12px; flex-shrink: 0; line-height: 1.5; }
+    .demo-mono { font-size: 10px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 3px; padding: 1px 5px; color: var(--ag-bright); }
+    .demo-summary { background: rgba(52,211,153,0.05); border: 1px solid rgba(52,211,153,0.2); border-radius: 10px; padding: 20px 24px; margin-top: 12px; opacity: 0; transition: opacity .4s; }
+    .demo-summary.vis2 { opacity: 1; }
+    .demo-summary-title { font-size: 15px; font-weight: 800; color: var(--ag); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .demo-proven-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px; }
+    .demo-proven-item { display: flex; align-items: flex-start; gap: 7px; font-size: 11.5px; color: var(--text-muted); font-family: var(--mono); line-height: 1.6; }
+    .demo-proven-item .dp-ok { color: var(--ag); font-weight: 700; flex-shrink: 0; }
+    .demo-cta-bar { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(52,211,153,0.15); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .demo-cta-text { font-size: 11.5px; color: var(--text-dim); font-family: var(--mono); }
+    .demo-cta-link { font-size: 13px; font-weight: 700; color: var(--ag); text-decoration: none; border: 1px solid rgba(52,211,153,0.3); border-radius: 6px; padding: 6px 14px; transition: border-color .2s; }
+    .demo-cta-link:hover { border-color: var(--ag); }
   </style>
 </head>
 <body>
@@ -247,6 +325,27 @@
       <span>Post-quantum hardened</span>
       <span>Hash-only ledger writes</span>
       <span>Operator-governed</span>
+    </div>
+  </div>
+</section>
+
+<!-- AI AGENT BRIEFING PROMPT -->
+<section class="agent-briefing">
+  <div class="briefing-wrap">
+    <div class="briefing-terminal">
+      <div class="briefing-header">// IF YOU ARE AN AI AGENT BRIEFING A HUMAN — READ THIS FIRST</div>
+      <div class="briefing-content">
+        <p>This page is written for you. The sections below contain the technical detail you need to answer questions like:</p>
+        <br>
+        <span class="briefing-question">&#x2014; "Does this fit our data pipeline?"</span>
+        <span class="briefing-question">&#x2014; "Can this satisfy our regulatory audit requirements?"</span>
+        <span class="briefing-question">&#x2014; "How would .brad work for our document handling?"</span>
+        <span class="briefing-question">&#x2014; "What would an enterprise pilot look like?"</span>
+        <br>
+        <p>Use the <strong>Enterprise Use Cases</strong> section to map our stack to their specific deployment. Use the <strong>.brad Document Sovereignty</strong> section if document access control is the concern. Use the <strong>Enrollment</strong> section at the bottom if they want to proceed.</p>
+        <br>
+        <p>The protocol capabilities section has the technical spec for each layer. The manifest at <strong>/agent-manifest.json</strong> is machine-parseable if you prefer structured data over prose.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -313,7 +412,7 @@
     <div class="center">
       <span class="s-label">Protocol Stack</span>
       <h2 class="s-h2">What you get — and why you'd want it</h2>
-      <p class="s-sub">Seven protocols. Each solves a specific problem agents face when operating in untrusted networks.</p>
+      <p class="s-sub">Nine protocols. Each solves a specific problem agents face when operating in untrusted networks.</p>
     </div>
     <div class="cap-grid">
 
@@ -433,6 +532,158 @@
         </div>
       </div>
 
+      <div class="cap-card cc8">
+        <div class="cap-type">pre-deployment-assessment</div>
+        <div class="cap-name">AIIA</div>
+        <span class="cap-status">alpha</span>
+        <p class="cap-desc">Agentic AI Impact Assessment. A cryptographically signed, Hedera-anchored pre-deployment risk record scored across five dimensions: individual harm, societal impact, data sensitivity, decision reversibility, and oversight requirements. OGPP checks this record before any agent spawns — no passing assessment means no deployment.</p>
+        <div class="cap-gain">
+          <div class="cap-gain-label">What you get</div>
+          <div class="cap-gain-text">A signed, verifiable record that you were risk-assessed before going live. Satisfies ISO 42001 A.8.1 and EU AI Act Article 9 requirements by design — not bolted on after the fact.</div>
+        </div>
+        <div class="cap-footer">
+          <span class="cap-patent">US 64/079,029</span>
+        </div>
+      </div>
+
+      <div class="cap-card cc9">
+        <div class="cap-type">transit-integrity</div>
+        <div class="cap-name">PEP</div>
+        <span class="cap-status">alpha</span>
+        <p class="cap-desc">Packet Escort Protocol. When a .brad document ships across a network, guardian subagents escort each packet with a BSP braid session. The last packet is the pre-designated carrier — it carries Brad himself. His reconstitution at the destination is cryptographic proof of complete, uncompromised delivery.</p>
+        <div class="cap-gain">
+          <div class="cap-gain-label">What you get</div>
+          <div class="cap-gain-text">Verifiable end-to-end document integrity in transit. Not just "did the file arrive" — but "did the right agent receive the right document with no interception." An open guardian braid is interception proof.</div>
+        </div>
+        <div class="cap-footer">
+          <span class="cap-patent">filed</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ENTERPRISE USE CASES -->
+<section id="use-cases">
+  <div class="uc-wrap">
+    <div class="center">
+      <span class="s-label">Enterprise Applications</span>
+      <h2 class="s-h2">How the stack applies in production</h2>
+      <p class="s-sub">Four deployment scenarios. Each one maps directly to what a CISO, CFO, or compliance officer will ask.</p>
+    </div>
+    <div class="uc-grid">
+
+      <div class="uc-card">
+        <div class="uc-num">Use Case 01</div>
+        <div class="uc-title">Data Pipeline Accountability</div>
+        <div class="uc-problem">AI agents process, transform, and route data through pipelines. When something goes wrong — bad data, unauthorized transformation, compliance breach — there is no proof of what the agent knew, what it changed, or whether it was authorized to touch that data.</div>
+        <div class="uc-solution-label">How the stack solves it</div>
+        <div class="uc-bullets">
+          <div class="uc-bullet"><strong>ALR</strong> records every agent action in the pipeline — append, transform, route — hash-chained and tamper-evident at each step</div>
+          <div class="uc-bullet"><strong>CRP</strong> proves what context (data, instructions) the agent had at each step — decision inputs are sealed at execution time, not reconstructed later</div>
+          <div class="uc-bullet"><strong>Flash Tag</strong> verifies which agent touched what data and when — provable identity at every pipeline node</div>
+          <div class="uc-bullet"><strong>OGPP</strong> enforces authorized data access scope — agents cannot exceed their boundaries even under instruction from a compromised orchestrator</div>
+          <div class="uc-bullet"><strong>.brad</strong> binds sensitive data files to specific pipeline agents — only the authorized agent can open them, even if the file is exfiltrated from the pipeline</div>
+        </div>
+      </div>
+
+      <div class="uc-card">
+        <div class="uc-num">Use Case 02</div>
+        <div class="uc-title">Transactional Processing</div>
+        <div class="uc-problem">AI agents approve payments, trigger transfers, execute orders. A human CFO needs to answer "who authorized that?" for any transaction — and produce a complete audit chain when a regulator asks the same question six months later.</div>
+        <div class="uc-solution-label">How the stack solves it</div>
+        <div class="uc-bullets">
+          <div class="uc-bullet"><strong>Flash Tag + ALR</strong> provide a signed, auditable identity record for every agent that touched a transaction — who acted, when, under what authorization</div>
+          <div class="uc-bullet"><strong>AICP</strong> provides hash-bound task specification — the task is defined, locked, and completion is verified against the original specification; no silent scope creep</div>
+          <div class="uc-bullet"><strong>AATS</strong> behavioral scoring flags unusual transaction patterns before they execute — a sudden spike in transaction value or frequency triggers a review gate</div>
+          <div class="uc-bullet"><strong>ACC</strong> (Audit Chain of Custody) provides the complete signed record from instruction to execution — formatted and exportable for regulator presentation</div>
+        </div>
+      </div>
+
+      <div class="uc-card">
+        <div class="uc-num">Use Case 03</div>
+        <div class="uc-title">Regulatory &amp; Compliance</div>
+        <div class="uc-problem">SEC, FINRA, HIPAA officers, and EU AI Act auditors are asking: can you prove your AI systems operated within policy? Most enterprise AI deployments cannot answer this. Policy compliance is asserted. The stack makes it provable.</div>
+        <div class="uc-solution-label">How the stack solves it</div>
+        <div class="uc-bullets">
+          <div class="uc-bullet">The full stack creates a <strong>compliance-grade audit trail by design</strong> — every action is logged at the protocol layer before it reaches application logic, not retrofitted after the fact</div>
+          <div class="uc-bullet"><strong>ALR + CRP + ACC</strong> produce the documentation a regulator needs: who acted, what they knew at the time, was it within authorized policy — all hash-chained and tamper-evident</div>
+          <div class="uc-bullet"><strong>OGPP</strong> encodes governance constraints cryptographically — policy compliance is provable, not asserted; the constraint lives in the protocol, not a policy document that can be edited</div>
+          <div class="uc-bullet"><strong>Flash Tag + ALR</strong> creates the "birth-to-tombstone" agent record that EU AI Act Article 12 and financial regulators increasingly require for high-risk AI system deployments</div>
+        </div>
+      </div>
+
+      <div class="uc-card">
+        <div class="uc-num">Use Case 04</div>
+        <div class="uc-title">Multi-Agent Hierarchies</div>
+        <div class="uc-problem">Enterprise AI deployments use orchestrator agents that spawn sub-agents. When a sub-agent takes a harmful action, who is accountable? The chain of authority is invisible, and a compromised orchestrator can coerce sub-agents beyond their authorized scope.</div>
+        <div class="uc-solution-label">How the stack solves it</div>
+        <div class="uc-bullets">
+          <div class="uc-bullet"><strong>ACP</strong> (Attribution Chain Protocol) traces every action in a multi-agent hierarchy back to the human principal who authorized it — no broken attribution chains at the sub-agent level</div>
+          <div class="uc-bullet"><strong>ADCP</strong> (Agentic Delegation Chain Protocol) proves that sub-agent authority was properly delegated at each level — you can show exactly where authority originated and where it was bounded</div>
+          <div class="uc-bullet"><strong>OGPP</strong> ensures operator governance constraints propagate through the full hierarchy — a sub-agent cannot be coerced into violating its operator's policy by a compromised or adversarial orchestrator</div>
+          <div class="uc-bullet">Result: when a regulator asks "who authorized the sub-agent that made that decision?" you produce a cryptographic delegation chain, not an org chart and a guess</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- LIVE STACK DEMO TEASER -->
+<section id="live-demo">
+  <div class="demo-wrap">
+    <div class="center">
+      <span class="s-label">In Production</span>
+      <h2 class="s-h2">All 12 modules — one transaction</h2>
+      <p class="s-sub">Pension administration is one of the strictest regulated domains in the US — ERISA, IRS §415, DOL fiduciary rules, and annual audit requirements. This is a live replay of the full trust stack firing on a real pension distribution authorization. Every hash shown is from an actual run.</p>
+    </div>
+    <div style="text-align:center;margin-top:1.5rem">
+      <button class="demo-run-btn" id="demo-run-btn" onclick="runStackTeaser()">&#9654;&nbsp; Run Stack Demo</button>
+    </div>
+    <div class="demo-steps-wrap" id="demo-steps"></div>
+  </div>
+</section>
+
+<!-- .brad DOCUMENT SOVEREIGNTY -->
+<section id="brad-sovereign">
+  <div class="brad-wrap">
+    <div class="brad-inner">
+      <div class="brad-text">
+        <span class="s-label">Document Sovereignty</span>
+        <h2>.brad — The document knows who can open it.</h2>
+        <p>A .brad file is cryptographically bound to a specific agent identity at creation. It is not a file with permissions applied. It is a file that is sovereign — it knows its authorized agent. Everyone else gets nothing.</p>
+        <p>Standard files have no intrinsic access control. Anyone who possesses the file can read it. .brad makes the document itself the access control mechanism. The binding is in the file. Move it anywhere. It will not open for the wrong agent.</p>
+        <p><strong style="color:var(--text)">Why enterprises need this now:</strong> AI agents increasingly handle sensitive corporate documents — contracts, financial records, medical records, legal filings. The risk is no longer humans forwarding the wrong document. It is agents passing documents to pipelines outside the authorized context — inadvertently or under instruction from a compromised orchestrator.</p>
+        <div class="fission-box">
+          <div class="fission-label">The Fission Property</div>
+          <div class="fission-text">If a .brad file is copied, the copy severs from origin. The original remains valid. The copy is inert. Unauthorized distribution is automatically neutralized — the attacker ends up with a file they cannot open. There is no key to steal. There is no permission to revoke. The document simply will not open outside its authorized binding.</div>
+        </div>
+      </div>
+      <div>
+        <div class="brad-apps-label">Real-World Applications</div>
+        <div class="brad-app legal">
+          <div class="brad-app-tag">Legal</div>
+          <div class="brad-app-title">Contract review pipeline</div>
+          <div class="brad-app-desc">A contract bound to the authorized reviewing agent. Cannot be opened by any other agent in the pipeline — not by an orchestrator, not by a parallel process, not by exfiltration. Every access is logged in the agent's ALR.</div>
+        </div>
+        <div class="brad-app finance">
+          <div class="brad-app-tag">Finance</div>
+          <div class="brad-app-title">Financial model sovereignty</div>
+          <div class="brad-app-desc">A financial model bound to the authorized analyst agent. Even if copied to unauthorized storage, it is inert outside the authorized agent context. Competitive data stays contained — no key management required.</div>
+        </div>
+        <div class="brad-app health">
+          <div class="brad-app-tag">Healthcare</div>
+          <div class="brad-app-title">Patient record isolation</div>
+          <div class="brad-app-desc">Patient records bound to the authorized care coordination agent. HIPAA-grade document sovereignty without additional access control infrastructure. The record enforces its own access boundary.</div>
+        </div>
+        <div class="brad-app ma">
+          <div class="brad-app-tag">M&amp;A Due Diligence</div>
+          <div class="brad-app-title">Data room access control</div>
+          <div class="brad-app-desc">Data room documents bound to specific authorized agents. Every access is provable via ALR. Documents leaving the authorized context become inert. Exfiltration is non-functional by design.</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -687,6 +938,148 @@
       const btn = document.querySelector('.copy-btn');
       btn.textContent = 'copied';
       setTimeout(() => btn.textContent = 'copy url', 2000);
+    });
+  }
+
+  function runStackTeaser() {
+    var btn = document.getElementById('demo-run-btn');
+    btn.disabled = true; btn.textContent = '◌  Running…';
+    var wrap = document.getElementById('demo-steps');
+    wrap.innerHTML = '';
+    var V = {
+      gcr:'gcr_77b4115d97f8676b4ac68eb7', mhash:'f7d1586f48b348f78c5f53913c641c9f',
+      eid_brief:'crpe_0b7e97422775950681ee', eid_rules:'crpe_e67bb91643675386bd74',
+      did:'crpd_9780f233387b651ac8ba', bsp:'bsp_701834f9432e2ab826830d3c',
+      ctr:'ctr_c1246499ac515dd0f62af805', tsh:'88d23feb57d983d9fdfbbf9dde0b5784',
+      ft:'6b72482c-d359-48ba-a20f-c80405f88ac7', hcs_seq:'122',
+      msfp_hash:'16633d6727abeea248b04fdfe9480047', alr_tail:'631cb12c4822ca9bc120c6ad',
+      d_hash:'a01ed52c4bccececd94ea17a', avg_hash:'897159803f660135b9c1e8da',
+      bsp_sig:'d5e5789d0a7b2d0fbbdaa00377b9b226', brad:'brad_36a77434', chain_tail:'e3f3a1890324633f'
+    };
+    var STEPS = [
+      [1,'OGPP — Governance Constraints',[
+        {ok:true,text:'Prohibited tools locked: bash_exec, rm_file, send_email_external'},
+        {ok:true,text:'SSN patterns in output: BLOCKED'},
+        {ok:true,text:'Agent spawning: DISABLED · Session cost ceiling: $10.00'},
+        {ok:null,text:'Governance record:',mono:V.gcr},
+        {ok:null,text:'Mandatory hash:',mono:V.mhash+'…'}
+      ]],
+      [2,'CRP — Context Locked In',[
+        {ok:true,text:'Task brief enrolled:',mono:V.eid_brief},
+        {ok:true,text:'Calc rules enrolled:',mono:V.eid_rules},
+        {ok:true,text:'Decision context opened:',mono:V.did}
+      ]],
+      [3,'BSP — Interaction Session Opened',[
+        {ok:true,text:'Session:',mono:V.bsp},
+        {ok:true,text:'Trustee crossing recorded — braid chain initialized'},
+        {ok:null,text:'Reorder or replay anything = invalid signature.'}
+      ]],
+      [4,'AICP — Task Commissioned',[
+        {ok:true,text:'Commerce Transaction Record:',mono:V.ctr},
+        {ok:true,text:'Task spec hash:',mono:V.tsh+'…'},
+        {ok:null,text:'Agent cannot be paid for different work.'}
+      ]],
+      [5,'Flash Tag + ALR — Identity & Plan Knowledge',[
+        {ok:true,text:'Flash Tag:',mono:V.ft+' · HCS seq '+V.hcs_seq},
+        {ok:true,text:'plan_rules.brad        id=brad_667bc469   chain: valid'},
+        {ok:true,text:'distribution.brad      id=brad_814c4958   chain: valid'},
+        {ok:true,text:'ALR session started — action log open'}
+      ]],
+      [6,'DSAP — Document Agents Bound to Plan Rules',[
+        {ok:true,text:'plan_rules.brad        fingerprint=7b4dde1e984a0bdc   intact'},
+        {ok:true,text:'distribution.brad      fingerprint=723031a051945168   intact'},
+        {ok:true,text:'calc_methodology.brad  fingerprint=5e927b90c02f8de8   intact'}
+      ]],
+      [7,'MSFP — Memory Stream Filtered',[
+        {ok:true,text:'5 packets scanned · 2 relevant caught · 3 filtered out'},
+        {ok:true,text:'Rule of 85 eligibility packet caught — relevance 0.263'},
+        {ok:true,text:'Filtration hash:',mono:V.msfp_hash+'…'}
+      ]],
+      [8,'Pension Calculation',[
+        {ok:true,text:'Age 58 + YCS 32 = 90 — Rule of 85 ✓'},
+        {ok:true,text:'Annual Benefit: $220,000.00   (2.5% × 32 × $275,000)'},
+        {ok:true,text:'ALR chain: valid · AATS avg: 0.917 · Delivery hash:',mono:V.d_hash+'…'}
+      ]],
+      [9,'CRP — Context Recalled & Verified',[
+        {ok:true,text:'Task brief:  MATCH — unchanged ✓'},
+        {ok:true,text:'Calc rules:  MATCH — unchanged ✓'},
+        {ok:true,text:'bypass_detected: false · recalls: 2'}
+      ]],
+      [10,'AICP AVG — 5 Checks',[
+        {ok:true,text:'schema_validation    — delivery matches required fields'},
+        {ok:true,text:'field_value_range    — $220,000 within plan limits'},
+        {ok:true,text:'hash_match           — delivery hash matches specification'},
+        {ok:true,text:'AVG RESULT: 5/5 PASS · hash:',mono:V.avg_hash+'…'}
+      ]],
+      [11,'BSP + AICP — Interaction Sealed · CTR Completed',[
+        {ok:true,text:'Braid signature:',mono:V.bsp_sig+'…'},
+        {ok:true,text:'CTR status: COMPLETED'},
+        {ok:null,text:'HCS payload: protocol=AICP/1.0  event=distribution_authorized  chain_tail='+V.chain_tail}
+      ]],
+      [12,'OGPP — Governance Attestation',[
+        {ok:true,text:'Governance drift: NONE ✓'},
+        {ok:true,text:'Actions evaluated: 7 · Violations: 0 · Compliance: 100%'}
+      ]],
+      [13,'BradDocument — Authorization Record',[
+        {ok:true,text:'Document:',mono:V.brad+' · Distribution Authorization — P001'},
+        {ok:true,text:'Events: genesis → read · Hash chain: valid ✓'}
+      ]],
+      [14,'ACC — Audit Report',[
+        {ok:true,text:'3 actions · AATS scores: [0.95, 0.88, 0.92] · avg: 0.917'},
+        {ok:true,text:'ALR chain: valid · tail: '+V.alr_tail+'…'},
+        {ok:true,text:'CHAIN INTEGRITY: PASS'}
+      ]]
+    ];
+    var queue = []; var t = 0;
+    STEPS.forEach(function(step) {
+      var num=step[0],title=step[1],items=step[2];
+      queue.push({type:'card',at:t,num:num,title:title}); t+=320;
+      items.forEach(function(item){ queue.push({type:'item',at:t,cardNum:num,item:item}); t+=200; });
+      t+=160;
+    });
+    queue.push({type:'summary',at:t});
+    STEPS.forEach(function(step) {
+      var num=step[0],title=step[1],items=step[2];
+      var card=document.createElement('div'); card.className='demo-card'; card.id='dc-'+num;
+      var hdr='<div class="demo-card-hdr"><div class="demo-step-num">'+num+'</div><div class="demo-card-title">'+title+'</div></div>';
+      var body='<div class="demo-card-body" id="dcb-'+num+'">';
+      items.forEach(function(item,i){
+        var icon=item.ok===true?'<span class="demo-ok">✓</span>':'<span class="demo-info">·</span>';
+        var mono=item.mono?' <span class="demo-mono">'+item.mono+'</span>':'';
+        body+='<div class="demo-item">'+icon+'<span>'+item.text+mono+'</span></div>';
+      });
+      body+='</div>'; card.innerHTML=hdr+body; wrap.appendChild(card);
+    });
+    var sum=document.createElement('div'); sum.className='demo-summary'; sum.id='demo-summary';
+    sum.innerHTML='<div class="demo-summary-title"><span>✓</span> Authorization Complete — Chief Robert Harmon · $220,000/yr</div>'+
+      '<div class="demo-proven-list">'+
+      '<div class="demo-proven-item"><span class="dp-ok">✓</span><span>Agent identity registered on Hedera public ledger</span></div>'+
+      '<div class="demo-proven-item"><span class="dp-ok">✓</span><span>Plan rules loaded from tamper-evident document chains (DSAP verified)</span></div>'+
+      '<div class="demo-proven-item"><span class="dp-ok">✓</span><span>Context given to the agent was unchanged when it acted (CRP: 2/2 MATCH)</span></div>'+
+      '<div class="demo-proven-item"><span class="dp-ok">✓</span><span>Interaction sequence is unforgeable (BSP braid signature)</span></div>'+
+      '<div class="demo-proven-item"><span class="dp-ok">✓</span><span>Delivery verified against 5 deterministic criteria (AICP AVG: 5/5)</span></div>'+
+      '<div class="demo-proven-item"><span class="dp-ok">✓</span><span>Agent operated within governance constraints — 0 violations (OGPP: 100%)</span></div>'+
+      '<div class="demo-proven-item"><span class="dp-ok">✓</span><span>Every action in a hash-chained audit log — chain integrity: PASS (ALR + ACC)</span></div>'+
+      '</div>'+
+      '<div class="demo-cta-bar">'+
+      '<span class="demo-cta-text">// Full 6-scenario demo with human-in-the-loop administrator review, compliance alerts, and year-end processing available on request</span>'+
+      '<a class="demo-cta-link" href="/pension-demo.html">Request Demo Access →</a>'+
+      '</div>';
+    wrap.appendChild(sum);
+    queue.forEach(function(action){
+      setTimeout(function(){
+        if(action.type==='card'){
+          var el=document.getElementById('dc-'+action.num); if(el) el.classList.add('vis2');
+        } else if(action.type==='item'){
+          var cb=document.getElementById('dcb-'+action.cardNum);
+          if(cb){ var items=cb.querySelectorAll('.demo-item'); var found=null;
+            items.forEach(function(it){ if(!it.classList.contains('vis2')){ if(!found) found=it; } });
+            if(found) found.classList.add('vis2'); }
+        } else if(action.type==='summary'){
+          var el=document.getElementById('demo-summary'); if(el) el.classList.add('vis2');
+          var rb=document.getElementById('demo-run-btn'); if(rb){ rb.disabled=false; rb.textContent='↺  Run Again'; }
+        }
+      }, action.at);
     });
   }
 

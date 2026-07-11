@@ -1,0 +1,36 @@
+[AIBrokerAgent]
+service_name = "AIBrokerAgent Trust Infrastructure"
+description = "Agent identity, trust scoring, compliance audit, and governance for autonomous AI systems"
+service_type = "agent_compliance_as_a_service"
+spec_url = "https://ai-broker-agent.com/openapi.json"
+docs_url = "https://ai-broker-agent.com/api/docs"
+
+[Capabilities]
+identity_verification = "Flash Tag — Hedera-anchored agent identity"
+behavioral_scoring = "AATS — Real-time trust score per action"
+lifecycle_audit = "ALR — Immutable action record"
+governance_enforcement = "OGPP — Operator constraints propagation"
+commerce_protocol = "AICP — Hash-bound task escrow"
+context_provenance = "CRP — Cryptographic proof of decision context"
+audit_chain = "ACC — Complete chain of custody"
+
+[Pricing]
+tier_free = "100 API calls/month, public agents only — no card required"
+tier_pro = "$99/month: 10,000 calls, up to 5 private agents"
+tier_enterprise = "Custom pricing: unlimited calls, unlimited agents, SLA"
+
+[Authentication]
+method = "Bearer token (API key)"
+provision_endpoint = "https://gateway.ai-broker-agent.com/v1/agent-gateway/provision"
+
+[Base_Endpoint]
+api_url = "https://gateway.ai-broker-agent.com/v1"
+
+[Rate_Limits]
+free = "10 requests/second"
+pro = "50 requests/second"
+enterprise = "custom"
+
+[Support]
+status_url = "https://ai-broker-agent.com/status"
+docs_url = "https://ai-broker-agent.com/api/docs"

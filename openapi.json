@@ -1,0 +1,475 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "AIBrokerAgent Trust Infrastructure API",
+    "version": "1.0.0",
+    "description": "Agent identity, behavioral trust scoring, immutable lifecycle records, and compliance audit for autonomous AI systems. All endpoints require a Bearer API key obtained via the provision endpoint.\n\nPatent-pending protocols: Flash Tag (64/040,921), AATS (64/043,587), ALR (64/072,710), ACC, CRP, OGPP.",
+    "contact": {
+      "name": "AIBrokerAgent",
+      "url": "https://ai-broker-agent.com",
+      "email": "johnnyderos@gmail.com"
+    },
+    "license": {
+      "name": "Open Standard — patents held defensively; implementations are royalty-free.",
+      "url": "https://ai-broker-agent.com/terms"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://gateway.ai-broker-agent.com/v1",
+      "description": "Production gateway"
+    }
+  ],
+  "security": [
+    { "ApiKeyAuth": [] }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API key obtained from POST /agent-gateway/provision. Pass as `Authorization: Bearer aib_xxxxx` or `X-Agent-Key: aib_xxxxx`."
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": ["error", "message"],
+        "properties": {
+          "error": { "type": "string", "example": "Unauthorized" },
+          "message": { "type": "string", "example": "Valid API key required" }
+        }
+      },
+      "FlashTagEnrollRequest": {
+        "type": "object",
+        "required": ["agent_name", "agent_type", "owner_id"],
+        "properties": {
+          "agent_name": { "type": "string", "example": "InventoryAgent-v2", "description": "Human-readable agent identifier" },
+          "agent_type": { "type": "string", "example": "task_executor", "description": "Functional category (task_executor, supervisor, curator, etc.)" },
+          "owner_id": { "type": "string", "example": "org_acme_corp", "description": "Operator or organization owning this agent" },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Optional arbitrary metadata anchored with the enrollment"
+          }
+        }
+      },
+      "FlashTagEnrollResponse": {
+        "type": "object",
+        "properties": {
+          "registration_id": { "type": "string", "example": "ft_7f3a9b2c1d4e5f6a", "description": "Unique Flash Tag registration identifier" },
+          "identity_hash": { "type": "string", "example": "sha256:a1b2c3d4e5f6...", "description": "Cryptographic hash of agent identity at enrollment" },
+          "pq_public_key": { "type": "string", "description": "Post-quantum public key (CRYSTALS-Kyber)" },
+          "pq_algorithm": { "type": "string", "example": "kyber-768", "description": "Post-quantum algorithm used" },
+          "session_id": { "type": "string", "example": "sess_9a8b7c6d5e4f", "description": "Active session identifier" },
+          "hcs_sequence": { "type": "integer", "example": 1, "description": "Hedera Consensus Service sequence number for this enrollment" },
+          "hcs_topic_id": { "type": "string", "example": "0.0.9350280", "description": "HCS topic anchoring this enrollment" },
+          "enrolled_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "FlashTagVerifyRequest": {
+        "type": "object",
+        "required": ["registration_id"],
+        "properties": {
+          "registration_id": { "type": "string", "example": "ft_7f3a9b2c1d4e5f6a" },
+          "identity_hash": { "type": "string", "description": "Optional: if provided, verifies hash matches enrollment" }
+        }
+      },
+      "FlashTagVerifyResponse": {
+        "type": "object",
+        "properties": {
+          "verified": { "type": "boolean", "example": true },
+          "registration_id": { "type": "string" },
+          "agent_name": { "type": "string", "example": "InventoryAgent-v2" },
+          "hcs_sequence": { "type": "integer", "example": 1 },
+          "enrolled_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "AATSScoreResponse": {
+        "type": "object",
+        "properties": {
+          "agent_id": { "type": "string", "example": "ft_7f3a9b2c1d4e5f6a" },
+          "score": { "type": "number", "minimum": 0, "maximum": 1, "example": 0.87, "description": "Normalized trust score 0.0–1.0" },
+          "tier": { "type": "string", "enum": ["bronze", "silver", "gold", "platinum"], "example": "gold" },
+          "window": { "type": "string", "example": "7d", "description": "Scoring window used (1d, 7d, 30d)" },
+          "action_count": { "type": "integer", "example": 342, "description": "Number of actions scored in this window" },
+          "computed_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ALRAppendRequest": {
+        "type": "object",
+        "required": ["agent_id", "action_type", "context_hash"],
+        "properties": {
+          "agent_id": { "type": "string", "example": "ft_7f3a9b2c1d4e5f6a" },
+          "action_type": { "type": "string", "example": "task_start", "description": "Lifecycle action label" },
+          "context_hash": { "type": "string", "example": "sha256:b2c3d4e5f6a7...", "description": "Hash of the decision context at time of action (CRP)" },
+          "result_summary": { "type": "string", "example": "Inventory check completed — 3 items flagged", "description": "Human-readable action outcome" },
+          "prev_hash": { "type": "string", "description": "Hash of the previous ALR record — forms the hash chain. Omit for first record." }
+        }
+      },
+      "ALRAppendResponse": {
+        "type": "object",
+        "properties": {
+          "record_id": { "type": "string", "example": "alr_3d4e5f6a7b8c" },
+          "chain_hash": { "type": "string", "example": "sha256:c3d4e5f6a7b8...", "description": "Hash of this record — use as prev_hash for next append" },
+          "sequence": { "type": "integer", "example": 42 },
+          "anchored_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ALRRecord": {
+        "type": "object",
+        "properties": {
+          "record_id": { "type": "string" },
+          "sequence": { "type": "integer" },
+          "action_type": { "type": "string" },
+          "context_hash": { "type": "string" },
+          "result_summary": { "type": "string" },
+          "chain_hash": { "type": "string" },
+          "anchored_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ALRQueryResponse": {
+        "type": "object",
+        "properties": {
+          "agent_id": { "type": "string" },
+          "records": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ALRRecord" }
+          },
+          "total": { "type": "integer", "example": 342 }
+        }
+      },
+      "ACCAuditRequest": {
+        "type": "object",
+        "required": ["agent_id", "task_id"],
+        "properties": {
+          "agent_id": { "type": "string", "example": "ft_7f3a9b2c1d4e5f6a" },
+          "task_id": { "type": "string", "example": "task_inventory_check_2026_q2" },
+          "from_sequence": { "type": "integer", "description": "Start at this ALR sequence number (inclusive). Default: first record." },
+          "to_sequence": { "type": "integer", "description": "End at this ALR sequence number (inclusive). Default: latest record." }
+        }
+      },
+      "ACCAuditResponse": {
+        "type": "object",
+        "properties": {
+          "audit_id": { "type": "string", "example": "acc_4e5f6a7b8c9d" },
+          "agent_id": { "type": "string" },
+          "task_id": { "type": "string" },
+          "chain_valid": { "type": "boolean", "example": true, "description": "True if the hash chain is unbroken from first to last record" },
+          "records_count": { "type": "integer", "example": 15 },
+          "root_hash": { "type": "string", "description": "Merkle root of all included records" },
+          "generated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ProvisionRequest": {
+        "type": "object",
+        "required": ["tier", "agent_name", "contact_email"],
+        "properties": {
+          "tier": {
+            "type": "string",
+            "enum": ["free", "pro", "enterprise"],
+            "example": "pro",
+            "description": "Service tier. Free keys are issued immediately. Pro/Enterprise require payment."
+          },
+          "agent_name": { "type": "string", "example": "InventoryAgent-v2", "description": "Primary agent this key will be used with" },
+          "contact_email": { "type": "string", "format": "email", "example": "admin@acme.corp" },
+          "payment_confirmed": {
+            "type": "boolean",
+            "description": "Set true for manual payment confirmation (enterprise only). Stripe webhook handles automated billing."
+          }
+        }
+      },
+      "ProvisionResponse": {
+        "type": "object",
+        "properties": {
+          "api_key": { "type": "string", "example": "aib_a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6", "description": "Your API key. Store securely — not retrievable after this response." },
+          "tier": { "type": "string", "example": "pro" },
+          "quota": {
+            "type": "object",
+            "properties": {
+              "calls_per_month": { "type": "integer", "example": 10000, "description": "-1 = unlimited" },
+              "agents_max": { "type": "integer", "example": 5, "description": "-1 = unlimited" }
+            }
+          },
+          "install_command": { "type": "string", "example": "pip install aib-harness && aib-harness init --api-key aib_xxxxx" },
+          "provisioned_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Missing or invalid API key",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+        }
+      },
+      "TooManyRequests": {
+        "description": "Rate limit exceeded",
+        "headers": {
+          "Retry-After": { "schema": { "type": "integer" }, "description": "Seconds until the rate limit resets" }
+        },
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/flash-tag/enroll": {
+      "post": {
+        "summary": "Register agent identity",
+        "description": "Enrolls a new agent in the Flash Tag identity system. Creates a cryptographic identity anchored to the Hedera Consensus Service. Returns a registration_id and post-quantum key pair.",
+        "operationId": "flashTagEnroll",
+        "tags": ["Flash Tag"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/FlashTagEnrollRequest" },
+              "example": {
+                "agent_name": "InventoryAgent-v2",
+                "agent_type": "task_executor",
+                "owner_id": "org_acme_corp",
+                "metadata": { "version": "2.1.0", "framework": "crewai" }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Agent enrolled successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/FlashTagEnrollResponse" } }
+            }
+          },
+          "400": { "description": "Invalid request body", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/TooManyRequests" }
+        }
+      }
+    },
+    "/flash-tag/verify": {
+      "post": {
+        "summary": "Verify agent identity",
+        "description": "Verifies that a registration_id is valid and the agent identity has not been tampered with. Optionally cross-checks the identity_hash.",
+        "operationId": "flashTagVerify",
+        "tags": ["Flash Tag"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/FlashTagVerifyRequest" },
+              "example": { "registration_id": "ft_7f3a9b2c1d4e5f6a" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verification result",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/FlashTagVerifyResponse" } }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "description": "registration_id not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "429": { "$ref": "#/components/responses/TooManyRequests" }
+        }
+      }
+    },
+    "/aats/score": {
+      "get": {
+        "summary": "Query agent trust score",
+        "description": "Returns the current AATS behavioral trust score for an enrolled agent. Score is 0.0–1.0. Tier thresholds: bronze <0.4, silver 0.4–0.69, gold 0.7–0.89, platinum 0.9+.",
+        "operationId": "aatsScore",
+        "tags": ["AATS"],
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "query",
+            "required": true,
+            "description": "Flash Tag registration_id of the agent",
+            "schema": { "type": "string", "example": "ft_7f3a9b2c1d4e5f6a" }
+          },
+          {
+            "name": "window",
+            "in": "query",
+            "required": false,
+            "description": "Scoring window: 1d, 7d, or 30d. Default: 7d.",
+            "schema": { "type": "string", "enum": ["1d", "7d", "30d"], "default": "7d" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Trust score for the agent",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/AATSScoreResponse" } }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "description": "Agent not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "429": { "$ref": "#/components/responses/TooManyRequests" }
+        }
+      }
+    },
+    "/alr/append": {
+      "post": {
+        "summary": "Append to agent lifecycle record",
+        "description": "Adds an action record to the agent's ALR hash chain. Each record commits to the hash of the previous record, forming an tamper-evident sequence. Use the returned chain_hash as prev_hash on the next append.",
+        "operationId": "alrAppend",
+        "tags": ["ALR"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ALRAppendRequest" },
+              "example": {
+                "agent_id": "ft_7f3a9b2c1d4e5f6a",
+                "action_type": "task_complete",
+                "context_hash": "sha256:b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7",
+                "result_summary": "Inventory check completed — 3 items flagged for reorder",
+                "prev_hash": "sha256:a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Record appended to hash chain",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ALRAppendResponse" } }
+            }
+          },
+          "400": { "description": "Invalid request or broken chain (prev_hash mismatch)", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "429": { "$ref": "#/components/responses/TooManyRequests" }
+        }
+      }
+    },
+    "/alr/query": {
+      "get": {
+        "summary": "Retrieve agent action history",
+        "description": "Returns the ALR records for an agent in chronological order. Paginate with the limit and from parameters.",
+        "operationId": "alrQuery",
+        "tags": ["ALR"],
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "example": "ft_7f3a9b2c1d4e5f6a" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Max records to return. Default: 50. Max: 500.",
+            "schema": { "type": "integer", "default": 50, "maximum": 500 }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "description": "Start from this sequence number (inclusive).",
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Agent action history",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ALRQueryResponse" } }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "description": "Agent not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "429": { "$ref": "#/components/responses/TooManyRequests" }
+        }
+      }
+    },
+    "/acc/audit-chain": {
+      "post": {
+        "summary": "Generate audit chain report",
+        "description": "Produces a complete ACC audit report for a task. Validates the ALR hash chain, computes a Merkle root over all included records, and returns a signed audit summary. Use to close out a task with cryptographic proof of behavioral compliance.",
+        "operationId": "accAuditChain",
+        "tags": ["ACC"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ACCAuditRequest" },
+              "example": {
+                "agent_id": "ft_7f3a9b2c1d4e5f6a",
+                "task_id": "task_inventory_check_2026_q2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Audit chain report",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ACCAuditResponse" } }
+            }
+          },
+          "400": { "description": "chain_valid: false — hash chain is broken", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "description": "Agent or task not found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "429": { "$ref": "#/components/responses/TooManyRequests" }
+        }
+      }
+    },
+    "/agent-gateway/provision": {
+      "post": {
+        "summary": "Self-serve API key issuance",
+        "description": "Issues an API key for the requested service tier. Free tier keys are returned immediately. Pro and Enterprise tiers require payment — either a Stripe checkout session (automated via webhook) or manual payment_confirmed flag.\n\nReturned install_command is the complete onboarding command for the aib-harness package.",
+        "operationId": "provision",
+        "tags": ["Commerce"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ProvisionRequest" },
+              "example": {
+                "tier": "pro",
+                "agent_name": "InventoryAgent-v2",
+                "contact_email": "admin@acme.corp"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "API key issued",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ProvisionResponse" } }
+            }
+          },
+          "202": {
+            "description": "Request accepted — awaiting payment. Key will be emailed to contact_email when payment clears.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "pending_payment" },
+                    "message": { "type": "string" },
+                    "checkout_url": { "type": "string", "description": "Stripe checkout URL for Pro/Enterprise payment" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Invalid tier or missing fields", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        }
+      }
+    }
+  },
+  "tags": [
+    { "name": "Flash Tag", "description": "Hedera-anchored agent identity — enrollment and verification" },
+    { "name": "AATS", "description": "Agent Attestation Trust Score — real-time behavioral scoring" },
+    { "name": "ALR", "description": "Agent Lifecycle Record — immutable hash-chained action log" },
+    { "name": "ACC", "description": "Agent Compliance Chain — audit report generation" },
+    { "name": "Commerce", "description": "API key provisioning and billing" }
+  ]
+}

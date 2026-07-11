@@ -13,7 +13,8 @@ import { collectSignals, scoreSignals } from './threat-classifier.js';
 import { holdAgent } from './honeypot.js';
 import { executePanicResponse } from './panic-room.js';
 
-const AGENT_KEY_PATTERN = /^bav1_[a-zA-Z0-9]+$/;
+// Accept both legacy bav1_ agent keys and provisioned aib_ harness keys — must stay in sync with gateway.js
+const AGENT_KEY_PATTERN = /^(bav1_|aib_)[a-zA-Z0-9]+$/;
 
 export async function routeRequest(request, env) {
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';

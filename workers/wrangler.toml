@@ -12,7 +12,10 @@ compatibility_date = "2026-05-21"
 #       wrangler secret put ORIGIN_URL
 #       wrangler secret put CF_API_TOKEN    # Zone:Firewall:Edit permission
 #       wrangler secret put CF_ZONE_ID
-#       wrangler secret put ALERT_WEBHOOK   # optional — Formspree endpoint for alerts
+#       wrangler secret put ALERT_WEBHOOK           # optional — Formspree endpoint for alerts
+#       wrangler secret put ABUSEIPDB_KEY           # optional — Blinky threat intel (abuseipdb.com free tier)
+#       wrangler secret put STRIPE_WEBHOOK_SECRET   # Phase 3 — from Stripe dashboard → Webhooks
+#       wrangler secret put STRIPE_PRO_CHECKOUT_URL # Phase 3 — Stripe Payment Link URL for Pro tier
 #
 # 3. Deploy:
 #       wrangler deploy
@@ -22,13 +25,13 @@ compatibility_date = "2026-05-21"
 #
 # ──────────────────────────────────────────────────────────────────────────────
 
-# [[kv_namespaces]]
-# binding = "ROACH_MOTEL"
-# id      = "YOUR_ROACH_MOTEL_KV_ID"
+[[kv_namespaces]]
+binding = "ROACH_MOTEL"
+id      = "0117e69a5f7c43a1b9b94a5613383324"
 
-# [[kv_namespaces]]
-# binding = "API_KEYS"
-# id      = "YOUR_API_KEYS_KV_ID"
+[[kv_namespaces]]
+binding = "API_KEYS"
+id      = "5f4e64e9788642cb92b7cf428cd10815"
 
 [dev]
 port = 8787

@@ -47,7 +47,7 @@ export async function collectSignals(request, env, context = {}) {
   if (!agentKey && !userAgent) signals.push('NO_IDENTITY');
 
   // Malformed key — present but doesn't match protocol format
-  if (agentKey && !/^bav1_[a-zA-Z0-9]+$/.test(agentKey)) signals.push('BAD_SIGNATURE');
+  if (agentKey && !/^(bav1_|aib_)[a-zA-Z0-9]+$/.test(agentKey)) signals.push('BAD_SIGNATURE');
 
   // Injection in path + query
   if (detectInjection(url.pathname + url.search)) signals.push('INJECTION');

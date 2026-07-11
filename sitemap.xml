@@ -55,6 +55,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://ai-broker-agent.com/api/docs</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://ai-broker-agent.com/terms</loc>
     <lastmod>2026-06-10</lastmod>
     <changefreq>yearly</changefreq>
