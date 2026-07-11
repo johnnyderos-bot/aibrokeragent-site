@@ -107,6 +107,14 @@ export default {
       return handleStripeWebhook(request, env);
     }
 
+    // --- -1.5. Flash Tag demo endpoints (public — browser demo pages call these
+    // with no X-Agent-Key by design; flash-tag-service has its own auth model.
+    // Bypasses Roach Motel too — these are legitimate unauthenticated browser
+    // calls, not the kind of unattributed traffic the trap system is meant to catch. ---
+    if (url.pathname.startsWith('/flash-tag/')) {
+      return proxyToOrigin(request, env, origin);
+    }
+
     // --- 0. Roach Motel pre-flight ---
     const roach = await routeRequest(request, env);
     if (roach.route !== 'PASS') {
@@ -191,37 +199,42 @@ export default {
     }));
 
     // --- 6. Proxy to origin ---
-    if (!env.ORIGIN_URL) {
-      return jsonResponse({ error: 'Gateway Error', message: 'ORIGIN_URL not configured' }, 503, origin);
-    }
-
-    const targetUrl = env.ORIGIN_URL.replace(/\/$/, '') + url.pathname + url.search;
-
-    // Strip X-Agent-Key before forwarding — origin trusts the gateway, not raw keys
-    const forwardHeaders = new Headers(request.headers);
-    forwardHeaders.delete('X-Agent-Key');
-
-    const originResponse = await fetch(new Request(targetUrl, {
-      method: request.method,
-      headers: forwardHeaders,
-      body: ['GET', 'HEAD'].includes(request.method) ? undefined : request.body,
-      redirect: 'follow',
-    }));
-
-    // Attach CORS + security headers to origin response, strip origin's stack fingerprint
-    const responseHeaders = new Headers(originResponse.headers);
-    responseHeaders.delete('X-Powered-By');
-    for (const [k, v] of Object.entries({ ...corsHeaders(origin), ...securityHeaders() })) {
-      responseHeaders.set(k, v);
-    }
-
-    return new Response(originResponse.body, {
-      status: originResponse.status,
-      statusText: originResponse.statusText,
-      headers: responseHeaders,
-    });
+    return proxyToOrigin(request, env, origin);
   },
 };
+
+async function proxyToOrigin(request, env, origin) {
+  if (!env.ORIGIN_URL) {
+    return jsonResponse({ error: 'Gateway Error', message: 'ORIGIN_URL not configured' }, 503, origin);
+  }
+
+  const url = new URL(request.url);
+  const targetUrl = env.ORIGIN_URL.replace(/\/$/, '') + url.pathname + url.search;
+
+  // Strip X-Agent-Key before forwarding — origin trusts the gateway, not raw keys
+  const forwardHeaders = new Headers(request.headers);
+  forwardHeaders.delete('X-Agent-Key');
+
+  const originResponse = await fetch(new Request(targetUrl, {
+    method: request.method,
+    headers: forwardHeaders,
+    body: ['GET', 'HEAD'].includes(request.method) ? undefined : request.body,
+    redirect: 'follow',
+  }));
+
+  // Attach CORS + security headers to origin response, strip origin's stack fingerprint
+  const responseHeaders = new Headers(originResponse.headers);
+  responseHeaders.delete('X-Powered-By');
+  for (const [k, v] of Object.entries({ ...corsHeaders(origin), ...securityHeaders() })) {
+    responseHeaders.set(k, v);
+  }
+
+  return new Response(originResponse.body, {
+    status: originResponse.status,
+    statusText: originResponse.statusText,
+    headers: responseHeaders,
+  });
+}
 
 // ── Commerce helpers ────────────────────────────────────────────────────────
 

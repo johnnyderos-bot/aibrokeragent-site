@@ -1221,7 +1221,7 @@ var CP_STEPS = [
 function runCuratorPipeline() {
   var btn = document.getElementById('cp-run-btn');
   btn.disabled = true;
-  btn.textContent = '&#9711;  Running&hellip;';
+  btn.textContent = '◯  Running…';
   var wrap = document.getElementById('curator-steps');
   wrap.innerHTML = '';
 
@@ -1313,7 +1313,7 @@ function runCuratorPipeline() {
         var el = document.getElementById('cp-summary');
         if (el) el.classList.add('visible');
         btn.disabled = false;
-        btn.textContent = '&#8635;  Run Again';
+        btn.textContent = '↺  Run Again';
         btn.onclick = function() { location.reload(); };
       }
     }, action.at);
