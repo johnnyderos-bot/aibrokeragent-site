@@ -51,7 +51,7 @@ const ALLOWED_ORIGINS = new Set([
 function corsHeaders(origin) {
   const headers = {
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, X-Agent-Key',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Agent-Key, X-Console-Api-Key',
     'Access-Control-Max-Age': '86400',
   };
   if (origin && ALLOWED_ORIGINS.has(origin)) {
