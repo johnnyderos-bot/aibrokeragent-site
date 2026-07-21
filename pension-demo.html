@@ -164,6 +164,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f2f5;color:#1a1a2e;fo
 .stack-run-intro{background:white;border:1px solid #e2e8f0;border-radius:8px;padding:24px;margin-bottom:24px;font-size:14px;color:#4a5568;line-height:1.7}
 .stack-run-intro h3{font-size:16px;font-weight:700;color:#1a2744;margin-bottom:10px}
 .stack-steps-wrap{display:flex;flex-direction:column;gap:14px;margin-top:24px}
+.stack-card-wrap{opacity:0;transform:translateY(8px);transition:opacity .3s ease,transform .3s ease;pointer-events:none}
+.stack-card-wrap.visible{opacity:1;transform:translateY(0);pointer-events:auto}
 .stack-card{background:white;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s}
 .stack-card.visible{opacity:1;transform:none}
 .stack-card-hdr{background:#f8fafc;border-bottom:1px solid #e2e8f0;padding:10px 18px;display:flex;align-items:center;gap:10px}
@@ -714,7 +716,7 @@ var HASHSCAN  = 'https://hashscan.io/testnet/topic/' + FT_TOPIC;
 // AIBrokerAgent's own console org key — attributes this public demo's runs to our
 // own org for Build 1 recall. Client-embedded is an accepted tradeoff while this
 // is single-org, non-sensitive demo data (see Console Build 1 plan).
-var CONSOLE_API_KEY = 'abk_9cf2e25a6555e932c7a840d0d7a7de64';
+var CONSOLE_API_KEY = 'abk_64102543c0f857542f9ef56761cf17ad';
 
 function _hsLink(seq) {
   return '<a href="' + HASHSCAN + '" target="_blank" rel="noopener" ' +
@@ -863,6 +865,8 @@ function _buildStackCards(pipeline) {
     msfp_hash: P.msfp_hash || '…',
     msfp_caught: P.msfp_caught != null ? P.msfp_caught : 2,
     msfp_total:  P.msfp_total  || 5,
+    ca_response:   P.causal_audit_response   || '…',
+    ca_trace_hash: P.causal_audit_trace_hash || '…',
     annual:    P.annual_benefit  || '$220,000.00',
     monthly:   P.monthly_benefit || '$18,333.33',
     d_hash:    P.d_hash    || '…',
@@ -873,6 +877,7 @@ function _buildStackCards(pipeline) {
     alr_tail:  P.alr_tail  || '…',
     // HCS sequences
     msfp_hcs:        P.msfp_hcs        || null,
+    causal_audit_hcs: P.causal_audit_hcs || null,
     calc_hcs:        P.calc_hcs        || null,
     crp_close_hcs:   P.crp_close_hcs   || null,
     avg_hcs:         P.avg_hcs         || null,
@@ -971,6 +976,10 @@ function _buildStackCards(pipeline) {
       _hcsItem(V.msfp_hcs),
     ]],
     [9,'Pension Calculation',[
+      {ok:true,  text:'LLM reasoning captured before flush — "'+V.ca_response+'"'},
+      {ok:null,  text:'Reasoning trace hash:', mono:V.ca_trace_hash+'…'},
+      {ok:true,  text:'Routed to deterministic engine — process selected: Rule of 85 benefit formula'},
+      _hcsItem(V.causal_audit_hcs),
       {ok:true,  text:'Age 58 + YCS 32 = 90 — Rule of 85 threshold ≥ 85 ✓'},
       {ok:true,  text:'Min years of service: 32 ≥ 20 ✓'},
       {ok:true,  text:'ELIGIBILITY: CONFIRMED — Rule of 85'},
