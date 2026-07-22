@@ -710,6 +710,7 @@ function showTab(id, btn) {
 }
 
 var _ftAndy = null, _ftTB = null, _stackStep = -1, _stackTotal = 0;
+var _builtStepNums = new Set(); // which step cards are already appended for the current run
 var HARNESS   = 'https://api.ai-broker-agent.com';
 var FT_TOPIC  = '0.0.9350280';
 var HASHSCAN  = 'https://hashscan.io/testnet/topic/' + FT_TOPIC;
@@ -729,6 +730,9 @@ function initFullStack() {
   var startBtn = document.getElementById('stack-run-btn');
   startBtn.disabled = true;
   startBtn.textContent = '⬡  Registering on Hedera testnet…';
+
+  document.getElementById('stack-steps').innerHTML = '';
+  _builtStepNums.clear();
 
   Promise.all([
     fetch(HARNESS + '/flash-tag/register', {
@@ -757,46 +761,45 @@ function initFullStack() {
     var sellerFT = Object.assign({}, _ftAndy, {agent_id: 'andy-pension-admin'});
     var buyerFT  = Object.assign({}, _ftTB,   {agent_id: 'trashbot-participant'});
 
-    // Run full harness pipeline — get real values for every card
+    // Run full harness pipeline — stream partial results, one card as soon as
+    // each step lands, instead of waiting for the full ~60-95s response.
     return fetch(HARNESS + '/flash-tag/demo-run', {
       method:'POST', headers:{'Content-Type':'application/json', 'X-Console-Api-Key': CONSOLE_API_KEY},
       body: JSON.stringify({seller_ft: sellerFT, buyer_ft: buyerFT})
-    }).then(function(r){ return r.json(); });
+    });
 
-  }).then(function(pipeline) {
-    // step12_hcs/step16_hcs/summary_hcs now come straight back from
-    // /flash-tag/demo-run itself (Console Build 2) — no separate /flash-tag/log
-    // round trip needed anymore, and they're now part of the recalled transaction.
-    window._pipelineV = pipeline;
-    _buildStackCards(pipeline);
-    startBtn.style.display = 'none';
+  }).then(function(response) {
+    // EventSource is GET-only; this is POST, so read the SSE stream by hand.
+    var reader = response.body.getReader();
+    var decoder = new TextDecoder();
+    var buffer = '';
+    var pipeline = {};
+
+    function pump() {
+      return reader.read().then(function(result) {
+        if (result.done) return pipeline;
+        buffer += decoder.decode(result.value, {stream: true});
+        var frames = buffer.split('\n\n');
+        buffer = frames.pop(); // keep any incomplete trailing frame for next read
+        frames.forEach(function(frame) {
+          if (frame.indexOf('data: ') !== 0) return;
+          var partial = JSON.parse(frame.slice(6));
+          if (partial.error) throw new Error(partial.error);
+          pipeline = partial; // each partial is already a superset of the last
+          window._pipelineV = pipeline;
+          _buildStackCards(pipeline);
+        });
+        return pump();
+      });
+    }
+    return pump();
+
+  }).then(function() {
     document.getElementById('stack-next-btn').style.display = 'none';
     document.getElementById('stack-step-counter').style.display = 'none';
-
-    // Auto-play: build a timer queue over the cards _buildStackCards just created
-    var cards = document.querySelectorAll('#stack-steps .stack-card-wrap');
-    var t = 400;
-    cards.forEach(function(card, idx) {
-      var itemCount = card.querySelectorAll('.sitem').length;
-      setTimeout(function() {
-        card.classList.add('visible');
-        // Detail lines fade in one-by-one within this step, but the next
-        // step's own timer (below) never starts until this one has had
-        // time to finish — steps never overlap.
-        card.querySelectorAll('.sitem').forEach(function(item, i) {
-          setTimeout(function(){ item.classList.add('visible'); }, i * 30);
-        });
-      }, t);
-      t += 950 + itemCount * 90;
-    });
-    setTimeout(function() {
-      var sum = document.getElementById('stack-summary');
-      if (sum) sum.classList.add('visible');
-      startBtn.style.display = '';
-      startBtn.disabled = false;
-      startBtn.textContent = '↺  Run Again';
-      startBtn.onclick = function() { location.reload(); };
-    }, t);
+    startBtn.disabled = false;
+    startBtn.textContent = '↺  Run Again';
+    startBtn.onclick = function() { location.reload(); };
 
   }).catch(function(err) {
     startBtn.disabled = false;
@@ -833,71 +836,71 @@ function nextStep() {
 
 function _buildStackCards(pipeline) {
   var wrap = document.getElementById('stack-steps');
-  wrap.innerHTML = '';
   var P = pipeline || {};
 
+  // No fallback placeholders here on purpose — every field below is only
+  // ever read for a step that STEP_MARKERS has already gated on being
+  // present in P (see the forEach below), so by the time it's read it's
+  // always the real value from that live pipeline run.
   var V = {
-    // Curator Dispatch (step 0)
-    curator_hcs: P.curator_hcs || null,
-    brief_hash:  P.brief_hash  || '…',
-    // Real values from pipeline
+    curator_hcs: P.curator_hcs,
+    brief_hash:  P.brief_hash,
+    // Real values already known from /flash-tag/register, before the
+    // pipeline's own re-verification of them lands.
     ft_andy:   P.ft_andy   || _ftAndy.registration_id,
     hcs_andy:  P.hcs_andy  || _ftAndy.hcs_sequence,
     ft_tb:     P.ft_tb     || _ftTB.registration_id,
     hcs_tb:    P.hcs_tb    || _ftTB.hcs_sequence,
-    aiia_id:   P.aiia_id   || 'aiia_pending',
-    aiia_hash: P.aiia_hash || '…',
-    aiia_score:P.aiia_score|| 0.30,
-    aiia_hcs:  P.aiia_hcs  || null,
-    gcr:       P.gcr       || 'gcr_pending',
-    mhash:     P.mhash     || '…',
-    ogpp_hcs:  P.ogpp_hcs  || null,
-    eid_brief: P.eid_brief || 'crpe_pending',
-    eid_rules: P.eid_rules || 'crpe_pending',
-    did:       P.did       || 'crpd_pending',
-    crp_hcs:   P.crp_hcs   || null,
-    bsp:       P.bsp       || 'bsp_pending',
-    bsp_chain: P.bsp_chain || '…',
-    bsp_hcs:   P.bsp_hcs   || null,
-    ctr:       P.ctr       || 'ctr_pending',
-    tsh:       P.tsh       || '…',
-    aicp_hcs:  P.aicp_hcs  || null,
-    msfp_hash: P.msfp_hash || '…',
-    msfp_caught: P.msfp_caught != null ? P.msfp_caught : 2,
-    msfp_total:  P.msfp_total  || 5,
-    ca_response:   P.causal_audit_response   || '…',
-    ca_trace_hash: P.causal_audit_trace_hash || '…',
-    annual:    P.annual_benefit  || '$220,000.00',
-    monthly:   P.monthly_benefit || '$18,333.33',
-    d_hash:    P.d_hash    || '…',
-    avg_hash:  P.avg_hash  || '…',
-    bsp_sig:   P.bsp_sig   || '…',
-    braid_word:P.braid_word|| 's1+',
-    chain_tail:P.chain_tail|| '…',
-    alr_tail:  P.alr_tail  || '…',
-    // HCS sequences
-    msfp_hcs:        P.msfp_hcs        || null,
-    causal_audit_hcs: P.causal_audit_hcs || null,
-    calc_hcs:        P.calc_hcs        || null,
-    crp_close_hcs:   P.crp_close_hcs   || null,
-    avg_hcs:         P.avg_hcs         || null,
-    ogpp_attest_hcs: P.ogpp_attest_hcs || null,
-    // Brad/PEP from pipeline
-    brad_pr_id:   P.brad_pr_id   || 'brad_667bc469',
-    brad_pr_fp:   P.brad_pr_fp   || '7b4dde1e984a0bdc',
-    brad_dist_id: P.brad_dist_id || 'brad_814c4958',
-    brad_dist_fp: P.brad_dist_fp || '723031a051945168',
-    brad_calc_id: P.brad_calc_id || 'brad_86dd35c6',
-    brad_calc_fp: P.brad_calc_fp || '5e927b90c02f8de8',
-    brad_hcs:     P.brad_hcs     || null,
-    brad:         P.brad         || 'brad_36a77434',
-    brad_auth_hcs: P.brad_auth_hcs || null,
-    ship_id:      P.ship_id      || 'ship_a3e7c901',
-    pep_hcs:      P.pep_hcs      || null,
-    // Resolved before build — see initFullStack's prefetch step
-    step12_hcs:   P.step12_hcs   || null,
-    step16_hcs:   P.step16_hcs   || null,
-    summary_hcs:  P.summary_hcs  || null,
+    aiia_id:   P.aiia_id,
+    aiia_hash: P.aiia_hash,
+    aiia_score:P.aiia_score,
+    aiia_hcs:  P.aiia_hcs,
+    gcr:       P.gcr,
+    mhash:     P.mhash,
+    ogpp_hcs:  P.ogpp_hcs,
+    eid_brief: P.eid_brief,
+    eid_rules: P.eid_rules,
+    did:       P.did,
+    crp_hcs:   P.crp_hcs,
+    bsp:       P.bsp,
+    bsp_chain: P.bsp_chain,
+    bsp_hcs:   P.bsp_hcs,
+    ctr:       P.ctr,
+    tsh:       P.tsh,
+    aicp_hcs:  P.aicp_hcs,
+    msfp_hash: P.msfp_hash,
+    msfp_caught: P.msfp_caught,
+    msfp_total:  P.msfp_total,
+    ca_response:   P.causal_audit_response,
+    ca_trace_hash: P.causal_audit_trace_hash,
+    annual:    P.annual_benefit,
+    monthly:   P.monthly_benefit,
+    d_hash:    P.d_hash,
+    avg_hash:  P.avg_hash,
+    bsp_sig:   P.bsp_sig,
+    braid_word:P.braid_word,
+    chain_tail:P.chain_tail,
+    alr_tail:  P.alr_tail,
+    msfp_hcs:        P.msfp_hcs,
+    causal_audit_hcs: P.causal_audit_hcs,
+    calc_hcs:        P.calc_hcs,
+    crp_close_hcs:   P.crp_close_hcs,
+    avg_hcs:         P.avg_hcs,
+    ogpp_attest_hcs: P.ogpp_attest_hcs,
+    brad_pr_id:   P.brad_pr_id,
+    brad_pr_fp:   P.brad_pr_fp,
+    brad_dist_id: P.brad_dist_id,
+    brad_dist_fp: P.brad_dist_fp,
+    brad_calc_id: P.brad_calc_id,
+    brad_calc_fp: P.brad_calc_fp,
+    brad_hcs:     P.brad_hcs,
+    brad:         P.brad,
+    brad_auth_hcs: P.brad_auth_hcs,
+    ship_id:      P.ship_id,
+    pep_hcs:      P.pep_hcs,
+    step12_hcs:   P.step12_hcs,
+    step16_hcs:   P.step16_hcs,
+    summary_hcs:  P.summary_hcs,
   };
 
   function _hcsItem(seq) {
@@ -1039,11 +1042,38 @@ function _buildStackCards(pipeline) {
     ]],
   ];
 
+  // Each step's own HCS field is always the last thing run_pipeline sets for
+  // that step, so its mere presence in P — even if the anchor itself is
+  // null because a Hedera submission failed (fail-open) — is the reliable
+  // "this step actually ran" signal. Step 6's card also needs step 7's
+  // brad_pr_id/brad_dist_id/brad_calc_id, but both steps' exhibits land in
+  // the same backend yield, so gating step 6 on flashtag_hcs is sufficient.
+  var STEP_MARKERS = {
+    0:'curator_hcs', 1:'aiia_hcs', 2:'ogpp_hcs', 3:'crp_hcs', 4:'bsp_hcs',
+    5:'aicp_hcs', 6:'flashtag_hcs', 7:'brad_hcs', 8:'msfp_hcs', 9:'calc_hcs',
+    10:'crp_close_hcs', 11:'avg_hcs', 12:'step12_hcs', 13:'ogpp_attest_hcs',
+    14:'brad_auth_hcs', 15:'pep_hcs', 16:'step16_hcs',
+  };
+
   window._stackV = V;
   _stackTotal = STEPS.length;
 
+  function _fadeIn(el) {
+    // rAF so the browser registers the pre-.visible state first — without
+    // it the CSS transition has nothing to animate from.
+    requestAnimationFrame(function() {
+      el.classList.add('visible');
+      el.querySelectorAll('.sitem').forEach(function(item, i) {
+        setTimeout(function(){ item.classList.add('visible'); }, i * 30);
+      });
+    });
+  }
+
   STEPS.forEach(function(step) {
     var num = step[0], title = step[1], items = step[2];
+    if (_builtStepNums.has(num)) return;             // already appended
+    if (P[STEP_MARKERS[num]] === undefined) return;  // hasn't arrived yet
+    _builtStepNums.add(num);
 
     var cardDiv = document.createElement('div');
     cardDiv.className = 'stack-step stack-card-wrap';
@@ -1058,7 +1088,6 @@ function _buildStackCards(pipeline) {
                  item.ok === false ? '<span style="color:#dc2626;font-weight:700;flex-shrink:0">✗</span>' :
                  '<span style="color:#9aa5b4;flex-shrink:0">·</span>';
       var monoHtml = item.mono ? ' <span style="font-family:\'Courier New\',monospace;font-size:11px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:3px;padding:1px 6px;color:#1e40af">' + item.mono + '</span>' : '';
-      // _seq = real seq already known (all steps resolve before reveal now — see initFullStack's prefetch)
       var hsHtml = item._seq
         ? _hsLink(item._seq)
         : item.hs
@@ -1072,20 +1101,24 @@ function _buildStackCards(pipeline) {
 
     cardDiv.innerHTML = header + itemsHtml + '</div>';
     wrap.appendChild(cardDiv);
+    _fadeIn(cardDiv);
   });
 
-  // Add summary card
-  var sumDiv = document.createElement('div');
-  sumDiv.className = 'stack-step stack-card-wrap';
-  sumDiv.innerHTML = '<div class="stack-step-header"><span class="stack-step-num" style="background:#16a34a">✓</span>' +
-    '<span class="stack-step-title">Transaction Complete</span></div>' +
-    '<div class="stack-step-body">' +
-    '<div class="sitem" style="font-size:13px;color:#166534;font-weight:600;padding:8px 0">' +
-    'Both agents verified on Hedera · All 16 steps sealed · Audit chain: PASS</div>' +
-    '<div class="sitem" style="margin-top:8px">' + (V.summary_hcs ? _hsLink(V.summary_hcs) : '') + '</div>' +
-    '</div>';
-  wrap.appendChild(sumDiv);
-  _stackTotal++;
+  if (!_builtStepNums.has(17) && P.summary_hcs !== undefined) {
+    _builtStepNums.add(17);
+    var sumDiv = document.createElement('div');
+    sumDiv.className = 'stack-step stack-card-wrap';
+    sumDiv.innerHTML = '<div class="stack-step-header"><span class="stack-step-num" style="background:#16a34a">✓</span>' +
+      '<span class="stack-step-title">Transaction Complete</span></div>' +
+      '<div class="stack-step-body">' +
+      '<div class="sitem" style="font-size:13px;color:#166534;font-weight:600;padding:8px 0">' +
+      'Both agents verified on Hedera · All 16 steps sealed · Audit chain: PASS</div>' +
+      '<div class="sitem" style="margin-top:8px">' + (V.summary_hcs ? _hsLink(V.summary_hcs) : '') + '</div>' +
+      '</div>';
+    wrap.appendChild(sumDiv);
+    _fadeIn(sumDiv);
+    _stackTotal++;
+  }
 }
 
 function authorizeDistribution() {
