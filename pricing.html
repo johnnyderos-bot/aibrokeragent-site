@@ -27,6 +27,8 @@
       --border:    #1c1f27;
       --accent:    #4f8ef7;
       --accent-dim:#2a4d8f;
+      --green:     #2dd4a0;
+      --purple:    #7c5cfc;
       --text:      #e4e8f0;
       --text-dim:  #8891a4;
       --text-mute: #555e70;
@@ -180,7 +182,7 @@
       letter-spacing: -0.02em;
       margin-bottom: 0.4rem;
     }
-    .pkg-section-header p { font-size: 0.9rem; color: var(--text-dim); max-width: 540px; }
+    .pkg-section-header p { font-size: 0.9rem; color: var(--text-dim); max-width: 620px; }
 
     .pkg-grid {
       display: grid;
@@ -196,11 +198,12 @@
       display: flex;
       flex-direction: column;
       transition: border-color 0.2s;
+      scroll-margin-top: 84px;
     }
     .pkg-card:hover { border-color: var(--accent-dim); }
     .pkg-card.featured {
-      border-color: rgba(79,142,247,0.4);
-      background: rgba(79,142,247,0.04);
+      border-color: rgba(45,212,160,0.4);
+      background: rgba(45,212,160,0.04);
     }
 
     .pkg-badge {
@@ -214,8 +217,11 @@
       border-radius: 4px;
       padding: 0.2rem 0.55rem;
       margin-bottom: 1rem;
+      align-self: flex-start;
     }
     .pkg-badge.top { background: rgba(79,142,247,0.2); }
+    .pkg-badge.free { background: rgba(45,212,160,0.14); color: var(--green); }
+    .pkg-badge.charm { background: rgba(124,92,252,0.14); color: var(--purple); }
     .pkg-badge.patent { background: rgba(245,158,11,0.12); color: #f59e0b; }
     .pkg-badge.physics { background: rgba(124,92,252,0.12); color: #7c5cfc; }
 
@@ -240,6 +246,7 @@
       color: var(--accent);
       margin-bottom: 1.25rem;
     }
+    .pkg-price.free { color: var(--green); }
 
     .pkg-includes {
       list-style: none;
@@ -258,6 +265,22 @@
       content: "–";
       color: var(--accent);
       flex-shrink: 0;
+    }
+    .pkg-card.featured .pkg-includes li::before { content: "+"; color: var(--green); font-weight: 700; }
+
+    .pkg-note {
+      font-size: 0.8rem;
+      color: var(--text-mute);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .pkg-note code {
+      font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 0.82rem;
+      color: var(--green);
+      background: rgba(45,212,160,0.08);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
     }
 
     .pkg-cta {
@@ -280,6 +303,7 @@
       border: 1px solid var(--accent-dim);
     }
     .pkg-cta.outline:hover { border-color: var(--accent); }
+    .pkg-cta.green { background: var(--green); color: #05170f; }
 
     /* ── Divider ── */
     .divider {
@@ -288,8 +312,8 @@
       margin: 3.5rem 0;
     }
 
-    /* ── Enterprise section ── */
-    #enterprise { scroll-margin-top: 80px; }
+    /* ── Enterprise / Contact section ── */
+    #contact { scroll-margin-top: 80px; }
     .enterprise-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -413,9 +437,9 @@
 </head>
 <body>
 
-  <!-- Closed Alpha Banner -->
+  <!-- Products Banner -->
   <div class="alpha-banner">
-    <strong>Closed Alpha</strong> — Pricing is not public. All tiers require a closed alpha signup.
+    <strong>The base bracelet is free.</strong> — Charms and enterprise are priced per engagement. Contact us for numbers.
   </div>
 
   <!-- Nav -->
@@ -423,273 +447,191 @@
     <a href="/" class="nav-logo">AIbroker<span>AGEnt</span></a>
     <ul class="nav-links">
       <li><a href="/">Platform</a></li>
-      <li><a href="pricing.html">Packages</a></li>
-      <li><a href="/#who">Who It's For</a></li>
-      <li><a href="/#about">About</a></li>
-      <li><a href="#enterprise" class="nav-cta">Sign up for closed alpha</a></li>
+      <li><a href="pricing.html">Products</a></li>
+      <li><a href="/#solution">How It Works</a></li>
+      <li><a href="/#install">Install</a></li>
+      <li><a href="#contact" class="nav-cta">Contact us</a></li>
     </ul>
   </nav>
 
   <div class="page">
 
     <!-- Header -->
-    <div class="section-label">Packages &amp; Access</div>
-    <h1>Sign up for <em>closed alpha</em></h1>
+    <div class="section-label">Products</div>
+    <h1>The bracelet is <em>free</em>.<br>Charms add capability.</h1>
     <p class="page-sub">
-      Pricing is not public during closed alpha. All tiers require a signup and brief conversation about your use case. We are selective — limited seats, enterprise-focused.
+      Every agent installs the base bracelet — identity, trust scoring, chain of custody, lifecycle log, and framework translation — at no charge. Add charms as your accountability needs grow. Pricing for charms and enterprise is set per engagement.
     </p>
 
     <div class="alpha-hero">
       <div class="alpha-hero-text">
-        <strong>Closed alpha is open now.</strong>
-        We are onboarding a small number of enterprise partners before general availability. Closed alpha partners get preferred pricing locked for life.
+        <strong>Not sure which charms you need?</strong>
+        Tell us what your agents do and which regulators, insurers, or auditors you answer to. We'll map the stack to your requirements.
       </div>
-      <a href="#enterprise" class="alpha-hero-btn">Sign up for closed alpha access →</a>
+      <a href="#contact" class="alpha-hero-btn">Contact us →</a>
     </div>
 
-    <!-- Complete Package -->
+    <!-- Free Bracelet -->
     <div class="pkg-section">
       <div class="pkg-section-header">
-        <h2>Complete Package</h2>
-        <p>The full AIbrokerAGEnt trust stack — all protocols, all integrations, enterprise support.</p>
+        <h2>Free Bracelet</h2>
+        <p>The essential accountability layer, installed with every agent. This is what an agent needs to be a responsible, provable participant — on day one.</p>
       </div>
       <div class="pkg-grid">
-        <div class="pkg-card featured">
-          <div class="pkg-badge top">Most Comprehensive</div>
-          <div class="pkg-name">Complete Trust Stack</div>
-          <p class="pkg-desc">Everything. Flash Tag identity, AATS trust scoring, ALR lifecycle record, ACC chain of custody, Agent Commerce, Governance protocol. Full implementation and enterprise support included.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
+        <div class="pkg-card featured" id="bracelet">
+          <div class="pkg-badge free">Included Free</div>
+          <div class="pkg-name">The Base Bracelet</div>
+          <p class="pkg-desc">Identity, trust, custody, lifecycle, commerce, and framework translation — the six protocols every accountable agent runs. Installs with the SDK and starts recording immediately.</p>
+          <div class="pkg-price free">Free — SDK install</div>
           <ul class="pkg-includes">
-            <li>Flash Tag — cryptographic agent identity</li>
-            <li>AATS — continuous trust scoring</li>
-            <li>ALR — agent lifecycle record</li>
+            <li>Flash Tag — agent identity</li>
+            <li>AATS — trust score</li>
+            <li>AICP — commerce contracts</li>
             <li>ACC — chain of custody</li>
-            <li>Agent Commerce — verified payment</li>
-            <li>Governance protocol</li>
-            <li>Enterprise SLA + dedicated support</li>
-            <li>Custom integration assistance</li>
+            <li>ALR — lifecycle log</li>
+            <li>APT — framework translation (included by default)</li>
           </ul>
-          <a href="#enterprise" class="pkg-cta">Sign up for closed alpha</a>
+          <p class="pkg-note">
+            Install: <code>pip install aib-translator</code><br>
+            The bracelet is free. Anchoring your records to Hedera is on your own account — you control your ledger, you pay your own hashing costs.
+          </p>
+          <a href="/#install" class="pkg-cta green">How it installs</a>
         </div>
       </div>
     </div>
 
     <hr class="divider" />
 
-    <!-- Individual Modules -->
+    <!-- Charms -->
     <div class="pkg-section">
       <div class="pkg-section-header">
-        <h2>Individual Modules</h2>
-        <p>Deploy specific accountability layers without the full stack. Each module is independent and standards-based.</p>
+        <h2>Charms</h2>
+        <p>Add a charm to unlock a capability — and the matching section of your console. Buy only what you use. Pricing is set per engagement.</p>
       </div>
       <div class="pkg-grid">
-        <div class="pkg-card">
-          <div class="pkg-badge">Identity</div>
-          <div class="pkg-name">Flash Tag</div>
-          <p class="pkg-desc">Cryptographic agent identity at spawn. Post-quantum signed, Hedera-anchored. Proves which agent acted, when, and under whose authority.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
-          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge">Trust</div>
-          <div class="pkg-name">AATS</div>
-          <p class="pkg-desc">Agent Accountability Trust Score. Continuous behavioral scoring from first deployment. Drift detection, adversarial testing, SOC 2 ready.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
-          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge">Lifecycle</div>
-          <div class="pkg-name">ALR</div>
-          <p class="pkg-desc">Agent Lifecycle Record. Birth to decommission — every behavioral state, policy change, and authorization event in one cryptographic record.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
-          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge">Commerce</div>
-          <div class="pkg-name">Agent Commerce</div>
-          <p class="pkg-desc">Verified payment tied to verified delivery. Agent-to-agent financial transactions with cryptographic proof of completion.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
-          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge">Policy</div>
+
+        <div class="pkg-card" id="governance">
+          <div class="pkg-badge charm">Charm</div>
           <div class="pkg-name">Governance</div>
-          <p class="pkg-desc">Operator constraints that travel cryptographically with the agent. Inherited at spawn, enforced at runtime, verifiable after the fact.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
-          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+          <p class="pkg-desc">Set the rules your agent must obey, prove it stayed inside them, and control who can authorize what. Unlocks the GOVERN zone in your console.</p>
+          <ul class="pkg-includes">
+            <li>OGPP — operator constraints, enforced at runtime</li>
+            <li>AIIA — pre-deployment impact assessment</li>
+            <li>ADCP — delegation chain</li>
+            <li>BSP — signing configuration</li>
+          </ul>
+          <div class="pkg-price">Contact us</div>
+          <a href="#contact" class="pkg-cta outline">Contact us</a>
         </div>
+
+        <div class="pkg-card" id="brad">
+          <div class="pkg-badge charm">Charm</div>
+          <div class="pkg-name">.brad — Document Custody</div>
+          <p class="pkg-desc">Prove which documents your agent touched and who touched them before. Convert any human file into a custody-tracked .brad document. Unlocks the DOCS zone.</p>
+          <ul class="pkg-includes">
+            <li>.brad — document custody + lineage</li>
+            <li>Human file → .brad conversion tool</li>
+            <li>Originator logged (human or agent)</li>
+            <li>Every access recorded</li>
+          </ul>
+          <div class="pkg-price">Contact us</div>
+          <a href="#contact" class="pkg-cta outline">Contact us</a>
+        </div>
+
+        <div class="pkg-card" id="memory">
+          <div class="pkg-badge charm">Charm</div>
+          <div class="pkg-name">Context Memory</div>
+          <p class="pkg-desc">Prove what your agent knew at decision time, and control what it recalls. Unlocks the MEMORY zone in your console.</p>
+          <ul class="pkg-includes">
+            <li>CRP — verifiable context recall</li>
+            <li>MSFP — memory filter settings</li>
+            <li>Decision-time context on record</li>
+          </ul>
+          <div class="pkg-price">Contact us</div>
+          <a href="#contact" class="pkg-cta outline">Contact us</a>
+        </div>
+
+        <div class="pkg-card" id="relationship">
+          <div class="pkg-badge charm">Charm</div>
+          <div class="pkg-name">Relationship</div>
+          <p class="pkg-desc">Model how your agents establish trust with each other across a network. Unlocks the NETWORK zone in your console.</p>
+          <ul class="pkg-includes">
+            <li>OCP — orbital consensus</li>
+            <li>TPBP — belief propagation</li>
+            <li>ALP — acquaintance layer</li>
+          </ul>
+          <div class="pkg-price">Contact us</div>
+          <a href="#contact" class="pkg-cta outline">Contact us</a>
+        </div>
+
+        <div class="pkg-card" id="enterprise">
+          <div class="pkg-badge charm">Charm</div>
+          <div class="pkg-name">Enterprise</div>
+          <p class="pkg-desc">The full picture: billing, the complete trust dashboard, and a hosted API. Unlocks the BILLING and full TRUST zones.</p>
+          <ul class="pkg-includes">
+            <li>Billing + spend tracking</li>
+            <li>Full TRUST dashboard — AATS history, AICP compliance</li>
+            <li>Hosted API access</li>
+            <li>Dedicated support</li>
+          </ul>
+          <div class="pkg-price">Contact us</div>
+          <a href="#contact" class="pkg-cta outline">Contact us</a>
+        </div>
+
       </div>
     </div>
 
     <hr class="divider" />
 
-    <!-- A la Carte -->
+    <!-- Enterprise API -->
     <div class="pkg-section">
       <div class="pkg-section-header">
-        <h2>À La Carte</h2>
-        <p>Individual protocol modules for teams that want to start with one component and expand.</p>
+        <h2>Enterprise API</h2>
+        <p>Want the translation layer without installing anything? Call the hosted endpoint directly and pay only for what you translate.</p>
       </div>
       <div class="pkg-grid">
-        <div class="pkg-card">
-          <div class="pkg-badge">Protocol</div>
-          <div class="pkg-name">BSP — Braid Signature Protocol</div>
-          <p class="pkg-desc">Proves the exact sequence and direction of agent-to-agent interactions via mathematical braid topology. Every message in the chain unforgeable.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
-          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge">Protocol</div>
-          <div class="pkg-name">ACC — Chain of Custody</div>
-          <p class="pkg-desc">End-to-end cryptographic chain linking identity, context, governance, and commerce into one auditable record. The answer to any SOX or regulatory inquiry.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
-          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge">Protocol</div>
-          <div class="pkg-name">CRP — Decision Provenance</div>
-          <p class="pkg-desc">Cryptographic record of what context the agent had at decision time. The signed reasoning environment for every automated action.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
-          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge">Protocol</div>
-          <div class="pkg-name">ADCP — Delegation Chain Protocol</div>
-          <p class="pkg-desc">Proves the complete delegation chain from operator to subagent. Every spawning hop is cryptographically signed — no agent can claim authority it was never granted.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
-          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge">Protocol</div>
-          <div class="pkg-name">AIIA — Impact Assessment</div>
-          <p class="pkg-desc">Pre-deployment impact gate. Identifies risk profile, constraint gaps, and compliance exposure before any agent goes live. Required gate for high-stakes deployments.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
-          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge">Protocol</div>
-          <div class="pkg-name">AICP — Identity Commit Protocol</div>
-          <p class="pkg-desc">Agent-to-agent identity exchange with commitment proof. Ensures both parties in a multi-agent interaction have verifiable, non-repudiable identity at session start.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
-          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge">Protocol</div>
-          <div class="pkg-name">ACP — Agent Commerce Protocol</div>
-          <p class="pkg-desc">Base layer for all agent financial transactions. Nonce-protected, double-spend resistant, compatible with USDC/x402. Foundation for the verified payment gate.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
-          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge">Protocol</div>
-          <div class="pkg-name">OGPP — On-chain Governance</div>
-          <p class="pkg-desc">Governance policy anchored on-chain and verifiable against any agent's current state. Policy drift between document and runtime becomes detectable and auditable.</p>
-          <div class="pkg-price">Sign up for closed alpha pricing</div>
-          <a href="#enterprise" class="pkg-cta outline">Sign up for closed alpha</a>
+        <div class="pkg-card" id="api" style="border-color:rgba(79,142,247,0.35);background:rgba(79,142,247,0.04)">
+          <div class="pkg-badge top">Hosted</div>
+          <div class="pkg-name">POST /translate</div>
+          <p class="pkg-desc">A hosted translation endpoint for agent-to-agent messages across frameworks. No SDK install required — authenticate with an API key and send. Audit records are stored per organization.</p>
+          <ul class="pkg-includes">
+            <li>Hosted <code>POST /translate</code> endpoint</li>
+            <li>Pay per translation</li>
+            <li>No SDK install required</li>
+            <li>API-key auth, rate-limited</li>
+            <li>Per-org audit records</li>
+          </ul>
+          <div class="pkg-price">Pay-per-translation — contact us</div>
+          <a href="#contact" class="pkg-cta">Contact us</a>
         </div>
       </div>
     </div>
 
     <hr class="divider" />
 
-    <!-- Physics Layer (.brad) Stack -->
-    <div class="pkg-section">
-      <div class="pkg-section-header">
-        <div class="section-label" style="color:#7c5cfc">Physics Layer — .brad Stack</div>
-        <h2>Dissipative computation as a trust substrate</h2>
-        <p>A new class of trust primitive. Identity, governance, and access control that emerge from physical dynamics — not programmed rules. Hardware-bound, authority-free, holographically distributed. Patent Applications Filed 2026. &nbsp;<a href="brad.html" style="color:#7c5cfc;font-weight:600;">Learn more about .brad →</a></p>
-      </div>
-      <div class="pkg-grid">
-        <div class="pkg-card" style="border-color:rgba(124,92,252,0.3);background:rgba(124,92,252,0.03)">
-          <div class="pkg-badge physics">Patent Pending</div>
-          <div class="pkg-name">Physics Layer (.brad)</div>
-          <p class="pkg-desc">The foundation. A coupled oscillator network running on commodity CPU/GPU hardware — no external authorities, no key ceremonies. Trust, identity, and governance emerge from physical dynamics. Hardware soul seeded from silicon entropy. History physically encoded; cannot be fabricated.</p>
-          <div class="pkg-price">Coming soon — contact us</div>
-          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge physics">Patent Pending</div>
-          <div class="pkg-name">DSAP — Document Sovereign Agent</div>
-          <p class="pkg-desc">Agent identity derived from the document it serves via HKDF key chain. The agent is cryptographically inseparable from its content. Fission-on-copy detection prevents unauthorized duplication. Witness log anchored to Hedera HCS.</p>
-          <div class="pkg-price">Coming soon — contact us</div>
-          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge physics">Patent Pending</div>
-          <div class="pkg-name">PEP — Packet Escort Protocol</div>
-          <p class="pkg-desc">Guardian subagents escort data packets in transit. Brad reconstitutes at the destination as proof of uncompromised delivery — four conditions must hold simultaneously. Self-documenting on failure: which condition broke tells you which attack vector was used.</p>
-          <div class="pkg-price">Coming soon — contact us</div>
-          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge physics">Patent Pending</div>
-          <div class="pkg-name">SOC — Self-Organized Criticality</div>
-          <p class="pkg-desc">The physical substrate underlying all trust protocols. Agent networks operate at criticality — the edge between order and chaos where information propagation is maximized and trust signals emerge naturally from interaction dynamics.</p>
-          <div class="pkg-price">Coming soon — contact us</div>
-          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge physics">Patent Pending</div>
-          <div class="pkg-name">ALP — Acquaintance Layer Protocol</div>
-          <p class="pkg-desc">Trust gradient derived from shared co-membership history. Fills the gap upstream of CLPR — two agents that have never interacted directly can establish a trust prior from shared institutional context.</p>
-          <div class="pkg-price">Coming soon — contact us</div>
-          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge physics">Patent Pending</div>
-          <div class="pkg-name">MPR — Memory-Predictive Reduction</div>
-          <p class="pkg-desc">Agent memory as a possibility-space reduction operator. Explains why memory retrieval narrows the decision space — and closes the WHY gap in trust modeling. Connects context recall to behavioral prediction.</p>
-          <div class="pkg-price">Coming soon — contact us</div>
-          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge physics">Patent Pending</div>
-          <div class="pkg-name">TPBP — Temporal Polymorphic Belief</div>
-          <p class="pkg-desc">Dynamic trust attribute vector with dual-mode affective/cognitive state machine. Trust states decay under inactivity and strengthen under consistent interaction — a physics-grounded model of how trust actually evolves over time.</p>
-          <div class="pkg-price">Coming soon — contact us</div>
-          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge physics">Patent Pending</div>
-          <div class="pkg-name">OCP — Orbital Consensus Protocol</div>
-          <p class="pkg-desc">World-based consensus with orbital distance weighting and limbo state for contested facts. Multi-agent agreement that reflects confidence and proximity — not just vote count. Integrates with Curator context provenance.</p>
-          <div class="pkg-price">Coming soon — contact us</div>
-          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
-        </div>
-        <div class="pkg-card">
-          <div class="pkg-badge physics">Patent Pending</div>
-          <div class="pkg-name">MSFP — Memory Signature Filter</div>
-          <p class="pkg-desc">Baleen whale–inspired memory retrieval. Three routing modes with relevance stemming and importance clamping — high catch_rate at low false-positive cost. The retrieval primitive at the bottom of the trust stack.</p>
-          <div class="pkg-price">Coming soon — contact us</div>
-          <a href="#enterprise" class="pkg-cta outline">Contact for access</a>
-        </div>
-      </div>
-    </div>
-
-    <hr class="divider" />
-
-    <!-- Enterprise -->
-    <section id="enterprise">
+    <!-- Contact -->
+    <section id="contact">
       <div class="enterprise-grid">
         <div class="enterprise-copy">
-          <div class="section-label">Enterprise</div>
-          <h2>Deploy an accountability layer inside your infrastructure</h2>
+          <div class="section-label">Contact</div>
+          <h2>Tell us what your agents do</h2>
           <p>
-            Enterprise pilots are available now under closed alpha. We work with you directly on integration into your existing agent infrastructure, compliance documentation, and custom deployment architecture.
+            The bracelet is free to install. For charms, the Enterprise API, or a scoped pilot inside your infrastructure, tell us about your deployment and we'll come back with pricing and a plan.
           </p>
           <p>
-            Typical enterprise engagement: scoping call → pilot design → 30-day deployment → compliance documentation package.
+            Typical engagement: scoping call → charm selection → pilot design → compliance documentation package.
           </p>
           <ul class="enterprise-bullets">
-            <li>Custom integration with your existing agent platform</li>
+            <li>Map the stack to your audit and regulatory exposure</li>
+            <li>Charm selection for your specific requirements</li>
             <li>Compliance documentation (SOC 2, SOX, HIPAA, government)</li>
             <li>Dedicated technical contact during pilot</li>
-            <li>Closed alpha pricing locked for the life of the contract</li>
             <li>Option to co-develop protocol extensions for your vertical</li>
           </ul>
         </div>
 
         <div class="lead-form-card">
-          <h3>Sign up for closed alpha access</h3>
+          <h3>Talk to us</h3>
           <p class="form-sub">Tell us about your organization and use case. We respond within one business day.</p>
           <form action="https://formspree.io/f/xykajlrr" method="POST">
             <div class="field">
@@ -703,16 +645,15 @@
             <div class="field">
               <label for="f-tier">Interested in</label>
               <select id="f-tier" name="tier">
-                <option value="">Select a package...</option>
-                <option value="complete">Complete Trust Stack</option>
-                <option value="flash-tag">Flash Tag (Identity)</option>
-                <option value="aats">AATS (Trust Scoring)</option>
-                <option value="alr">ALR (Lifecycle Record)</option>
-                <option value="commerce">Agent Commerce</option>
-                <option value="governance">Governance</option>
-                <option value="enterprise-pilot">Enterprise Pilot</option>
-                <option value="platform-integration">Platform Integration</option>
-                <option value="open-standards">Open Standards / À La Carte</option>
+                <option value="">Select a product...</option>
+                <option value="free-bracelet">Free Bracelet</option>
+                <option value="governance">Governance charm</option>
+                <option value="brad">.brad Document Custody charm</option>
+                <option value="memory">Context Memory charm</option>
+                <option value="relationship">Relationship charm</option>
+                <option value="enterprise">Enterprise charm</option>
+                <option value="enterprise-api">Enterprise API (POST /translate)</option>
+                <option value="pilot">Pilot / custom deployment</option>
                 <option value="not-sure">Not sure yet</option>
               </select>
             </div>
@@ -724,8 +665,8 @@
               <label for="f-email">Work Email</label>
               <input type="email" id="f-email" name="email" placeholder="you@company.com" required />
             </div>
-            <input type="hidden" name="_subject" value="AIbrokerAGEnt Closed Alpha — Enterprise Inquiry" />
-            <button type="submit" class="submit-btn">Request closed alpha access</button>
+            <input type="hidden" name="_subject" value="AIbrokerAGEnt Products — Inquiry" />
+            <button type="submit" class="submit-btn">Send inquiry</button>
           </form>
           <p class="form-note">Direct: <a href="mailto:john@ai-broker-agent.com" style="color:var(--accent)">john@ai-broker-agent.com</a></p>
         </div>
