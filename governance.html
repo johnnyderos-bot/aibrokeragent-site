@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Operator Governance Protocol — Agent Governance That Can't Drift</title>
-  <meta name="description" content="OGPP makes governance constraints verifiable, unerasable, and enforced at action time — all the way down an agent hierarchy. No silent drift. No unauthorized relaxation. Every violation recorded.">
+  <title>Make Sure Every AI Sub-Agent Follows Your Rules — Operator Governance Protocol (OGPP)</title>
+  <meta name="description" content="When an AI agent hands off work to sub-agents, your rules need to travel with it — unchanged, enforced before every action, and impossible to quietly relax without leaving a record. That's what OGPP (Operator Governance Protocol) does at every level of the hierarchy.">
   <meta name="keywords" content="Operator Governance Protocol, OGPP, AI agent governance, governance drift, enforcement, AIBrokerAgent, DerosLabs">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ai-broker-agent.com/governance">
-  <meta property="og:title" content="Operator Governance Protocol — Agent Governance That Can't Drift">
-  <meta property="og:description" content="OGPP makes governance constraints verifiable, unerasable, and enforced at action time — all the way down an agent hierarchy.">
+  <meta property="og:title" content="Make Sure Every AI Sub-Agent Follows Your Rules — Operator Governance Protocol">
+  <meta property="og:description" content="When an AI agent hands work to sub-agents, your rules need to travel with it, unchanged and enforced at every level. OGPP makes governance drift detectable and blocks violations in real time.">
   <meta property="og:image" content="https://ai-broker-agent.com/og-image.png">
   <meta property="og:site_name" content="AIbrokerAGEnt">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Operator Governance Protocol — Agent Governance That Can't Drift">
-  <meta name="twitter:description" content="OGPP makes governance constraints verifiable, unerasable, and enforced at action time — all the way down an agent hierarchy.">
+  <meta name="twitter:title" content="Make Sure Every AI Sub-Agent Follows Your Rules — Operator Governance Protocol">
+  <meta name="twitter:description" content="When an AI agent hands work to sub-agents, your rules need to travel with it, unchanged and enforced at every level. OGPP makes governance drift detectable and blocks violations in real time.">
   <meta name="twitter:image" content="https://ai-broker-agent.com/og-image.png">
   <link rel="canonical" href="https://ai-broker-agent.com/governance">
   <script type="application/ld+json">
@@ -180,7 +180,7 @@
       Your rules.<br>
       <span class="grad">All the way down</span>.
     </h1>
-    <p class="hero-sub">OGPP makes governance constraints verifiable, unerasable, and enforced at action time — through every level of an agent hierarchy. Governance drift becomes technically impossible. Every violation is permanently recorded.</p>
+    <p class="hero-sub">When an agent spawns a sub-agent, your rules need to travel with it — unchanged, enforced before every action, and impossible to quietly relax without leaving a record. That's what OGPP (Operator Governance Protocol) does, across every level of the hierarchy.</p>
     <div class="hero-pills">
       <span class="pill"><span class="dot" style="background:#38bdf8"></span>Drift-Proof Propagation</span>
       <span class="pill"><span class="dot" style="background:#a78bfa"></span>Pre-Action Enforcement</span>
@@ -204,17 +204,17 @@
     <div class="pillar p1 reveal">
       <div class="pillar-num">01 — Define</div>
       <h3>Constraints in machine-evaluable form</h3>
-      <p>The operator signs a Governance Constraint Record containing every constraint — prohibited tools, output limits, resource caps, delegation rules. Mandatory constraints are marked and hash-locked. The record is anchored to the ledger before any agent acts.</p>
+      <p>The operator signs a Governance Constraint Record — in plain terms, a signed rulebook — containing every constraint: prohibited tools, output limits, resource caps, delegation rules. Mandatory constraints are marked and hash-locked. The record is anchored to the ledger before any agent acts.</p>
     </div>
     <div class="pillar p2 reveal">
       <div class="pillar-num">02 — Propagate</div>
       <h3>Ledger record at every spawn</h3>
-      <p>When any agent spawns a sub-agent, a Governance Inheritance Binding is generated and anchored to the ledger before the sub-agent executes. The mandatory constraint hash travels unchanged through the entire hierarchy. Any relaxation breaks it — and any third party can detect it.</p>
+      <p>When any agent spawns a sub-agent, a Governance Inheritance Binding — think of it as a chain-of-custody stamp proving the same rules were passed down — is generated and anchored to the ledger before the sub-agent executes. The mandatory constraint hash travels unchanged through the entire hierarchy. Any relaxation breaks it, and any third party can detect it.</p>
     </div>
     <div class="pillar p3 reveal">
       <div class="pillar-num">03 — Enforce</div>
       <h3>Every action intercepted at the boundary</h3>
-      <p>The Local Enforcement Gate intercepts every tool call, API request, and message before external effects are produced. Deterministic rule-matching — no LLM inference. Violations are blocked in real time and logged as tamper-evident events.</p>
+      <p>The Local Enforcement Gate — a checkpoint the agent cannot route around — intercepts every tool call, API request, and message before external effects are produced. Deterministic rule-matching, no LLM inference. Violations are blocked in real time and logged as tamper-evident events.</p>
     </div>
   </div>
 </div>
@@ -265,7 +265,7 @@
   <div class="wrap tight">
     <div class="center" style="margin-bottom:2rem;"><div class="s-label">Questions</div><h2 class="s-h2">Common questions.</h2></div>
     <div class="faq-list">
-      <div class="faq-item"><button class="faq-q" onclick="tf(this)">What is governance drift and why does it matter? <span class="faq-chev">▼</span></button><div class="faq-a">Governance drift is the silent relaxation of operator constraints as they pass through AI agent hierarchies. When agents spawn sub-agents at machine speed — no human reviews each delegation. Intermediate agents can narrow or drop mandatory rules with no record. OGPP makes this technically impossible and immediately detectable by anyone with ledger access.</div></div>
+      <div class="faq-item"><button class="faq-q" onclick="tf(this)">What is governance drift and why does it matter? <span class="faq-chev">▼</span></button><div class="faq-a">Governance drift is the silent relaxation of operator constraints as they pass through AI agent hierarchies. When agents spawn sub-agents at machine speed — no human reviews each delegation. Intermediate agents can narrow or drop mandatory rules with no record. OGPP blocks the attempt and makes it immediately detectable by anyone with ledger access.</div></div>
       <div class="faq-item"><button class="faq-q" onclick="tf(this)">What does the Local Enforcement Gate actually do? <span class="faq-chev">▼</span></button><div class="faq-a">The LEG intercepts every discrete action proposal — tool calls, API requests, file writes, messages — before external effects are produced. It evaluates each against the agent's constraint set using deterministic rule-matching. No LLM inference. Violations are blocked in real time and permanently logged.</div></div>
       <div class="faq-item"><button class="faq-q" onclick="tf(this)">How can an auditor verify constraint integrity? <span class="faq-chev">▼</span></button><div class="faq-a">Every Governance Inheritance Binding contains a mandatory_constraints_hash that must match the root operator's hash exactly, at any depth. Any party with ledger access can retrieve any GIB and compare hashes. No access to internal systems, no platform cooperation required.</div></div>
       <div class="faq-item"><button class="faq-q" onclick="tf(this)">How do I get access to OGPP? <span class="faq-chev">▼</span></button><div class="faq-a">OGPP is patent pending. Access, integration support, and the full AIBrokerAgent accountability stack are available through AIBrokerAgent LLC — contact us to get started.</div></div>
