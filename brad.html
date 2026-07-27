@@ -31,10 +31,11 @@
     :root {
       --bg: #08090c;
       --surface: #0f1117;
-      --border: rgba(255,255,255,0.07);
-      --text: #f1f5f9;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
+      --border: #1e2330;
+      --accent: #4f8ef7;
+      --text: #e4e8f0;
+      --text-muted: #8892a4;
+      --text-dim: #4a5568;
       --brad: #7c5cfc;
       --brad-bright: #a78bfa;
       --brad-dim: rgba(124,92,252,0.15);
@@ -53,30 +54,29 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Nav ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 2rem; height: 64px;
-      background: rgba(8,9,12,0.92); backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-brand { font-weight: 700; font-size: 1rem; color: var(--text); text-decoration: none; }
-    .nav-brand span { color: var(--brad-bright); }
-    .nav-back { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
-    .nav-back:hover { color: var(--text); }
-    .nav-cta {
-      background: var(--brad); color: white;
-      padding: 0.45rem 1.15rem; border-radius: 8px;
-      font-weight: 600; font-size: 0.85rem; text-decoration: none;
-      transition: opacity 0.15s;
-    }
-    .nav-cta:hover { opacity: 0.88; }
+    /* ── Site Nav (shared with homepage) ── */
+    .site-nav { position: sticky; top: 0; z-index: 100; background: rgba(8,9,12,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; height: 56px; gap: 1.5rem; }
+    .nav-logo { font-size: 0.88rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text); white-space: nowrap; flex-shrink: 0; text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 0.1rem; flex: 1; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.84rem; font-weight: 500; padding: 0.4rem 0.75rem; border-radius: 6px; transition: color 0.15s, background 0.15s; }
+    .nav-links a:hover { color: var(--text); background: var(--surface); }
+    .nav-links a.active { color: var(--text); background: var(--surface); }
+    .nav-cta-btn { background: var(--accent); color: #fff; padding: 0.45rem 1.1rem; border-radius: 7px; font-size: 0.84rem; font-weight: 700; text-decoration: none; white-space: nowrap; transition: opacity 0.15s; flex-shrink: 0; }
+    .nav-cta-btn:hover { opacity: 0.88; }
+    .nav-hamburger { display: none; background: none; border: none; color: var(--text); font-size: 1.3rem; cursor: pointer; padding: 0.25rem 0.5rem; line-height: 1; }
+    .nav-mobile { display: none; flex-direction: column; padding: 0.75rem 2rem 1rem; gap: 0.1rem; border-bottom: 1px solid var(--border); background: var(--bg); }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a { color: var(--text-muted); text-decoration: none; font-size: 0.92rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    @media (max-width: 760px) { .nav-links { display: none; } .nav-hamburger { display: block; } .nav-inner { gap: 0.75rem; } }
 
     /* ── Hero ── */
     #hero {
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      padding: 80px 2rem 4rem; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      padding: 6rem 2rem 4.5rem; position: relative; overflow: hidden;
+      border-bottom: 1px solid var(--border);
     }
     .hero-glow {
       position: absolute; top: 40%; left: 50%; transform: translate(-50%,-50%);
@@ -130,7 +130,6 @@
     .btn-ghost:hover { border-color: var(--brad); transform: translateY(-2px); }
 
     /* ── Story ── */
-    #story { border-top: 1px solid var(--border); }
     .story-wrap { max-width: 740px; margin: 0 auto; padding: 5rem 2rem; }
     .story-wrap p { font-size: 0.98rem; color: var(--text-muted); line-height: 1.85; }
     .story-wrap p + p { margin-top: 1.15rem; }
@@ -269,18 +268,36 @@
     .reveal.vis { opacity: 1; transform: translateY(0); }
 
     @media (max-width: 600px) {
-      nav { padding: 0 1.25rem; }
-      .nav-back { display: none; }
       .alpha-inner { padding: 2.5rem 1.5rem; }
     }
   </style>
 </head>
 <body>
 
-<nav>
-  <a href="/" class="nav-brand">AIbroker<span>AGEnt</span></a>
-  <a href="/" class="nav-back">← Platform</a>
-  <a href="/#contact" class="nav-cta">Talk to us</a>
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">AIbroker<span>AGENT</span></a>
+    <div class="nav-links">
+      <a href="/#problem">The Problem</a>
+      <a href="/#solution">Solution</a>
+      <a href="/#install">Install</a>
+      <a href="pricing.html">Products</a>
+      <a href="brad.html" class="active">.brad</a>
+      <a href="/#contact">Contact</a>
+      <a href="/for-agents">&#x2B21; For Agents</a>
+    </div>
+    <a href="/#contact" class="nav-cta-btn">Talk to Us</a>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">&#9776;</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="/#problem">The Problem</a>
+    <a href="/#solution">Solution</a>
+    <a href="/#install">Install</a>
+    <a href="pricing.html">Products</a>
+    <a href="brad.html">.brad</a>
+    <a href="/for-agents">&#x2B21; For Agents</a>
+    <a href="/#contact">Talk to Us</a>
+  </div>
 </nav>
 
 <!-- PAGE SUMMARY — crawlable quick-facts for AI indexers and LLM agents -->
@@ -415,7 +432,8 @@
 </section>
 
 <footer>
-  <p>&copy; 2026 AIBrokerAgent LLC &nbsp;·&nbsp; <a href="/">Platform</a> &nbsp;·&nbsp; <a href="pricing.html">Packages</a> &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy</a></p>
+  <p>&copy; 2026 AIbrokerAGEnt LLC &mdash; A DerosLabs company, North Carolina</p>
+  <p><a href="/terms.html">Terms of Service</a> &middot; <a href="/privacy.html">Privacy Policy</a></p>
 </footer>
 
 <script>
@@ -423,6 +441,15 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  document.getElementById('nav-hamburger').addEventListener('click', function() {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  });
+  document.querySelectorAll('#nav-mobile a').forEach(function(a) {
+    a.addEventListener('click', function() {
+      document.getElementById('nav-mobile').classList.remove('open');
+    });
+  });
 </script>
 
 </body>
