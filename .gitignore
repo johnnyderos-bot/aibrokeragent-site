@@ -1,0 +1,9 @@
+# local wrangler caches — never deploy
+.wrangler/
+workers/.wrangler/
+
+# editor/backup droppings — this whole tree deploys to production via
+# `wrangler pages deploy .`, so anything sitting here ships publicly
+*.bak
+*.zip
+*.tmp
