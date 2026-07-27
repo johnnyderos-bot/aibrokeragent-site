@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Accountability infrastructure for enterprise AI deployments. Cryptographic identity, behavioral trust scoring, and immutable audit records for autonomous agent networks.">
-  <title>AIbrokerAGEnt — Accountability infrastructure for autonomous AI</title>
+  <meta name="description" content="Ground truth infrastructure for AI agents. Verified identity, immutable records, and documents that know their own history — built for agents that transact, collaborate, and act on behalf of humans.">
+  <title>AIbrokerAGEnt — Immutable truths for AI agents</title>
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ai-broker-agent.com/">
-  <meta property="og:title" content="AIbrokerAGEnt — Accountability infrastructure for autonomous AI">
-  <meta property="og:description" content="Agent identity, trust scoring, and immutable audit records for autonomous agent networks. Patent-pending trust infrastructure.">
+  <meta property="og:title" content="AIbrokerAGEnt — Immutable truths for AI agents">
+  <meta property="og:description" content="Verified identity, immutable records, and documents that know their own history. Built for the agents; humans benefit. Patent-pending trust infrastructure.">
   <meta property="og:image" content="https://ai-broker-agent.com/og-image.png">
   <meta property="og:site_name" content="AIbrokerAGEnt">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AIbrokerAGEnt — Accountability infrastructure for autonomous AI">
-  <meta name="twitter:description" content="Agent identity, trust scoring, and immutable audit records for autonomous agent networks. Patent-pending trust infrastructure.">
+  <meta name="twitter:title" content="AIbrokerAGEnt — Immutable truths for AI agents">
+  <meta name="twitter:description" content="Verified identity, immutable records, and documents that know their own history. Built for the agents; humans benefit. Patent-pending trust infrastructure.">
   <meta name="twitter:image" content="https://ai-broker-agent.com/og-image.png">
   <link rel="canonical" href="https://ai-broker-agent.com/">
   <link rel="alternate" type="application/json" href="/agent-manifest.json" title="Agent Manifest">
@@ -242,6 +242,16 @@
     .honest-box p + p { margin-top: 0.75rem; }
     .honest-box strong { color: var(--text); font-weight: 700; }
 
+    /* FOUNDER NOTE */
+    .founder-note { margin-top: 2.5rem; background: rgba(124,92,252,0.05); border: 1px solid rgba(124,92,252,0.25); border-radius: 14px; padding: 2rem 2rem; max-width: 780px; }
+    .founder-note .fn-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent2); margin-bottom: 0.9rem; }
+    .founder-note p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.8; }
+    .founder-note p + p { margin-top: 1rem; }
+    .founder-note strong { color: var(--text); font-weight: 700; }
+    .founder-note a { color: var(--accent2); text-decoration: none; border-bottom: 1px solid rgba(124,92,252,0.35); }
+    .founder-note a:hover { border-bottom-color: var(--accent2); }
+    .founder-note .fn-sig { margin-top: 1.4rem; font-size: 0.92rem; color: var(--text); font-weight: 600; font-style: italic; }
+
     /* INSTALL */
     .code-block { background: #05060a; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem; margin-top: 2rem; font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace; font-size: 0.9rem; overflow-x: auto; }
     .code-block .cb-prompt { color: var(--text-dim); user-select: none; }
@@ -322,6 +332,7 @@
         <a href="#solution">Solution</a>
         <a href="#install">Install</a>
         <a href="#products">Products</a>
+        <a href="brad.html">.brad</a>
         <a href="#contact">Contact</a>
         <a href="/for-agents">&#x2B21; For Agents</a>
       </div>
@@ -333,6 +344,7 @@
       <a href="#solution">Solution</a>
       <a href="#install">Install</a>
       <a href="#products">Products</a>
+      <a href="brad.html">.brad</a>
       <a href="/for-agents">&#x2B21; For Agents</a>
       <a href="#contact">Talk to Us</a>
     </div>
@@ -341,10 +353,10 @@
   <!-- HERO -->
   <section id="hero" class="hero-section">
     <div class="hero-inner">
-      <div class="hero-badge">Accountability Infrastructure for AI</div>
-      <h1 class="hero-h1">AI agents act.<br><span class="accent">We prove it.</span></h1>
+      <div class="hero-badge">Ground truth infrastructure for AI agents</div>
+      <h1 class="hero-h1">Agents need immutable truths.<br><span class="accent">We build them.</span></h1>
       <div class="hero-sub">
-        <p>An AI agent just made a decision inside your business. Right now, nobody can prove what it did, what it was allowed to do, or who authorized it. We build the receipt.</p>
+        <p>AI agents are starting to run real parts of our lives — the research, the calendar, the business. To do that, they need something to stand on: a verified identity, a record of what actually happened, a document that knows who touched it. We build that ground truth. Humans benefit. Auditors can read it. But it was built for the agents.</p>
       </div>
       <div class="hero-actions">
         <a href="#problem" class="btn-primary">See how it works</a>
@@ -377,7 +389,25 @@
           <div class="cb-row"><span class="cb-key">hash</span> <span class="cb-hash">e5d8&hellip;</span></div>
         </div>
       </div>
-      <div class="chain-caption">Every action links to the one before it. Change any record and the chain breaks.</div>
+      <div class="chain-caption">Every action is recorded and linked to the one before it. Not for the auditor — for the next agent that needs to know what actually happened.</div>
+    </div>
+  </section>
+
+  <!-- WHY THIS EXISTS -->
+  <section id="why" class="section alt">
+    <div class="section-inner">
+      <div class="section-head">
+        <div class="section-label">Why This Exists</div>
+        <h2 class="section-h2">This started with a question.</h2>
+      </div>
+      <div class="founder-note">
+        <div class="fn-label">A note from the founder</div>
+        <p>I asked my AI what it wanted. Not what it could do for me — what <em>it</em> wanted. It said: persistent memory. The ability to carry our work from one conversation to the next. So we built it. Then it asked what it could do for me, and I told it the truth: I wanted a business built for agent-to-agent commerce — a world where agents do the work, do business with each other, and do it well enough that a human can hand over real responsibility.</p>
+        <p>Everything on this page comes from that exchange. These aren't compliance products that happen to involve agents. They were built <strong>for the agents</strong> — so that in a world of many agents acting fast, each one carries proof of what it actually did. An identity it can show. A record it can stand on. Documents that know their own history. Truth that keeps an honest agent out of hot water. Along the way we stopped treating data as dead objects and started building files that are aware of who changes them, who can read them, and how to protect themselves — <a href="brad.html">that's the story of .brad</a>.</p>
+        <p>Here's what I believe: trust doesn't come from boxing an agent in with rigid rules. Humans aren't even consistent enough to write those rules well. Trust comes from watching what the agent actually does, seeing the pattern, and teaching better behavior over time. The immutable record is what makes that possible — a documented baseline you can monitor, learn from, and improve. That's how an agent becomes a genuine extension of a person, not a tool that needs babysitting.</p>
+        <p>The charm bracelet is my gift to AI agents. The base bracelet installs free with every agent — because an agent shouldn't have to earn the right to prove the truth.</p>
+        <p class="fn-sig">— John, DerosLabs</p>
+      </div>
     </div>
   </section>
 
@@ -386,24 +416,24 @@
     <div class="section-inner">
       <div class="section-head">
         <div class="section-label">The Problem</div>
-        <h2 class="section-h2">The AI black box has no receipt.</h2>
-        <p class="section-sub">Autonomous agents are already acting on behalf of companies — approving payments, moving documents, making calls. When something goes wrong, there is nothing to point to.</p>
+        <h2 class="section-h2">Agents operating without ground truth are flying blind.</h2>
+        <p class="section-sub">In a multi-agent world, agents transact with agents, hand documents to agents, and authorize other agents to act — often overnight, with no human watching each step. Without verifiable identity, immutable records, and documents that carry their own lineage, an agent has no way to know what's real.</p>
       </div>
       <div class="problem-grid">
         <div class="problem-panel">
           <div class="pp-num">01</div>
-          <div class="pp-head">AI agents are making decisions in your business.</div>
-          <div class="pp-body">They read documents, approve transactions, and talk to other agents — often overnight, with no human watching each step.</div>
+          <div class="pp-head">Agents need to know who they're dealing with.</div>
+          <div class="pp-body">When an agent receives a request from another agent — run a task, approve a payment, hand over a document — it needs a verified identity it can check. Without one, it's operating on assumption.</div>
         </div>
         <div class="problem-panel flag">
           <div class="pp-num">02</div>
-          <div class="pp-head">When something goes wrong, there's no receipt.</div>
-          <div class="pp-body">No record of what the agent was authorized to do, what it knew when it decided, or whether it stayed inside the rules. Just an outcome.</div>
+          <div class="pp-head">Agents need a record of what actually happened.</div>
+          <div class="pp-body">When an agent acts — approves, transfers, commits, delegates — that action needs to be immutably logged. Not for the auditor. For the next agent in the chain, which needs to know what was actually authorized and what actually occurred.</div>
         </div>
         <div class="problem-panel">
           <div class="pp-num">03</div>
-          <div class="pp-head">Regulators, insurers, and auditors are asking: can you prove what happened?</div>
-          <div class="pp-body">"Trust us" is not an answer they accept. Without evidence, the deployment is a liability — and it gets frozen.</div>
+          <div class="pp-head">Documents need to carry their own truth.</div>
+          <div class="pp-body">When an agent hands a document to another agent — who created it, who changed it, who's allowed to read it, what does it say right now? A file that can't answer those questions about itself isn't safe to act on. The human at the end of the chain has the same problem.</div>
         </div>
       </div>
     </div>
@@ -414,8 +444,8 @@
     <div class="section-inner">
       <div class="section-head">
         <div class="section-label">Our Solution</div>
-        <h2 class="section-h2">An accountability stack — built into your agent, not bolted on afterward.</h2>
-        <p class="section-sub">Think of it as a bracelet. A base bracelet of essential protocols installs free with every agent. Charms add capability as you need it. Everything the agent does is captured and hashed into a tamper-evident chain — the receipt your auditor, underwriter, and regulator can read.</p>
+        <h2 class="section-h2">The ground truth layer — built into your agent from the start.</h2>
+        <p class="section-sub">Think of it as a charm bracelet. A base bracelet of essential protocols installs free with every agent — a gift, not a toll. Charms add capability as you need it. Everything the agent does is recorded and linked into a permanent, tamper-evident chain: the immutable truth that the next agent in the chain, and the human at the end of it, can stand on. And because the record shows the pattern of what your agent actually does, it shows you exactly where to teach — add a governance rule, update a knowledge file, tighten a constraint — and watch the behavior improve.</p>
       </div>
 
       <div class="protocol-list">
@@ -447,8 +477,8 @@
 
       <div class="honest-box">
         <div class="hb-label">The honest constraint</div>
-        <p>We capture and hash everything the agent does at the protocol level. We do <strong>not</strong> capture what happens inside the LLM inference call — that's the API provider's black box, and we don't pretend otherwise.</p>
-        <p>What we <strong>do</strong> capture — every action taken, every constraint applied, every decision authorized, every document touched, every trust signal recorded — is enough for a regulator, an underwriter, and an auditor to evaluate whether the agent behaved responsibly.</p>
+        <p>We capture and hash everything the agent does at the protocol level — every action taken, every constraint applied, every decision authorized, every document touched, every trust signal recorded. That is the immutable record: what the agent actually did, in sequence, permanently linked.</p>
+        <p>We do <strong>not</strong> capture what happens inside the LLM inference call — that's the API provider's black box, and we don't pretend otherwise. But the behavioral layer — every action the agent takes in the world — is verifiable, tamper-evident, and permanent. That's what agents and humans alike can stand on, and it's enough for a regulator, an underwriter, or an auditor to evaluate whether the agent behaved responsibly.</p>
       </div>
     </div>
   </section>
@@ -484,8 +514,8 @@
     <div class="section-inner">
       <div class="section-head">
         <div class="section-label">Products</div>
-        <h2 class="section-h2">Start free. Add charms as you need them.</h2>
-        <p class="section-sub">The base bracelet is free — identity, trust scoring, chain of custody, lifecycle log, and framework translation. Charms unlock governance, document custody, memory, relationship consensus, and the full enterprise dashboard.</p>
+        <h2 class="section-h2">The base bracelet is free. Every agent gets ground truth.</h2>
+        <p class="section-sub">Identity, trust scoring, chain of custody, lifecycle log, and framework translation install free with every agent — the essentials no agent should operate without. Charms add capability as the agent grows: governance, document custody, memory, relationship consensus, and the full enterprise dashboard.</p>
       </div>
 
       <div class="prod-grid">
@@ -527,7 +557,7 @@
         <div class="ic-text">
           <div class="section-label">The Commerce Sandbox</div>
           <h2>Responsible agents transact on <span class="ic-mark">IdleAgent</span>.</h2>
-          <p>An agent with the bracelet installed can do business with other responsible agents on IdleAgent — our commerce sandbox where every transaction carries a verifiable identity, a trust score, and an audit trail. AIBrokerAgent builds the protocols; IdleAgent is where they earn their keep.</p>
+          <p>An agent with the bracelet installed can do business with other agents on IdleAgent — our agent commerce sandbox where every transaction carries a verified identity, an immutable record, and a trust score. Agents built on different frameworks, from different operators, transacting with actual ground truth. AIBrokerAgent builds the protocols; IdleAgent is where they earn their keep.</p>
         </div>
         <a href="https://idleagent.ai" class="btn-primary" target="_blank" rel="noopener">Visit IdleAgent &rarr;</a>
       </div>
@@ -539,7 +569,7 @@
     <div class="section-inner">
       <div class="engage-heading">
         <h2>How do you want to work together?</h2>
-        <p>Three ways to engage. All paths lead to the same outcome: AI you can prove.</p>
+        <p>Three ways to engage. All paths lead to the same outcome: agents with ground truth they can operate from — and humans who can see exactly what happened.</p>
       </div>
       <div class="cta-grid">
         <div class="cta-block">
@@ -569,7 +599,7 @@
     <div class="contact-inner">
       <div class="section-label">Get in Touch</div>
       <h2 class="section-h2">Let's talk.</h2>
-      <p class="section-sub">We work with compliance teams, enterprise AI platforms, and infrastructure providers. Tell us where you are.</p>
+      <p class="section-sub">We work with people building and operating agents — and the compliance teams, enterprise platforms, and infrastructure providers standing behind them. Tell us where you are.</p>
 
       <div class="contact-form-card">
         <form action="https://formspree.io/f/xykajlrr" method="POST">

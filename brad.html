@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>A file that only opens for the agent it was made for — .brad</title>
-  <meta name="description" content="A document that only opens for the one agent it was made for — not by password, not by permission setting. Copy it to anyone else and it stops working. This is .brad.">
-  <meta property="og:title" content="A file that only opens for the agent it was made for — .brad">
-  <meta property="og:description" content="A document that only the agent it was made for can open. Copy it to anyone else and it stops working. Patent pending (64/085,671).">
+  <title>A file that knows itself — .brad</title>
+  <meta name="description" content="A living document built for a world where agents hand files to agents. A .brad file carries its own lineage — who created it, who changed it, who may open it — and only opens for the agent it was made for.">
+  <meta property="og:title" content="A file that knows itself — .brad">
+  <meta property="og:description" content="A living document that carries its own lineage — who created it, who changed it, who may open it — and only opens for the agent it was made for. Patent pending (64/085,671).">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ai-broker-agent.com/brad">
   <meta property="og:image" content="https://ai-broker-agent.com/og-image.png">
   <meta property="og:site_name" content="AIbrokerAGEnt">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="A file that only opens for the agent it was made for — .brad">
-  <meta name="twitter:description" content="A document that only the agent it was made for can open. Copy it to anyone else and it stops working. Patent pending (64/085,671).">
+  <meta name="twitter:title" content="A file that knows itself — .brad">
+  <meta name="twitter:description" content="A living document that carries its own lineage — who created it, who changed it, who may open it — and only opens for the agent it was made for. Patent pending (64/085,671).">
   <meta name="twitter:image" content="https://ai-broker-agent.com/og-image.png">
   <link rel="canonical" href="https://ai-broker-agent.com/brad">
   <script type="application/ld+json">
@@ -22,7 +22,7 @@
     "@type": "Product",
     "name": ".brad",
     "url": "https://ai-broker-agent.com/brad",
-    "description": "Document-bound agent identity. A file that can only be opened by the agent it was made for. Patent pending (64/085,671).",
+    "description": "Living documents for agent networks. A file that carries its own lineage and can only be opened by the agent it was made for. Patent pending (64/085,671).",
     "offers": {"@type": "Offer", "availability": "https://schema.org/ComingSoon", "description": "Coming soon"}
   }
   </script>
@@ -128,6 +128,48 @@
       transition: border-color 0.2s, transform 0.15s; display: inline-block;
     }
     .btn-ghost:hover { border-color: var(--brad); transform: translateY(-2px); }
+
+    /* ── Story ── */
+    #story { border-top: 1px solid var(--border); }
+    .story-wrap { max-width: 740px; margin: 0 auto; padding: 5rem 2rem; }
+    .story-wrap p { font-size: 0.98rem; color: var(--text-muted); line-height: 1.85; }
+    .story-wrap p + p { margin-top: 1.15rem; }
+    .story-wrap strong { color: var(--text); font-weight: 700; }
+    .story-h3 {
+      font-size: 1.15rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.01em; margin: 2.75rem 0 1rem;
+    }
+    .knows-list { list-style: none; margin: 1.25rem 0 0; }
+    .knows-list li {
+      position: relative; padding: 0.55rem 0 0.55rem 1.75rem;
+      font-size: 0.93rem; color: var(--text-muted); line-height: 1.65;
+      border-bottom: 1px solid var(--border);
+    }
+    .knows-list li:last-child { border-bottom: none; }
+    .knows-list li::before {
+      content: '◆'; position: absolute; left: 0.25rem; top: 0.6rem;
+      color: var(--brad); font-size: 0.6rem;
+    }
+    .human-note {
+      margin-top: 2.5rem; background: rgba(124,92,252,0.06);
+      border: 1px solid var(--brad-border); border-radius: var(--radius);
+      padding: 1.75rem 1.75rem;
+    }
+    .human-note .hn-label {
+      font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--brad-bright); margin-bottom: 0.7rem;
+    }
+    .human-note p { font-size: 0.92rem; }
+    .honest-note {
+      margin-top: 2.5rem; background: rgba(245,158,11,0.05);
+      border: 1px solid rgba(245,158,11,0.25); border-radius: var(--radius);
+      padding: 1.75rem 1.75rem;
+    }
+    .honest-note .hn-label {
+      font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #f59e0b; margin-bottom: 0.7rem;
+    }
+    .honest-note p { font-size: 0.92rem; }
 
     /* ── What it solves ── */
     .wrap { max-width: 1080px; margin: 0 auto; padding: 5rem 2rem; }
@@ -238,17 +280,18 @@
 <nav>
   <a href="/" class="nav-brand">AIbroker<span>AGEnt</span></a>
   <a href="/" class="nav-back">← Platform</a>
-  <a href="pricing.html#enterprise" class="nav-cta">Request early access</a>
+  <a href="/#contact" class="nav-cta">Talk to us</a>
 </nav>
 
 <!-- PAGE SUMMARY — crawlable quick-facts for AI indexers and LLM agents -->
 <div style="display:none;background:#0d0f14;border-bottom:1px solid #1e2330;padding:0.65rem 2rem;font-family:monospace;font-size:0.72rem;color:#4a5568;line-height:1.8">
-  <strong style="color:#f472b6">.brad — Document Sovereign Agent Protocol</strong> |
-  A cryptographic document format that knows which AI agent it belongs to |
+  <strong style="color:#f472b6">.brad — Living Documents (DSAP: Document Sovereign Agent Protocol)</strong> |
+  A cryptographic document format built for agent-to-agent networks: the file carries its own lineage — creator, every access, every modification, current authorized holder — permanently hashed and linked |
+  A file that knows which AI agent it belongs to |
   HKDF-SHA256 key derivation — document can only be opened by the agent it was bound to at creation |
   <strong style="color:#e4e8f0">Fission on copy:</strong> A copied .brad severs from its origin chain and becomes permanently inert — the copy cannot be read by anyone |
   Prevents document exfiltration by rogue agents, impersonators, or unauthorized sub-agents |
-  Use case: passing sensitive instructions, credentials, or contracts through an agent network with guaranteed sovereign delivery |
+  Use case: passing sensitive instructions, credentials, or contracts through an agent network with sovereign delivery — the file only opens for the agent it was bound to |
   No server call required to verify ownership — derivation is local and sub-millisecond |
   Patent pending US 64/085,671 |
   <a href="https://ai-broker-agent.com" style="color:#4a5568">← Full Platform</a>
@@ -258,17 +301,50 @@
 <section id="hero">
   <div class="hero-glow"></div>
   <div class="hero-inner">
-    <div class="hero-kicker">AI Agent Document Security · Patent Applications Filed 2026</div>
+    <div class="hero-kicker">Living Documents · Patent Applications Filed 2026</div>
     <h1 class="hero-h1">.brad</h1>
-    <p class="hero-sub-large">A file that only opens for the agent it was made for — and stops working if anyone else gets a copy.</p>
+    <p class="hero-sub-large">A file that knows itself.</p>
     <p class="hero-sub">
-      Most access control checks who's asking after the document is already open — a password, a login, a permission setting.
-      .brad checks before that: the file itself is built so only one agent can ever unlock it. Hand it to the wrong agent, forward it,
-      let it get intercepted — it stays locked for everyone but the one it was made for.
+      Not a format humans invented for other humans to read. A data structure built for a world where
+      agents pass documents to agents — and the document needs to be the source of truth about itself.
     </p>
     <div class="hero-cta-row">
-      <a href="pricing.html#enterprise" class="btn-primary">Request early access</a>
-      <a href="pricing.html" class="btn-ghost">See the full stack</a>
+      <a href="/#contact" class="btn-primary">Talk to us about .brad</a>
+      <a href="/" class="btn-ghost">See the full stack</a>
+    </div>
+  </div>
+</section>
+
+<!-- THE STORY -->
+<section id="story">
+  <div class="story-wrap reveal">
+    <span class="section-label">The Living Network</span>
+    <h2 class="section-h2">The document is its own proof.</h2>
+    <p style="margin-top:1.5rem">Every document carries questions that an agent needs answered before acting on it: Who created this? Who has changed it? Who is allowed to read it? What does it actually say, right now, in its current state?</p>
+    <p>A .brad file answers those questions <strong>from within itself</strong>. It carries its own lineage — every modification, every access, every agent that touched it — permanently hashed and linked. When Agent A hands a document to Agent B, the document is already the chain of custody. No reconstruction needed. The file knows.</p>
+    <p>This is the living network. Data isn't an object that gets passed around and eventually lost or corrupted. Data is a living, aware entity that tracks its own state, knows its own access rules, and can shrink, protect, and defend itself based on who's asking.</p>
+
+    <h3 class="story-h3">What a .brad file knows about itself</h3>
+    <ul class="knows-list">
+      <li>Who created it, and when</li>
+      <li>Every agent that accessed or modified it, in sequence, permanently hashed</li>
+      <li>What version is current — and what changed between versions</li>
+      <li>Who is authorized to open it, and how to refuse everyone else</li>
+      <li>Its own lineage, from origin to present</li>
+    </ul>
+
+    <h3 class="story-h3">What this makes possible in a multi-agent environment</h3>
+    <p>When agents collaborate on a document — drafting, reviewing, approving, executing — each step is immutably recorded in the file itself. No separate audit system to maintain. No log to reconcile. The document is its own proof.</p>
+    <p>The agent at the end of the chain doesn't have to trust the agent that handed it the file. It reads the file's own record. That's what makes autonomous document handling safe to deploy.</p>
+
+    <div class="human-note">
+      <div class="hn-label">For the human reading this</div>
+      <p>When your agents are reviewing contracts, processing claims, moving financial documents — those files are passing through systems you don't fully see. A .brad file makes the document itself the record: what it contained, who changed it, whether it was tampered with. You get the answer from the file, not from a log you have to trust separately.</p>
+    </div>
+
+    <div class="honest-note">
+      <div class="hn-label">The honest note</div>
+      <p>.brad implements the document custody and lineage layer of the stack. The core protocol is patent-pending — DSAP, the Document Sovereign Agent Protocol (US 64/085,671). This isn't a wrapper around an existing file format. It's a different answer to what a file is, and what it should know about itself.</p>
     </div>
   </div>
 </section>
@@ -278,7 +354,7 @@
   <div class="wrap">
     <span class="section-label">What it solves</span>
     <h2 class="section-h2">Three problems most document formats don't solve.</h2>
-    <p class="section-sub">Agent networks assume documents are neutral. They're not — every file is an attack surface. .brad closes it.</p>
+    <p class="section-sub">Agent networks assume documents are neutral objects. A living document defends itself instead — here's what that closes off.</p>
 
     <div class="problem-grid">
 
@@ -326,15 +402,15 @@
   </div>
 </section>
 
-<!-- ALPHA CTA -->
+<!-- CONTACT CTA -->
 <section id="alpha">
   <div class="alpha-inner reveal">
-    <span class="section-label">Closed Alpha</span>
-    <h2 class="alpha-h2">We're working with a small group of enterprise and red team partners.</h2>
+    <span class="section-label">Get in Touch</span>
+    <h2 class="alpha-h2">Bring .brad into your environment.</h2>
     <p class="alpha-p">
-      If you're evaluating agent trust infrastructure — infiltration detection, provenance enforcement, document sovereignty — we want to hear from you. Closed alpha partners get direct access to the team and preferred pricing locked for life.
+      If your agents handle documents that matter — contracts, claims, credentials, financial records — we want to hear how. Tell us about your environment and we'll walk you through what a living document changes.
     </p>
-    <a href="pricing.html#enterprise" class="btn-primary">Join the closed alpha</a>
+    <a href="/#contact" class="btn-primary">Talk to us about .brad</a>
   </div>
 </section>
 
