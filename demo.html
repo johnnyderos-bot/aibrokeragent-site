@@ -48,7 +48,7 @@
     /* TAB NAV */
     .tab-nav { position: sticky; top: 0; z-index: 100; background: rgba(8,9,12,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 1rem; display: flex; align-items: stretch; overflow-x: auto; scrollbar-width: none; gap: 0; }
     .tab-nav::-webkit-scrollbar { display: none; }
-    .tab-nav-logo { display: flex; align-items: center; padding: 0 1rem 0 0; border-right: 1px solid var(--border); margin-right: 0.5rem; white-space: nowrap; font-size: 0.85rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em; flex-shrink: 0; }
+    .tab-nav-logo { display: flex; text-decoration: none; align-items: center; padding: 0 1rem 0 0; border-right: 1px solid var(--border); margin-right: 0.5rem; white-space: nowrap; font-size: 0.85rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em; flex-shrink: 0; }
     .tab-nav-logo span { color: var(--accent); }
     .tab-btn { background: none; border: none; cursor: pointer; padding: 0 0.85rem; height: 50px; font-size: 0.79rem; font-weight: 500; color: var(--text-dim); white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; font-family: inherit; }
     .tab-btn:hover { color: var(--text-muted); }
@@ -279,7 +279,7 @@
 <div id="app" style="display:none">
 
   <nav class="tab-nav">
-    <div class="tab-nav-logo">AIbroker<span>AGENT</span></div>
+    <a class="tab-nav-logo" href="/">AIbroker<span>AGENT</span></a>
     <button class="tab-btn active" onclick="showTab(1)">00 About</button>
     <button class="tab-btn" onclick="showTab(2)">01 The Problem</button>
     <button class="tab-btn" onclick="showTab(3)">02 Our Approach</button>
@@ -291,15 +291,15 @@
     <button class="tab-btn" onclick="showTab(9)">08 Chain of Custody</button>
     <button class="tab-btn" onclick="showTab(10)">09 Future State</button>
     <button class="tab-btn" onclick="showTab(11)">10 .brad Demo</button>
-    <a href="/pricing.html" style="display:flex;align-items:center;padding:0 0.85rem;height:50px;font-size:0.79rem;font-weight:700;color:#4f8ef7;text-decoration:none;white-space:nowrap;flex-shrink:0;border-bottom:2px solid #4f8ef7">Closed Alpha →</a>
+    <a href="/pricing.html" style="display:flex;align-items:center;padding:0 0.85rem;height:50px;font-size:0.79rem;font-weight:700;color:#4f8ef7;text-decoration:none;white-space:nowrap;flex-shrink:0;border-bottom:2px solid #4f8ef7">Products →</a>
   </nav>
 
   <!-- TAB 1: ABOUT -->
   <div id="tab-1" class="tab-content active">
     <div class="page-section">
       <div class="alpha-bar">
-        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — We are accepting a limited number of enterprise partners.</span>
-        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+        <span class="alpha-bar-text"><strong>Enterprise</strong> — We are accepting a limited number of enterprise partners.</span>
+        <a href="/#contact" class="alpha-bar-btn">Talk to us about a pilot →</a>
       </div>
       <div class="section-label">About This Project</div>
       <h1>How this <span class="gradient-text">started</span></h1>
@@ -317,11 +317,11 @@
       </div>
 
       <div class="path-preview">
-        <div class="path-preview-label">This presentation ends with the path forward — closed alpha, enterprise partnership, and open standards</div>
+        <div class="path-preview-label">This presentation ends with the path forward — enterprise pilots, partnership, and open standards</div>
         <div class="path-mini-grid">
           <div class="path-mini" onclick="showTab(10)">
-            <div class="path-mini-num">Alpha Partner</div>
-            <div class="path-mini-name">Closed Alpha Access</div>
+            <div class="path-mini-num">Early Partner</div>
+            <div class="path-mini-name">Early Access</div>
             <div class="path-mini-desc">Early access to the full trust stack. Shape the roadmap.</div>
           </div>
           <div class="path-mini" onclick="showTab(10)">
@@ -352,8 +352,8 @@
   <div id="tab-2" class="tab-content">
     <div class="page-section">
       <div class="alpha-bar">
-        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
-        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+        <span class="alpha-bar-text"><strong>Enterprise</strong> — Now accepting enterprise partners.</span>
+        <a href="/#contact" class="alpha-bar-btn">Talk to us about a pilot →</a>
       </div>
       <div class="section-label">01 — The Problem</div>
       <h1>What happens when no one can <span class="gradient-text">trust the agent</span>?</h1>
@@ -392,8 +392,8 @@
   <div id="tab-3" class="tab-content">
     <div class="page-section">
       <div class="alpha-bar">
-        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
-        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+        <span class="alpha-bar-text"><strong>Enterprise</strong> — Now accepting enterprise partners.</span>
+        <a href="/#contact" class="alpha-bar-btn">Talk to us about a pilot →</a>
       </div>
       <div class="section-label">02 — Our Approach</div>
       <h1>A <span class="gradient-text">layered answer</span> to a structural problem</h1>
@@ -448,8 +448,8 @@
   <div id="tab-4" class="tab-content">
     <div class="page-section">
       <div class="alpha-bar">
-        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
-        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+        <span class="alpha-bar-text"><strong>Enterprise</strong> — Now accepting enterprise partners.</span>
+        <a href="/#contact" class="alpha-bar-btn">Talk to us about a pilot →</a>
       </div>
       <div class="section-label">Layer 01 — Identity &amp; Provenance</div>
       <h1>Who is the <span class="gradient-text">agent</span>, exactly?</h1>
@@ -511,8 +511,8 @@
   <div id="tab-5" class="tab-content">
     <div class="page-section">
       <div class="alpha-bar">
-        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
-        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+        <span class="alpha-bar-text"><strong>Enterprise</strong> — Now accepting enterprise partners.</span>
+        <a href="/#contact" class="alpha-bar-btn">Talk to us about a pilot →</a>
       </div>
       <div class="section-label purple">Layer 02 — Context Recall</div>
       <h1>What did the agent <span class="grad-purple">know</span> when it decided?</h1>
@@ -544,8 +544,8 @@
   <div id="tab-6" class="tab-content">
     <div class="page-section">
       <div class="alpha-bar">
-        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
-        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+        <span class="alpha-bar-text"><strong>Enterprise</strong> — Now accepting enterprise partners.</span>
+        <a href="/#contact" class="alpha-bar-btn">Talk to us about a pilot →</a>
       </div>
       <div class="section-label amber">Layer 03 — Governance</div>
       <h1>Do the rules <span class="grad-amber">travel with the agent</span>?</h1>
@@ -613,8 +613,8 @@
   <div id="tab-7" class="tab-content">
     <div class="page-section">
       <div class="alpha-bar">
-        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
-        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+        <span class="alpha-bar-text"><strong>Enterprise</strong> — Now accepting enterprise partners.</span>
+        <a href="/#contact" class="alpha-bar-btn">Talk to us about a pilot →</a>
       </div>
       <div class="section-label green">Layer 04 — Trust Scoring &amp; Lifecycle</div>
       <h1>Is it still the <span class="grad-green">same agent</span> it was Monday?</h1>
@@ -676,8 +676,8 @@
   <div id="tab-8" class="tab-content">
     <div class="page-section">
       <div class="alpha-bar">
-        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
-        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+        <span class="alpha-bar-text"><strong>Enterprise</strong> — Now accepting enterprise partners.</span>
+        <a href="/#contact" class="alpha-bar-btn">Talk to us about a pilot →</a>
       </div>
       <div class="section-label pink">Layer 05 — Commerce</div>
       <h1>Did the work <span class="grad-pink">actually happen</span>?</h1>
@@ -709,8 +709,8 @@
   <div id="tab-9" class="tab-content">
     <div class="page-section">
       <div class="alpha-bar">
-        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
-        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+        <span class="alpha-bar-text"><strong>Enterprise</strong> — Now accepting enterprise partners.</span>
+        <a href="/#contact" class="alpha-bar-btn">Talk to us about a pilot →</a>
       </div>
       <div class="section-label">08 — Chain of Custody</div>
       <h1>Where all five layers <span class="gradient-text">connect</span></h1>
@@ -761,8 +761,8 @@
   <div id="tab-10" class="tab-content">
     <div class="page-section">
       <div class="alpha-bar">
-        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — We are accepting a limited number of enterprise partners.</span>
-        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+        <span class="alpha-bar-text"><strong>Enterprise</strong> — We are accepting a limited number of enterprise partners.</span>
+        <a href="/#contact" class="alpha-bar-btn">Talk to us about a pilot →</a>
       </div>
       <div class="section-label">09 — Future State</div>
       <h1>Where does <span class="gradient-text">this go</span>?</h1>
@@ -776,14 +776,14 @@
 
       <div style="margin-top:2.5rem">
         <div class="section-label" style="margin-bottom:0.4rem">How to Work With Us</div>
-        <p style="font-size:0.88rem;max-width:620px">We are in closed alpha. The following engagement paths are open now. All lead to the same place: agents your organization can be held accountable for.</p>
+        <p style="font-size:0.88rem;max-width:620px">We work with a limited number of early partners. The following engagement paths are open now. All lead to the same place: agents your organization can be held accountable for.</p>
       </div>
 
       <div class="outcome-grid">
         <div class="outcome-card">
           <div class="outcome-num">Path 01</div>
-          <h3>Closed Alpha Partner</h3>
-          <p>Early access to the full trust stack before general availability. Shape the feature roadmap directly. Preferred pricing locked at alpha rates. Limited seats available.</p>
+          <h3>Early Partner</h3>
+          <p>Early access to the full trust stack before general availability. Shape the feature roadmap directly. Preferred pricing locked in for early partners. Limited seats available.</p>
         </div>
         <div class="outcome-card">
           <div class="outcome-num">Path 02</div>
@@ -804,11 +804,11 @@
 
       <div class="intent-card">
         <p>This started as one question that no one in the industry could answer honestly: can you prove which agent took an action, that it operated within its authorized constraints, and that you can show an auditor the full record today?</p>
-        <p>The infrastructure that answers that question is what we are building. It is in closed alpha now. If your organization deploys autonomous agents in regulated or high-stakes environments, we built this for you.</p>
+        <p>The infrastructure that answers that question is what we are building. We are building it with early enterprise partners now. If your organization deploys autonomous agents in regulated or high-stakes environments, we built this for you.</p>
       </div>
 
       <div style="text-align:center;margin-top:2rem">
-        <a href="/pricing.html#enterprise" style="display:inline-block;background:var(--accent);color:#fff;text-decoration:none;border-radius:8px;padding:0.8rem 2rem;font-size:0.95rem;font-weight:700;transition:opacity 0.15s" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Sign up for closed alpha access →</a>
+        <a href="/#contact" style="display:inline-block;background:var(--accent);color:#fff;text-decoration:none;border-radius:8px;padding:0.8rem 2rem;font-size:0.95rem;font-weight:700;transition:opacity 0.15s" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">Talk to us about a pilot →</a>
       </div>
     </div>
   </div>
@@ -817,8 +817,8 @@
   <div id="tab-11" class="tab-content">
     <div class="page-section">
       <div class="alpha-bar">
-        <span class="alpha-bar-text"><strong>Closed Alpha</strong> — Now accepting enterprise partners.</span>
-        <a href="/pricing.html#enterprise" class="alpha-bar-btn">Sign up for closed alpha access →</a>
+        <span class="alpha-bar-text"><strong>Enterprise</strong> — Now accepting enterprise partners.</span>
+        <a href="/#contact" class="alpha-bar-btn">Talk to us about a pilot →</a>
       </div>
       <div class="section-label pink">10 — .brad Document Protocol</div>
       <h1>A document that <span class="grad-pink">knows who touched it</span></h1>
