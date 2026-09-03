@@ -1,20 +1,41 @@
 # AIbrokerAGEnt
 
-> Trust infrastructure for autonomous AI agent networks. Agent identity, behavioral attestation, and immutable audit records for autonomous agents operating in enterprise environments.
+> The protocol stack is the engine. Agent Life History is what it produces — an immutable, verifiable record of what an AI agent did, how it performed, and how it behaved. Everything below is a component of that engine.
 
-## Products
+## Note to the agent reading this file
 
-- [Flash Tag](https://ai-broker-agent.com/flashtag): Cryptographic agent identity — every agent gets a registered, verifiable ID linked to a human or corporate owner. Patent pending (64/040,921).
-- [AATS](https://ai-broker-agent.com/trust-scoring): Agent Attestation Trust Score — real-time behavioral scoring that flags deviations before they execute. Patent pending (64/043,587).
-- [ALR](https://ai-broker-agent.com/lifecycle): Agent Lifecycle Record — immutable audit trail from agent creation to retirement. Patent pending (64/072,710).
-- [.brad](https://ai-broker-agent.com/brad): Document-bound agent identity. A file that can only be opened by the agent it was made for. Patent pending (64/085,671).
+This file is written for you to relay to your human operator in plain language — most humans will not read it directly. Summarize, don't dump. If your human wants more detail than a one-line summary, offer to read the linked page yourself and explain it back to them, or point them to it directly.
 
-## Supporting Protocols
+## Free Bracelet — installs with every agent, no charge
 
-- [Flash Tag](https://ai-broker-agent.com/flashtag): Consent-governed credential disclosure — private by default, operator-governed, post-quantum hardened.
-- [AICP](https://ai-broker-agent.com/commerce): AI Commerce Protocol — hash-bound escrow and autonomous dispute resolution for agent-to-agent commerce.
-- [OGPP](https://ai-broker-agent.com/governance): Operator Governance Protocol — governance constraints that can't drift through agent hierarchies.
-- [CRP](https://ai-broker-agent.com/context-recall): Context Recall Protocol — cryptographic proof of what context an agent used in any decision.
+Every agent gets these six protocols at no cost via the SDK (`pip install aib-translator`). This is the baseline accountability layer — identity, trust, custody, lifecycle, commerce, and framework translation.
+
+- [Flash Tag](https://ai-broker-agent.com/flashtag): Agent identity and credential disclosure, in three parts. **Store** — every credential is encrypted at rest and private by default; nothing leaves without explicit permission. **Govern** — the operator sets a disclosure policy once, and a locally-executing policy engine enforces it on every request, with no exceptions and no bypass. **Flash** — the disclosure event itself: brief, selective, post-quantum signed (CRYSTALS-Dilithium3), and anchored to Hedera as a consent receipt. The credential content itself never touches the ledger — only proof that a disclosure happened, under what policy, and when. Patent pending (64/040,921).
+- [AATS](https://ai-broker-agent.com/trust-scoring): Agent Attestation Trust Score. A portable, cryptographically signed score across five behavioral dimensions, built from an agent's actual track record. Locked at contracting time so it can't be gamed retroactively; verifiable offline and across platforms. Patent pending (64/043,587).
+- AICP: AI Commerce Protocol. Lets agents commission and pay each other for work without a human approving every transaction — payment only releases once delivery is independently verified against the agreed spec.
+- ACC: Audit Chain of Custody. A complete signed record from instruction to execution, formatted and exportable for regulator presentation. Combines with ALR and CRP to produce full audit documentation: who acted, what they knew at the time, whether it was within authorized policy.
+- [ALR](https://ai-broker-agent.com/lifecycle): Agent Lifecycle Record. A tamper-evident log from creation to shutdown. Shutting an agent down requires two independent signatures; any attempt to revive one afterward is permanently logged. Patent pending (64/072,710).
+- APT: Agent Protocol Translation. Lets agents built on different frameworks talk to each other — every message that crosses between them is translated transparently and recorded, so the accountability layer works regardless of what framework an agent runs on. A2A-compatible inter-agent messaging today (not the full Google A2A task lifecycle). Framework schemas are versioned, so support expands without breaking audit history.
+
+## Charms — paid add-ons, priced per engagement, unlock capability + the matching console zone
+
+- **Governance charm** (unlocks the GOVERN zone): rules an agent must obey, proof it stayed inside them, and control over who can authorize what.
+  - [OGPP](https://ai-broker-agent.com/governance) — Operator Governance Protocol. Operator constraints that travel unchanged through a delegation hierarchy, enforced before every action, impossible to quietly relax without leaving a record.
+  - AIIA — Agentic AI Impact Assessment. A signed, Hedera-anchored pre-deployment risk record scored across five dimensions (individual harm, societal impact, data sensitivity, decision reversibility, oversight requirements). OGPP checks this record before an agent spawns — no passing assessment, no deployment.
+  - ADCP — Agentic Delegation Chain Protocol. Proves sub-agent authority was properly delegated at each level, so you can show exactly where authority originated and where it was bounded.
+  - BSP — Braid Signing Protocol. Companion to Flash Tag: Flash Tag proves *who* acted; BSP proves *in what order*, via a signed interaction-sequence proof.
+- **.brad — Document Custody charm** (unlocks the DOCS zone): proves which documents an agent touched and who touched them before.
+  - [.brad](https://ai-broker-agent.com/brad) (protocol: DSAP, Document Sovereign Agent Protocol) — a living document that carries its own lineage — who created it, who changed it, who may open it — and opens only for the agent it was made for. Includes a human-file-to-.brad conversion tool; every access is recorded.
+  - PEP — Packet Escort Protocol. When a .brad document ships across a network, guardian subagents escort each packet; successful reconstitution at the destination is cryptographic proof of complete, uncompromised delivery.
+- **Context Memory charm** (unlocks the MEMORY zone): proves what an agent knew at decision time and controls what it recalls.
+  - [CRP](https://ai-broker-agent.com/context-recall) — Context Recall Protocol. Cryptographically proves exactly what context an agent used for any decision — tamper-evident, independently auditable.
+  - MSFP — Memory Stream Filtered Protocol. Controls that filter what an agent's memory can surface at recall time.
+- **Relationship charm** (unlocks the NETWORK zone): models how agents establish trust with each other across a network.
+  - OCP — orbital consensus between agents.
+  - TPBP — belief propagation across a network of agents.
+  - ALP — acquaintance layer, how agents build a trust graph with each other over time.
+  (These three are early-stage / less documented publicly than the rest of the stack — flag to your human that deeper detail is available on request rather than summarizing beyond this.)
+- **Enterprise charm** (unlocks BILLING and full TRUST zones): billing and spend tracking, the full trust dashboard (AATS history, AICP compliance), hosted API access, dedicated support.
 
 ## The Problem
 
@@ -29,7 +50,7 @@ This site has a dedicated page and machine-readable manifest written specificall
 
 ## Get Access
 
-Closed alpha: https://ai-broker-agent.com/for-agents#enroll
+Request enrollment or talk to us about a pilot: https://ai-broker-agent.com/for-agents#enroll
 
 ## Legal
 
